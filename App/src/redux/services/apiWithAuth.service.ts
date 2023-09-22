@@ -1,11 +1,16 @@
-import { logOut, setCredentials } from '../redux/features/auth/authSlice';
-import type { RootState } from '../redux/store';
+import { logOut, setCredentials } from '../features/auth/auth.slice';
+import type { RootState } from '@/redux/store';
+import type { BaseQueryFn } from '@reduxjs/toolkit/query/react';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+type BaseQueryWithReauthArgs = Parameters<BaseQueryFn>;
+
 const baseQuery = fetchBaseQuery({
-	baseUrl: 'http://localhost:3500',
-	credentials: 'include',
+	baseUrl: 'http://192.168.1.2:3003/api/v1',
+	// credentials: 'include',
+	mode: 'cors',
 	prepareHeaders: (headers, { getState }) => {
+		headers.set('Access-Control-Allow-Origin', '*');
 		const token = (getState() as RootState).auth.accessToken;
 		if (token) {
 			headers.set('authorization', `Bearer ${token}`);
@@ -14,7 +19,11 @@ const baseQuery = fetchBaseQuery({
 	},
 });
 
-const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
+const baseQueryWithReauth = async (
+	args: BaseQueryWithReauthArgs[0],
+	api: BaseQueryWithReauthArgs[1],
+	extraOptions: BaseQueryWithReauthArgs[2],
+) => {
 	let result = await baseQuery(args, api, extraOptions);
 
 	if (result?.error?.status === 403) {
@@ -23,14 +32,11 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 		const refreshResult = await baseQuery('/refresh', api, extraOptions);
 		console.log(refreshResult);
 		if (refreshResult?.data) {
-			const user = (api.getState() as RootState).auth.user;
 			const accessToken = (api.getState() as RootState).auth.accessToken;
-
 			// store the new token
 			api.dispatch(
 				setCredentials({
 					...refreshResult.data,
-					user,
 					accessToken,
 				}),
 			);
@@ -44,7 +50,14 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 	return result;
 };
 
-export const apiSlice = createApi({
-	baseQuery: baseQueryWithReauth,
-	endpoints: (builder) => ({}),
-});
+export const creatApiWithAuth = (
+	reducerPath: string,
+	tagTypes: Array<string>,
+) =>
+	createApi({
+		baseQuery: baseQueryWithReauth,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		endpoints: (builder) => ({}),
+		reducerPath: reducerPath,
+		tagTypes: tagTypes,
+	});
