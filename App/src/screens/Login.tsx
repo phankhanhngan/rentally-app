@@ -4,9 +4,9 @@ import { StyleSheet, View } from 'react-native';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
-import { useLoginMutation } from '../redux/slices/auth/authApiSlice';
-import { setCredentials } from '../redux/slices/auth/authSlice';
 import { showError } from '../utils/helperFunction';
+import { setCredentials } from '@/redux/features/auth/auth.slice';
+import { useLoginMutation } from '@/redux/services/auth/auth.service';
 const Login = ({ navigation }) => {
 	const [state, setState] = useState({
 		email: '',
