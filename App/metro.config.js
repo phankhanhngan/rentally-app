@@ -1,12 +1,14 @@
+const path = require('path');
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
-/**
- * Metro configuration
- * https://facebook.github.io/metro/docs/configuration
- *
- * @type {import('metro-config').MetroConfig}
- */
-const config = {};
+const defaultConfig = getDefaultConfig(__dirname);
 
-// eslint-disable-next-line no-undef
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+const config = {
+	resolver: {
+		extraNodeModules: {
+			'@': path.resolve(__dirname, '.'),
+		},
+	},
+};
+
+module.exports = mergeConfig(defaultConfig, config);
