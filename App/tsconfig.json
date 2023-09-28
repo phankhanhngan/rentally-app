@@ -19,7 +19,8 @@
     "strictNullChecks": true,
     "paths": {
       "@/*": ["./src/*", "./dist/*"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules"]
 }

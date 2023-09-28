@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Detail: React.FC = () => {
+const Profile: React.FC = () => {
 	return (
 		<View>
-			<Text>Detail</Text>
+			<Text>Profile</Text>
 		</View>
 	);
 };
 
-export default Detail;
+export default Profile;

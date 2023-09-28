@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
 import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
-import { showError } from '../utils/helperFunction';
+import LayoutAuth from '@/Layout/LayoutAuth';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
 import { useLoginMutation } from '@/redux/services/auth/auth.service';
-const Login = ({ navigation }) => {
+// import { showError } from '../utils/helperFunction';
+import { useNavigation } from '@react-navigation/native';
+const Login = () => {
+	const navigation = useNavigation();
 	const [state, setState] = useState({
 		email: '',
 		password: '',
@@ -15,7 +18,11 @@ const Login = ({ navigation }) => {
 	});
 	const { email, password, isSecure } = state;
 	const dispatch = useAppDispatch();
-	const updateState = (data) => setState(() => ({ ...state, ...data }));
+	const updateState = (data: {
+		email?: any;
+		password?: any;
+		isSecure?: boolean;
+	}) => setState(() => ({ ...state, ...data }));
 	const [login, { isLoading }] = useLoginMutation();
 
 	const onLogin = async () => {
@@ -36,44 +43,82 @@ const Login = ({ navigation }) => {
 	};
 
 	return (
-		<View style={styles.container}>
-			<TextInputWithLable
-				label="Email"
-				placheHolder="enter your email"
-				onChangeText={(email) => updateState({ email })}
-				value={undefined}
-				isSecure={undefined}
-			/>
-			<TextInputWithLable
-				label="Password"
-				placheHolder="enter your password"
-				// isSecure={isSecure}
-				secureTextEntry={isSecure}
-				onChangeText={(password) => updateState({ password })}
-				value={undefined}
-				isSecure={undefined}
-			/>
-			<ButtonWithLoader
-				text="Login"
-				onPress={onLogin}
-				isLoading={undefined}
-			/>
-			<View style={{ marginVertical: 8 }} />
-			<ButtonWithLoader
-				text="Signup"
-				onPress={() => navigation.navigate('Register')}
-				isLoading={undefined}
-			/>
-		</View>
+		<LayoutAuth>
+			<SafeAreaView
+				style={{
+					flex: 1,
+					backgroundColor: 'white',
+				}}
+			>
+				<Text
+					style={{
+						color: '#1D5868',
+						fontSize: 26,
+						fontWeight: '600',
+					}}
+				>
+					Login to your account
+				</Text>
+				<View style={{ marginTop: 15, flexDirection: 'row' }}>
+					<Text
+						style={{
+							color: '#1D5868',
+							fontSize: 12,
+						}}
+					>
+						Not a member?
+					</Text>
+					<Pressable onPress={() => navigation.navigate('Register')}>
+						<Text
+							style={{
+								color: '#E36414',
+								fontSize: 12,
+								fontWeight: '600',
+								paddingBottom: 10,
+							}}
+						>
+							{' '}
+							Create account{' '}
+						</Text>
+					</Pressable>
+				</View>
+				<TextInputWithLable
+					placheHolder="Email *"
+					onChangeText={(email: any) => updateState({ email })}
+					value={undefined}
+					isSecure={undefined}
+					label={undefined}
+				/>
+				<TextInputWithLable
+					placheHolder="Password *"
+					// isSecure={isSecure}
+					secureTextEntry={isSecure}
+					onChangeText={(password: any) => updateState({ password })}
+					value={undefined}
+					isSecure={undefined}
+					label={undefined}
+				/>
+				<ButtonWithLoader
+					text="Login"
+					onPress={onLogin}
+					isLoading={undefined}
+				/>
+				<Pressable
+					onPress={() => navigation.navigate('ForgotPassword')}
+					style={{ marginTop: 15, flexDirection: 'row' }}
+				>
+					<Text
+						style={{
+							color: '#1D5868',
+							fontSize: 12,
+						}}
+					>
+						Forgot your password?
+					</Text>
+				</Pressable>
+			</SafeAreaView>
+		</LayoutAuth>
 	);
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 24,
-		backgroundColor: 'white',
-	},
-});

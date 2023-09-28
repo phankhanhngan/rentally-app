@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Detail: React.FC = () => {
+const ForgotPassword: React.FC = () => {
 	return (
 		<View>
-			<Text>Detail</Text>
+			<Text>ForgotPassword</Text>
 		</View>
 	);
 };
 
-export default Detail;
+export default ForgotPassword;

@@ -11,21 +11,12 @@ const TextInputWithLable = ({
 }) => {
 	return (
 		<View style={{ marginBottom: 16 }}>
-			<Text
-				style={{
-					fontSize: 16,
-					marginBottom: 8,
-					fontWeight: 'bold',
-				}}
-			>
-				{label}
-			</Text>
 			<TextInput
 				value={value}
 				placeholder={placheHolder}
 				onChangeText={onChangeText}
 				style={styles.inputStyle}
-				placeholderTextColor="gray"
+				placeholderTextColor="rgba(29, 36, 51, 0.8)"
 				{...props}
 			/>
 		</View>
@@ -34,11 +25,14 @@ const TextInputWithLable = ({
 
 const styles = StyleSheet.create({
 	inputStyle: {
-		height: 48,
-		borderWidth: 1,
-		borderColor: 'gray',
+		height: 38,
+		width: 260,
+		borderWidth: 2,
+		borderRadius: 8,
+		borderColor: '#E1E6EF',
 		color: 'black',
-		paddingHorizontal: 16,
+		paddingHorizontal: 12,
+		backgroundColor: '#F1F3F9',
 	},
 });
 

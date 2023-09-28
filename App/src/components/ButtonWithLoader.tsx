@@ -23,17 +23,17 @@ const ButtonWithLoader = ({ isLoading, text, onPress }) => {
 // define your styles
 const styles = StyleSheet.create({
 	btnStyle: {
-		height: 48,
-		backgroundColor: 'blue',
+		height: 30,
+		width: 260,
+		backgroundColor: '#E36414',
 		alignItems: 'center',
 		justifyContent: 'center',
-		borderRadius: 10,
+		borderRadius: 8,
 		paddingHorizontal: 16,
 	},
 	textStyle: {
 		fontSize: 16,
-		textTransform: 'uppercase',
-		fontWeight: 'bold',
+		fontWeight: '500',
 		color: 'white',
 	},
 });
