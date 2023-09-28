@@ -103,6 +103,34 @@ const ResetPassword: React.FC = () => {
 						onPress={handleSubmitCode}
 						isLoading={undefined}
 					/>
+					<View
+						style={{
+							marginTop: 40,
+							flexDirection: 'row',
+						}}
+					>
+						<Text
+							style={{
+								color: '#1D5868',
+								fontSize: 12,
+							}}
+						>
+							Back to?
+						</Text>
+						<Pressable onPress={() => navigation.navigate('Login')}>
+							<Text
+								style={{
+									color: '#E36414',
+									fontSize: 12,
+									fontWeight: '600',
+									paddingBottom: 10,
+								}}
+							>
+								{' '}
+								Login
+							</Text>
+						</Pressable>
+					</View>
 				</SafeAreaView>
 			) : (
 				<SafeAreaView
@@ -121,37 +149,105 @@ const ResetPassword: React.FC = () => {
 					>
 						Reset Password
 					</Text>
-					<View
-						style={{
-							marginTop: 15,
-							flexDirection: 'row',
-							alignSelf: 'flex-start',
-						}}
-					>
+					<View style={{ width: 260 }}>
+						<View
+							style={{
+								flexDirection: 'row',
+								alignSelf: 'flex-start',
+							}}
+						>
+							<Text
+								style={{
+									color: '#1D5868',
+									fontSize: 12,
+								}}
+							>
+								In order to protect
+							</Text>
+
+							<Text
+								style={{
+									color: '#E36414',
+									fontSize: 12,
+									fontWeight: '600',
+								}}
+							>
+								{' '}
+								protect your account,{' '}
+							</Text>
+							<Text
+								style={{
+									color: '#1D5868',
+									fontSize: 12,
+								}}
+							>
+								make
+							</Text>
+						</View>
 						<Text
 							style={{
 								color: '#1D5868',
 								fontSize: 12,
 							}}
 						>
-							In order to protect your account, make sure your
-							password:
+							your password:
 						</Text>
-						<Pressable
-							onPress={() => navigation.navigate('Register')}
+						<View
+							style={{
+								flexDirection: 'column',
+							}}
 						>
-							<Text
+							<View
 								style={{
-									color: '#E36414',
-									fontSize: 12,
-									fontWeight: '600',
-									paddingBottom: 10,
+									flexDirection: 'row',
+									alignItems: 'center',
 								}}
 							>
-								Longer than 8 characters Does not match or
-								contain your username
-							</Text>
-						</Pressable>
+								<Text
+									style={{
+										color: '#1D5868',
+										fontSize: 16,
+										fontWeight: 'bold',
+										marginRight: 5,
+									}}
+								>
+									•
+								</Text>
+								<Text
+									style={{
+										color: '#1D5868',
+										fontSize: 12,
+									}}
+								>
+									Longer than 8 characters
+								</Text>
+							</View>
+							<View
+								style={{
+									flexDirection: 'row',
+									alignItems: 'center',
+								}}
+							>
+								<Text
+									style={{
+										color: '#1D5868',
+										fontSize: 16,
+										fontWeight: 'bold',
+										marginRight: 5,
+									}}
+								>
+									•
+								</Text>
+								<Text
+									style={{
+										color: '#1D5868',
+										fontSize: 12,
+									}}
+								>
+									Does not match or contain your username
+								</Text>
+							</View>
+						</View>
 					</View>
 					<TextInputWithLable
 						placheHolder="Password *"
@@ -179,23 +275,6 @@ const ResetPassword: React.FC = () => {
 						onPress={handleResetPassword}
 						isLoading={undefined}
 					/>
-					<Pressable
-						onPress={() => navigation.navigate('Login')}
-						style={{
-							marginTop: 15,
-							flexDirection: 'row',
-							alignSelf: 'flex-start',
-						}}
-					>
-						<Text
-							style={{
-								color: '#1D5868',
-								fontSize: 12,
-							}}
-						>
-							Back to Login
-						</Text>
-					</Pressable>
 				</SafeAreaView>
 			)}
 		</LayoutAuth>

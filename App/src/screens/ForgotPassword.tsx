@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, Text, View } from 'react-native';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
@@ -76,6 +76,34 @@ const ForgotPassword: React.FC = () => {
 					onPress={onLogin}
 					isLoading={undefined}
 				/>
+				<View
+					style={{
+						marginTop: 40,
+						flexDirection: 'row',
+					}}
+				>
+					<Text
+						style={{
+							color: '#1D5868',
+							fontSize: 12,
+						}}
+					>
+						Back to?
+					</Text>
+					<Pressable onPress={() => navigation.navigate('Login')}>
+						<Text
+							style={{
+								color: '#E36414',
+								fontSize: 12,
+								fontWeight: '600',
+								paddingBottom: 10,
+							}}
+						>
+							{' '}
+							Login
+						</Text>
+					</Pressable>
+				</View>
 			</SafeAreaView>
 		</LayoutAuth>
 	);

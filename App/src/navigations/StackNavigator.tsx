@@ -27,8 +27,23 @@ const StackNavigator = () => {
 	function BottomTabs() {
 		return (
 			<Tab.Navigator>
-				<Tab.Screen name="Home" component={Home} />
-				<Tab.Screen name="Profile" component={Profile} />
+				<Tab.Screen
+					name="Home"
+					component={Home}
+					options={{
+						tabBarLabel: 'Home',
+						tabBarLabelStyle: { color: '#008E97' },
+						headerShown: false,
+					}}
+				/>
+				<Tab.Screen
+					name="Profile"
+					component={Profile}
+					options={{
+						tabBarLabel: 'Home',
+						tabBarLabelStyle: { color: '#008E97' },
+					}}
+				/>
 			</Tab.Navigator>
 		);
 	}
