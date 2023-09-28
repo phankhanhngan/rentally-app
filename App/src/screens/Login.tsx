@@ -11,13 +11,13 @@ import { useLoginMutation } from '@/redux/services/auth/auth.service';
 import { useNavigation } from '@react-navigation/native';
 const Login = () => {
 	const navigation = useNavigation();
+	const dispatch = useAppDispatch();
 	const [state, setState] = useState({
 		email: '',
 		password: '',
 		isSecure: true,
 	});
 	const { email, password, isSecure } = state;
-	const dispatch = useAppDispatch();
 	const updateState = (data: {
 		email?: any;
 		password?: any;
@@ -26,6 +26,7 @@ const Login = () => {
 	const [login, { isLoading }] = useLoginMutation();
 
 	const onLogin = async () => {
+		navigation.replace('Main');
 		try {
 			console.log({
 				email,
@@ -36,6 +37,7 @@ const Login = () => {
 				password,
 			}).unwrap();
 			console.log('res==>>>>>', userData);
+
 			dispatch(setCredentials({ ...userData }));
 		} catch (error) {
 			console.log(error);
@@ -48,6 +50,7 @@ const Login = () => {
 				style={{
 					flex: 1,
 					backgroundColor: 'white',
+					alignItems: 'center',
 				}}
 			>
 				<Text
@@ -59,7 +62,13 @@ const Login = () => {
 				>
 					Login to your account
 				</Text>
-				<View style={{ marginTop: 15, flexDirection: 'row' }}>
+				<View
+					style={{
+						marginTop: 15,
+						flexDirection: 'row',
+						alignSelf: 'flex-start',
+					}}
+				>
 					<Text
 						style={{
 							color: '#1D5868',
@@ -105,7 +114,11 @@ const Login = () => {
 				/>
 				<Pressable
 					onPress={() => navigation.navigate('ForgotPassword')}
-					style={{ marginTop: 15, flexDirection: 'row' }}
+					style={{
+						marginTop: 15,
+						flexDirection: 'row',
+						alignSelf: 'flex-start',
+					}}
 				>
 					<Text
 						style={{
