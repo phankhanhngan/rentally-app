@@ -7,6 +7,7 @@ import TextInputWithLable from '../components/TextInputWithLabel';
 import LayoutAuth from '@/Layout/LayoutAuth';
 import {
 	useForgotPasswordVerifyMutation,
+	useResendEmailMutation,
 	useResetPasswordMutation,
 } from '@/redux/services/auth/auth.service';
 // import { showError } from '../utils/helperFunction';
@@ -23,6 +24,7 @@ const ResetPassword: React.FC = () => {
 	const route = useRoute();
 	const [resetPassword] = useResetPasswordMutation();
 	const [isPermitted, setIsPermitted] = useState(false);
+	const [resendEmail] = useResendEmailMutation();
 	const [forgotPasswordVerify] = useForgotPasswordVerifyMutation();
 	const [code, setCode] = useState<string>('');
 
@@ -66,6 +68,12 @@ const ResetPassword: React.FC = () => {
 		if (res.status === 'SUCCESS') {
 			setIsPermitted(true);
 		}
+	};
+	const handleResetPassword = async () => {
+		const res = await resendEmail({
+			email: route?.params?.email || '',
+		}).unwrap();
+		console.log(res);
 	};
 
 	return (
@@ -131,6 +139,39 @@ const ResetPassword: React.FC = () => {
 						onPress={handleSubmitCode}
 						isLoading={undefined}
 					/>
+					<View
+						style={{
+							marginTop: 15,
+							flexDirection: 'row',
+							alignSelf: 'flex-start',
+						}}
+					>
+						<Text
+							style={{
+								color: '#1D5868',
+								fontSize: 12,
+							}}
+						>
+							Didn't receive the email?
+						</Text>
+						<Pressable
+							onPress={() => {
+								handleResetPassword();
+							}}
+						>
+							<Text
+								style={{
+									color: '#E36414',
+									fontSize: 12,
+									fontWeight: '600',
+									paddingBottom: 10,
+								}}
+							>
+								{' '}
+								Click to resend
+							</Text>
+						</Pressable>
+					</View>
 					<View
 						style={{
 							marginTop: 40,

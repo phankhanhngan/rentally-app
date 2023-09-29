@@ -19,6 +19,7 @@ import LayoutAuth from '@/Layout/LayoutAuth';
 import {
 	useRegisterMutation,
 	useRegisterVerificationMutation,
+	useResendEmailMutation,
 } from '@/redux/services/auth/auth.service';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
@@ -54,6 +55,7 @@ const Register = () => {
 		confirmPassword: '',
 	};
 	const [register] = useRegisterMutation();
+	const [resendEmail] = useResendEmailMutation();
 	const [registerVerification] = useRegisterVerificationMutation();
 	const ref = useRef<IDropdownRef>(null);
 	const validate = (values: Values) => {
@@ -116,6 +118,12 @@ const Register = () => {
 		if (res.status === 'SUCCESS') {
 			navigation.navigate('Login');
 		}
+	};
+	const handleResetPassword = async () => {
+		const res = await resendEmail({
+			email: code.email || '',
+		}).unwrap();
+		console.log(res);
 	};
 	return (
 		<SafeAreaView>
@@ -401,10 +409,43 @@ const Register = () => {
 						/>
 
 						<ButtonWithLoader
-							text="Reset password"
+							text="Register"
 							onPress={handleSubmitCode}
 							isLoading={undefined}
 						/>
+						<View
+							style={{
+								marginTop: 15,
+								flexDirection: 'row',
+								alignSelf: 'flex-start',
+							}}
+						>
+							<Text
+								style={{
+									color: '#1D5868',
+									fontSize: 12,
+								}}
+							>
+								Didn't receive the email?
+							</Text>
+							<Pressable
+								onPress={() => {
+									handleResetPassword();
+								}}
+							>
+								<Text
+									style={{
+										color: '#E36414',
+										fontSize: 12,
+										fontWeight: '600',
+										paddingBottom: 10,
+									}}
+								>
+									{' '}
+									Click to resend
+								</Text>
+							</Pressable>
+						</View>
 						<View
 							style={{
 								marginTop: 40,
