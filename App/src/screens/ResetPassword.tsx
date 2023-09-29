@@ -4,40 +4,68 @@ import { Pressable, SafeAreaView, Text, View } from 'react-native';
 import Mail from '../assets/images/mailsvg.svg';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
-import { useAppDispatch } from '../hooks/redux.hook';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import {
+	useForgotPasswordVerifyMutation,
+	useResetPasswordMutation,
+} from '@/redux/services/auth/auth.service';
 // import { showError } from '../utils/helperFunction';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Formik } from 'formik';
+
+interface Values {
+	password: string;
+	confirmPassword: string;
+}
 
 const ResetPassword: React.FC = () => {
 	const navigation = useNavigation();
-	const dispatch = useAppDispatch();
-
+	const route = useRoute();
+	const [resetPassword] = useResetPasswordMutation();
 	const [isPermitted, setIsPermitted] = useState(false);
+	const [forgotPasswordVerify] = useForgotPasswordVerifyMutation();
 	const [code, setCode] = useState<string>('');
 
-	const [state, setState] = useState({
+	const initialValues: Values = {
 		password: '',
 		confirmPassword: '',
-	});
-	const { password, confirmPassword } = state;
-	const updateState = (data: {
-		password?: string;
-		confirmPassword?: string;
-	}) => setState(() => ({ ...state, ...data }));
+	};
 
-	const handleSubmitCode = async () => {
-		try {
-			console.log({
-				code,
-			});
-			setIsPermitted(true);
-		} catch (error) {
-			console.log(error);
+	const validate = (values: Values) => {
+		const errors: Partial<Values> = {};
+		if (!values.password) {
+			errors.password = 'Password is required';
+		} else if (values.password.length < 8) {
+			errors.password = 'Password too short';
+		}
+
+		if (values.password !== values.confirmPassword) {
+			errors.confirmPassword = 'Passwords do not match';
+		}
+
+		return errors;
+	};
+
+	const submitForm = async (values: Values) => {
+		const res = await resetPassword({
+			email: route?.params?.email || '',
+			password: values.password,
+			code: 'R-' + code,
+		}).unwrap();
+		if (res.status === 'SUCCESS') {
+			navigation.navigate('Login');
 		}
 	};
-	const handleResetPassword = () => {
-		navigation.navigate('Home');
+	const handleSubmitCode = async () => {
+		console.log(code);
+		const res = await forgotPasswordVerify({
+			email: route?.params?.email || '',
+			code: 'R-' + code,
+		}).unwrap();
+		console.log(res);
+		if (res.status === 'SUCCESS') {
+			setIsPermitted(true);
+		}
 	};
 
 	return (
@@ -87,7 +115,7 @@ const ResetPassword: React.FC = () => {
 								paddingBottom: 10,
 							}}
 						>
-							abc@gmail.com
+							{route?.params?.email}
 						</Text>
 					</View>
 					<TextInputWithLable
@@ -133,149 +161,166 @@ const ResetPassword: React.FC = () => {
 					</View>
 				</SafeAreaView>
 			) : (
-				<SafeAreaView
-					style={{
-						flex: 1,
-						backgroundColor: 'white',
-						alignItems: 'center',
-					}}
+				<Formik
+					initialValues={initialValues}
+					validate={validate}
+					onSubmit={submitForm}
 				>
-					<Text
-						style={{
-							color: '#1D5868',
-							fontSize: 26,
-							fontWeight: '600',
-						}}
-					>
-						Reset Password
-					</Text>
-					<View style={{ width: 260 }}>
-						<View
-							style={{
-								flexDirection: 'row',
-								alignSelf: 'flex-start',
-							}}
-						>
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 12,
-								}}
-							>
-								In order to protect
-							</Text>
+					{(formik) => {
+						const { values, handleChange, handleSubmit } = formik;
 
-							<Text
+						return (
+							<SafeAreaView
 								style={{
-									color: '#E36414',
-									fontSize: 12,
-									fontWeight: '600',
-								}}
-							>
-								{' '}
-								protect your account,{' '}
-							</Text>
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 12,
-								}}
-							>
-								make
-							</Text>
-						</View>
-						<Text
-							style={{
-								color: '#1D5868',
-								fontSize: 12,
-							}}
-						>
-							your password:
-						</Text>
-						<View
-							style={{
-								flexDirection: 'column',
-							}}
-						>
-							<View
-								style={{
-									flexDirection: 'row',
+									flex: 1,
+									backgroundColor: 'white',
 									alignItems: 'center',
 								}}
 							>
 								<Text
 									style={{
 										color: '#1D5868',
-										fontSize: 16,
-										fontWeight: 'bold',
-										marginRight: 5,
+										fontSize: 26,
+										fontWeight: '600',
 									}}
 								>
-									•
+									Reset Password
 								</Text>
-								<Text
-									style={{
-										color: '#1D5868',
-										fontSize: 12,
-									}}
-								>
-									Longer than 8 characters
-								</Text>
-							</View>
-							<View
-								style={{
-									flexDirection: 'row',
-									alignItems: 'center',
-								}}
-							>
-								<Text
-									style={{
-										color: '#1D5868',
-										fontSize: 16,
-										fontWeight: 'bold',
-										marginRight: 5,
-									}}
-								>
-									•
-								</Text>
-								<Text
-									style={{
-										color: '#1D5868',
-										fontSize: 12,
-									}}
-								>
-									Does not match or contain your username
-								</Text>
-							</View>
-						</View>
-					</View>
-					<TextInputWithLable
-						placheHolder="Password *"
-						onChangeText={(password: any) =>
-							updateState({ password })
-						}
-						value={undefined}
-						secureTextEntry={true}
-						label={undefined}
-						isSecure={undefined}
-					/>
-					<TextInputWithLable
-						placheHolder="Confirm password *"
-						// isSecure={isSecure}
-						secureTextEntry={true}
-						onChangeText={(confirmPassword: any) =>
-							updateState({ confirmPassword })
-						}
-						value={undefined}
-						isSecure={undefined}
-						label={undefined}
-					/>
-					<ButtonWithLoader
-						text="Reset password"
-						onPress={handleResetPassword}
-						isLoading={undefined}
-					/>
-				</SafeAreaView>
+								<View style={{ width: 260 }}>
+									<View
+										style={{
+											flexDirection: 'row',
+											alignSelf: 'flex-start',
+										}}
+									>
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 12,
+											}}
+										>
+											In order to protect
+										</Text>
+
+										<Text
+											style={{
+												color: '#E36414',
+												fontSize: 12,
+												fontWeight: '600',
+											}}
+										>
+											{' '}
+											protect your account,{' '}
+										</Text>
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 12,
+											}}
+										>
+											make
+										</Text>
+									</View>
+									<Text
+										style={{
+											color: '#1D5868',
+											fontSize: 12,
+										}}
+									>
+										your password:
+									</Text>
+									<View
+										style={{
+											flexDirection: 'column',
+										}}
+									>
+										<View
+											style={{
+												flexDirection: 'row',
+												alignItems: 'center',
+											}}
+										>
+											<Text
+												style={{
+													color: '#1D5868',
+													fontSize: 16,
+													fontWeight: 'bold',
+													marginRight: 5,
+												}}
+											>
+												•
+											</Text>
+											<Text
+												style={{
+													color: '#1D5868',
+													fontSize: 12,
+												}}
+											>
+												Longer than 8 characters
+											</Text>
+										</View>
+										<View
+											style={{
+												flexDirection: 'row',
+												alignItems: 'center',
+											}}
+										>
+											<Text
+												style={{
+													color: '#1D5868',
+													fontSize: 16,
+													fontWeight: 'bold',
+													marginRight: 5,
+												}}
+											>
+												•
+											</Text>
+											<Text
+												style={{
+													color: '#1D5868',
+													fontSize: 12,
+												}}
+											>
+												Does not match or contain your
+												username
+											</Text>
+										</View>
+									</View>
+								</View>
+								<TextInputWithLable
+									placheHolder="Password *"
+									secureTextEntry={true}
+									label={undefined}
+									isSecure={undefined}
+									type="password"
+									name="password"
+									id="password"
+									value={values.password}
+									onChangeText={handleChange('password')}
+								/>
+								<TextInputWithLable
+									placheHolder="Confirm password *"
+									secureTextEntry={true}
+									label={undefined}
+									isSecure={undefined}
+									type="password"
+									name="password"
+									id="password"
+									value={values.confirmPassword}
+									onChangeText={handleChange(
+										'confirmPassword',
+									)}
+								/>
+								<ButtonWithLoader
+									text="Reset password"
+									onPress={handleSubmit}
+									title="Submit"
+									isLoading={undefined}
+								/>
+							</SafeAreaView>
+						);
+					}}
+				</Formik>
 			)}
 		</LayoutAuth>
 	);

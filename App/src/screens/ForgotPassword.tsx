@@ -3,34 +3,21 @@ import { Pressable, SafeAreaView, Text, View } from 'react-native';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
-import { useAppDispatch } from '../hooks/redux.hook';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import { useForgotPasswordMutation } from '@/redux/services/auth/auth.service';
 // import { showError } from '../utils/helperFunction';
 import { useNavigation } from '@react-navigation/native';
 
 const ForgotPassword: React.FC = () => {
 	const navigation = useNavigation();
-	const [state, setState] = useState({
-		email: '',
-		password: '',
-		isSecure: true,
-	});
-	const { email, isSecure } = state;
-	const dispatch = useAppDispatch();
-	const updateState = (data: {
-		email?: any;
-		password?: any;
-		isSecure?: boolean;
-	}) => setState(() => ({ ...state, ...data }));
+	const [email, setEmail] = useState<string>('');
+	const [forgotPassword] = useForgotPasswordMutation();
 
-	const onLogin = async () => {
-		try {
-			console.log({
-				email,
-			});
-			navigation.navigate('ResetPassword');
-		} catch (error) {
-			console.log(error);
+	const handleResetPassword = async () => {
+		const res = await forgotPassword({ email }).unwrap();
+		console.log(res);
+		if (res.status === 'SUCCESS') {
+			navigation.navigate('ResetPassword', { email: email });
 		}
 	};
 
@@ -66,14 +53,14 @@ const ForgotPassword: React.FC = () => {
 				</View>
 				<TextInputWithLable
 					placheHolder="Email *"
-					onChangeText={(email: any) => updateState({ email })}
+					onChangeText={(email: any) => setEmail(email)}
 					value={undefined}
 					isSecure={undefined}
 					label={undefined}
 				/>
 				<ButtonWithLoader
 					text="Reset password"
-					onPress={onLogin}
+					onPress={handleResetPassword}
 					isLoading={undefined}
 				/>
 				<View
