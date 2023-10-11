@@ -9,10 +9,10 @@ import Login from '@/screens/Login';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
+import { BASE_URL } from '@env';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
@@ -25,6 +25,8 @@ export type RootStackParams = {
 
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
+	console.log(BASE_URL);
+
 	useEffect(() => {
 		dispatch(initializeState());
 	}, []);

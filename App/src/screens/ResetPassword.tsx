@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, SafeAreaView, Text, View } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import Mail from '../assets/images/mailsvg.svg';
 import ButtonWithLoader from '../components/ButtonWithLoader';
@@ -14,30 +15,40 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Formik } from 'formik';
 
-interface Values {
+interface ResetPasswordValues {
 	password: string;
 	confirmPassword: string;
+}
+interface SendCodeValues {
+	code: string;
 }
 
 const ResetPassword: React.FC = () => {
 	const navigation = useNavigation();
 	const route = useRoute();
-	const [resetPassword] = useResetPasswordMutation();
-	const [isPermitted, setIsPermitted] = useState(false);
-	const [resendEmail] = useResendEmailMutation();
-	const [forgotPasswordVerify] = useForgotPasswordVerifyMutation();
+	const email = route?.params?.email || '';
+	const [isPermitted, SetIsPermitted] = useState<boolean>(false);
+	const [resetPassword, { isLoading: isResetPasswordLoading }] =
+		useResetPasswordMutation();
+	const [forgotPasswordVerify, { isLoading: isForgotPasswordVerifyLoading }] =
+		useForgotPasswordVerifyMutation();
+	const [resendEmail, { isLoading: isResendEmailLoading }] =
+		useResendEmailMutation();
 	const [code, setCode] = useState<string>('');
 
-	const initialValues: Values = {
+	const initialValues: ResetPasswordValues = {
 		password: '',
 		confirmPassword: '',
 	};
+	const initialSendCodeValues: SendCodeValues = {
+		code: '',
+	};
 
-	const validate = (values: Values) => {
-		const errors: Partial<Values> = {};
+	const resetPasswordValidate = (values: ResetPasswordValues) => {
+		const errors: Partial<ResetPasswordValues> = {};
 		if (!values.password) {
 			errors.password = 'Password is required';
-		} else if (values.password.length < 8) {
+		} else if (values.password.length < 6) {
 			errors.password = 'Password too short';
 		}
 
@@ -47,10 +58,19 @@ const ResetPassword: React.FC = () => {
 
 		return errors;
 	};
+	const sendCodeValidate = (
+		values: SendCodeValues,
+	): Partial<SendCodeValues> => {
+		const errors: Partial<SendCodeValues> = {};
+		if (!values.code) {
+			errors.code = 'Email is required';
+		}
+		return errors;
+	};
 
-	const submitForm = async (values: Values) => {
+	const submitResetPasswordForm = async (values: ResetPasswordValues) => {
 		const res = await resetPassword({
-			email: route?.params?.email || '',
+			email: email || '',
 			password: values.password,
 			code: 'R-' + code,
 		}).unwrap();
@@ -58,154 +78,178 @@ const ResetPassword: React.FC = () => {
 			navigation.navigate('Login');
 		}
 	};
-	const handleSubmitCode = async () => {
-		console.log(code);
+	const submitCodeForm = async (values: SendCodeValues) => {
 		const res = await forgotPasswordVerify({
-			email: route?.params?.email || '',
-			code: 'R-' + code,
+			email: email || '',
+			code: 'R-' + values.code,
 		}).unwrap();
 		console.log(res);
 		if (res.status === 'SUCCESS') {
-			setIsPermitted(true);
+			SetIsPermitted(true);
+			setCode(values.code);
 		}
 	};
+
 	const handleResetPassword = async () => {
-		const res = await resendEmail({
-			email: route?.params?.email || '',
-		}).unwrap();
+		const res = await resendEmail({ email: email || '' }).unwrap();
 		console.log(res);
 	};
 
 	return (
 		<LayoutAuth>
+			<Spinner
+				visible={
+					isResendEmailLoading ||
+					isForgotPasswordVerifyLoading ||
+					isResetPasswordLoading
+				}
+			/>
 			{!isPermitted ? (
-				<SafeAreaView
-					style={{
-						flex: 1,
-						backgroundColor: 'white',
-						alignItems: 'center',
-					}}
+				<Formik
+					initialValues={initialSendCodeValues}
+					validate={sendCodeValidate}
+					onSubmit={submitCodeForm}
 				>
-					<View
-						style={{
-							flexDirection: 'row',
-							gap: 10,
-							alignContent: 'center',
-						}}
-					>
-						<Mail height={40} />
-						<Text
-							style={{
-								color: '#1D5868',
-								fontSize: 24,
-								fontWeight: '600',
-							}}
-						>
-							Check your email!
-						</Text>
-					</View>
+					{(formik) => {
+						const { values, handleChange, handleSubmit } = formik;
 
-					<View style={{ marginTop: 15 }}>
-						<Text
-							style={{
-								color: '#1D5868',
-								fontSize: 12,
-								width: 260,
-							}}
-						>
-							We sent a verification code to
-						</Text>
-						<Text
-							style={{
-								color: '#E36414',
-								fontSize: 12,
-								width: 260,
-								paddingBottom: 10,
-							}}
-						>
-							{route?.params?.email}
-						</Text>
-					</View>
-					<TextInputWithLable
-						placheHolder="Code *"
-						onChangeText={(code: string) => setCode(code)}
-						value={undefined}
-						isSecure={undefined}
-						label={undefined}
-					/>
-
-					<ButtonWithLoader
-						text="Reset password"
-						onPress={handleSubmitCode}
-						isLoading={undefined}
-					/>
-					<View
-						style={{
-							marginTop: 15,
-							flexDirection: 'row',
-							alignSelf: 'flex-start',
-						}}
-					>
-						<Text
-							style={{
-								color: '#1D5868',
-								fontSize: 12,
-							}}
-						>
-							Didn't receive the email?
-						</Text>
-						<Pressable
-							onPress={() => {
-								handleResetPassword();
-							}}
-						>
-							<Text
+						return (
+							<SafeAreaView
 								style={{
-									color: '#E36414',
-									fontSize: 12,
-									fontWeight: '600',
-									paddingBottom: 10,
+									flex: 1,
+									backgroundColor: 'white',
+									alignItems: 'center',
 								}}
 							>
-								{' '}
-								Click to resend
-							</Text>
-						</Pressable>
-					</View>
-					<View
-						style={{
-							marginTop: 40,
-							flexDirection: 'row',
-						}}
-					>
-						<Text
-							style={{
-								color: '#1D5868',
-								fontSize: 12,
-							}}
-						>
-							Back to?
-						</Text>
-						<Pressable onPress={() => navigation.navigate('Login')}>
-							<Text
-								style={{
-									color: '#E36414',
-									fontSize: 12,
-									fontWeight: '600',
-									paddingBottom: 10,
-								}}
-							>
-								{' '}
-								Login
-							</Text>
-						</Pressable>
-					</View>
-				</SafeAreaView>
+								<View
+									style={{
+										flexDirection: 'row',
+										gap: 10,
+										alignContent: 'center',
+									}}
+								>
+									<Mail height={40} />
+									<Text
+										style={{
+											color: '#1D5868',
+											fontSize: 24,
+											fontWeight: '600',
+										}}
+									>
+										Check your email!
+									</Text>
+								</View>
+
+								<View style={{ marginTop: 15 }}>
+									<Text
+										style={{
+											color: '#1D5868',
+											fontSize: 12,
+											width: 260,
+										}}
+									>
+										We sent a verification code to
+									</Text>
+									<Text
+										style={{
+											color: '#E36414',
+											fontSize: 12,
+											width: 260,
+											paddingBottom: 10,
+										}}
+									>
+										{route?.params?.email}
+									</Text>
+								</View>
+								<TextInputWithLable
+									placheHolder="Code *"
+									onChangeText={handleChange('code')}
+									value={values.code}
+									isSecure={undefined}
+									label={undefined}
+									name="code"
+									id="code"
+								/>
+
+								<ButtonWithLoader
+									text="Reset password"
+									onPress={handleSubmit}
+									isLoading={undefined}
+								/>
+								<View
+									style={{
+										marginTop: 15,
+										flexDirection: 'row',
+										alignSelf: 'flex-start',
+									}}
+								>
+									<Text
+										style={{
+											color: '#1D5868',
+											fontSize: 12,
+										}}
+									>
+										Didn't receive the email?
+									</Text>
+									<Pressable
+										onPress={() => {
+											handleResetPassword();
+										}}
+									>
+										<Text
+											style={{
+												color: '#E36414',
+												fontSize: 12,
+												fontWeight: '600',
+												paddingBottom: 10,
+											}}
+										>
+											{' '}
+											Click to resend
+										</Text>
+									</Pressable>
+								</View>
+								<View
+									style={{
+										marginTop: 40,
+										flexDirection: 'row',
+									}}
+								>
+									<Text
+										style={{
+											color: '#1D5868',
+											fontSize: 12,
+										}}
+									>
+										Back to?
+									</Text>
+									<Pressable
+										onPress={() =>
+											navigation.navigate('Login')
+										}
+									>
+										<Text
+											style={{
+												color: '#E36414',
+												fontSize: 12,
+												fontWeight: '600',
+												paddingBottom: 10,
+											}}
+										>
+											{' '}
+											Login
+										</Text>
+									</Pressable>
+								</View>
+							</SafeAreaView>
+						);
+					}}
+				</Formik>
 			) : (
 				<Formik
 					initialValues={initialValues}
-					validate={validate}
-					onSubmit={submitForm}
+					validate={resetPasswordValidate}
+					onSubmit={submitResetPasswordForm}
 				>
 					{(formik) => {
 						const { values, handleChange, handleSubmit } = formik;

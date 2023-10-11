@@ -10,11 +10,15 @@ import {
 } from 'react-native';
 import type { IDropdownRef } from 'react-native-element-dropdown';
 import { Dropdown } from 'react-native-element-dropdown';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import Mail from '../assets/images/mailsvg.svg';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
+import type { IAccounRegister } from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import { setCredentials } from '@/redux/features/auth/auth.slice';
+import { useAppDispatch } from '@/redux/hook';
 // import { showError } from '../utils/helperFunction';
 import {
 	useRegisterMutation,
@@ -23,15 +27,12 @@ import {
 } from '@/redux/services/auth/auth.service';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-interface Values {
-	email: string;
-	password: string;
-	confirmPassword: string;
-	firstName: string;
-	lastName: string;
-	phoneNumber: string;
-	role: string;
+type RegisterValues = IAccounRegister & { confirmPassword?: string };
+
+interface SendCodeValues {
+	code: string;
 }
 
 const data = [
@@ -40,98 +41,99 @@ const data = [
 ];
 const Register = () => {
 	const navigation = useNavigation();
-	const [isPermitted, setIsPermitted] = useState(false);
-	const [code, setCode] = useState<{ email: string; code: string }>({
+	const dispatch = useAppDispatch();
+
+	const [isPermitted, setIsPermitted] = useState<boolean>(false);
+	const [email, setEmail] = useState<string>('');
+	const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+	const [registerVerification, { isLoading: isRegisterVerificationLoading }] =
+		useRegisterVerificationMutation();
+	const [resendEmail, { isLoading: isResendEmailLoading }] =
+		useResendEmailMutation();
+	const ref = useRef<IDropdownRef>(null);
+	const initialRegisterValues: RegisterValues = {
 		email: '',
-		code: '',
-	});
-	const initialValues: Values = {
-		email: '',
-		password: '',
 		firstName: '',
 		lastName: '',
+		password: '',
+		confirmPassword: '',
 		phoneNumber: '',
 		role: '',
-		confirmPassword: '',
 	};
-	const [register] = useRegisterMutation();
-	const [resendEmail] = useResendEmailMutation();
-	const [registerVerification] = useRegisterVerificationMutation();
-	const ref = useRef<IDropdownRef>(null);
-	const validate = (values: Values) => {
-		const errors: Partial<Values> = {};
-		const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+	const initialSendCodeValues: SendCodeValues = {
+		code: '',
+	};
 
-		if (!values.email) {
-			errors.email = 'Email is required';
-		} else if (!regex.test(values.email)) {
-			errors.email = 'Invalid Email';
+	const RegisterSchema = Yup.object().shape<Record<string, any>>({
+		email: Yup.string()
+			.email('Email is invalid!')
+			.required('Email Required!'),
+		firstName: Yup.string().required('Firstname Required!'),
+		lastName: Yup.string().required('Lastname Required!'),
+		password: Yup.string()
+			.min(4, 'Password must be minimum 4 digits!')
+			.required('Password Required!'),
+		confirmPassword: Yup.string()
+			.oneOf([Yup.ref('password'), undefined], 'Password must match!')
+			.required('Confirm password is reqired!'),
+		phoneNumber: Yup.string()
+			.matches(
+				/^[\\+]?[(]?[0-9]{3}[)]?[-\s\\.]?[0-9]{3}[-\s\\.]?[0-9]{4,6}$/im,
+				'Invalid phone number',
+			)
+			.required('Number phone must be required!'),
+		role: Yup.string().required('Role Required!'),
+	});
+	const sendCodeValidate = (
+		values: SendCodeValues,
+	): Partial<SendCodeValues> => {
+		const errors: Partial<SendCodeValues> = {};
+		if (!values.code) {
+			errors.code = 'Email is required';
 		}
-
-		if (!values.password) {
-			errors.password = 'Password is required';
-		} else if (values.password.length < 4) {
-			errors.password = 'Password too short';
-		}
-
-		if (values.password !== values.confirmPassword) {
-			errors.confirmPassword = 'Passwords do not match';
-		}
-
-		if (!values.firstName) {
-			errors.firstName = 'First name is required';
-		}
-
-		if (!values.lastName) {
-			errors.lastName = 'Last name is required';
-		}
-
-		if (!values.phoneNumber) {
-			errors.phoneNumber = 'Phone number is required';
-		}
-
-		if (!values.role) {
-			errors.role = 'Role is required';
-		}
-		console.log(errors);
 		return errors;
 	};
-	const submitForm = async (values: Values) => {
+
+	const submitRegisterForm = async (values: RegisterValues) => {
 		const { confirmPassword, ...body } = values;
 		console.log(body, confirmPassword);
 		const res = await register(body).unwrap();
-		console.log(res);
 		if (res.status === 'SUCCESS') {
 			setIsPermitted(true);
-			setCode((pre) => ({ ...pre, email: body.email }));
+			setEmail(body.email);
 		}
 	};
-	const handleSubmitCode = async () => {
-		console.log(code);
+	const submitCodeForm = async (values: SendCodeValues) => {
+		console.log(values.code);
 		const body = {
-			email: code.email,
-			code: 'R-' + code.code,
+			email: email,
+			code: 'R-' + values.code,
 		};
-		console.log(body);
 		const res = await registerVerification(body).unwrap();
 		console.log(res);
-		if (res.status === 'SUCCESS') {
-			navigation.navigate('Login');
+		if (res.status === 'SUCCESS' && res.data) {
+			dispatch(setCredentials({ accessToken: res.data.token }));
+			navigation.replace('Main');
 		}
 	};
 	const handleResetPassword = async () => {
-		const res = await resendEmail({
-			email: code.email || '',
-		}).unwrap();
+		const res = await resendEmail({ email: email }).unwrap();
 		console.log(res);
 	};
 	return (
 		<SafeAreaView>
+			<Spinner
+				visible={
+					isRegisterLoading ||
+					isRegisterVerificationLoading ||
+					isResendEmailLoading
+				}
+			/>
 			{!isPermitted ? (
 				<Formik
-					initialValues={initialValues}
-					validate={validate}
-					onSubmit={submitForm}
+					initialValues={initialRegisterValues}
+					validationSchema={RegisterSchema}
+					onSubmit={submitRegisterForm}
 				>
 					{(formik) => {
 						const { values, handleChange, handleSubmit } = formik;
@@ -350,134 +352,147 @@ const Register = () => {
 					}}
 				</Formik>
 			) : (
-				<LayoutAuth>
-					<SafeAreaView
-						style={{
-							flex: 1,
-							backgroundColor: 'white',
-							alignItems: 'center',
-						}}
-					>
-						<View
-							style={{
-								flexDirection: 'row',
-								gap: 10,
-								alignContent: 'center',
-							}}
-						>
-							<Mail height={40} />
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 24,
-									fontWeight: '600',
-								}}
-							>
-								Check your email!
-							</Text>
-						</View>
-
-						<View style={{ marginTop: 15 }}>
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 12,
-									width: 260,
-								}}
-							>
-								We sent a verification code to
-							</Text>
-							<Text
-								style={{
-									color: '#E36414',
-									fontSize: 12,
-									width: 260,
-									paddingBottom: 10,
-								}}
-							>
-								{code.email}
-							</Text>
-						</View>
-						<TextInputWithLable
-							placheHolder="Code *"
-							onChangeText={(code: string) =>
-								setCode((values) => ({ ...values, code: code }))
-							}
-							value={code.code}
-							isSecure={undefined}
-							label={undefined}
-						/>
-
-						<ButtonWithLoader
-							text="Register"
-							onPress={handleSubmitCode}
-							isLoading={undefined}
-						/>
-						<View
-							style={{
-								marginTop: 15,
-								flexDirection: 'row',
-								alignSelf: 'flex-start',
-							}}
-						>
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 12,
-								}}
-							>
-								Didn't receive the email?
-							</Text>
-							<Pressable
-								onPress={() => {
-									handleResetPassword();
-								}}
-							>
-								<Text
+				<Formik
+					initialValues={initialSendCodeValues}
+					validate={sendCodeValidate}
+					onSubmit={submitCodeForm}
+				>
+					{(formik) => {
+						const { values, handleChange, handleSubmit } = formik;
+						return (
+							<LayoutAuth>
+								<SafeAreaView
 									style={{
-										color: '#E36414',
-										fontSize: 12,
-										fontWeight: '600',
-										paddingBottom: 10,
+										flex: 1,
+										backgroundColor: 'white',
+										alignItems: 'center',
 									}}
 								>
-									{' '}
-									Click to resend
-								</Text>
-							</Pressable>
-						</View>
-						<View
-							style={{
-								marginTop: 40,
-								flexDirection: 'row',
-							}}
-						>
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 12,
-								}}
-							>
-								Back to?
-							</Text>
-							<Pressable
-								onPress={() => navigation.navigate('Login')}
-							>
-								<Text
-									style={{
-										color: '#E36414',
-										fontSize: 12,
-										fontWeight: '600',
-										paddingBottom: 10,
-									}}
-								>
-									{' '}
-									Login
-								</Text>
-							</Pressable>
-						</View>
-					</SafeAreaView>
-				</LayoutAuth>
+									<View
+										style={{
+											flexDirection: 'row',
+											gap: 10,
+											alignContent: 'center',
+										}}
+									>
+										<Mail height={40} />
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 24,
+												fontWeight: '600',
+											}}
+										>
+											Check your email!
+										</Text>
+									</View>
+
+									<View style={{ marginTop: 15 }}>
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 12,
+												width: 260,
+											}}
+										>
+											We sent a verification code to
+										</Text>
+										<Text
+											style={{
+												color: '#E36414',
+												fontSize: 12,
+												width: 260,
+												paddingBottom: 10,
+											}}
+										>
+											{email}
+										</Text>
+									</View>
+									<TextInputWithLable
+										placheHolder="Code *"
+										onChangeText={handleChange('code')}
+										value={values.code}
+										isSecure={undefined}
+										label={undefined}
+										name="code"
+										id="code"
+									/>
+
+									<ButtonWithLoader
+										text="Register"
+										onPress={handleSubmit}
+										isLoading={undefined}
+									/>
+									<View
+										style={{
+											marginTop: 15,
+											flexDirection: 'row',
+											alignSelf: 'flex-start',
+										}}
+									>
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 12,
+											}}
+										>
+											Didn't receive the email?
+										</Text>
+										<Pressable
+											onPress={() => {
+												handleResetPassword();
+											}}
+										>
+											<Text
+												style={{
+													color: '#E36414',
+													fontSize: 12,
+													fontWeight: '600',
+													paddingBottom: 10,
+												}}
+											>
+												{' '}
+												Click to resend
+											</Text>
+										</Pressable>
+									</View>
+									<View
+										style={{
+											marginTop: 40,
+											flexDirection: 'row',
+										}}
+									>
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 12,
+											}}
+										>
+											Back to?
+										</Text>
+										<Pressable
+											onPress={() =>
+												navigation.navigate('Login')
+											}
+										>
+											<Text
+												style={{
+													color: '#E36414',
+													fontSize: 12,
+													fontWeight: '600',
+													paddingBottom: 10,
+												}}
+											>
+												{' '}
+												Login
+											</Text>
+										</Pressable>
+									</View>
+								</SafeAreaView>
+							</LayoutAuth>
+						);
+					}}
+				</Formik>
 			)}
 		</SafeAreaView>
 	);
