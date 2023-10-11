@@ -7,6 +7,7 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
@@ -31,7 +32,7 @@ type Errors = {
 const Login = () => {
 	const navigation = useNavigation();
 	const dispatch = useAppDispatch();
-	const [login] = useLoginMutation();
+	const [login, { isLoading }] = useLoginMutation();
 
 	const initialValues: Values = {
 		email: '',
@@ -68,6 +69,7 @@ const Login = () => {
 
 	return (
 		<LayoutAuth>
+			<Spinner visible={isLoading} />
 			<Formik
 				initialValues={initialValues}
 				validate={validate}
