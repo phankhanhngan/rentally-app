@@ -1,25 +1,25 @@
 import { creatApiWithAuth } from '../apiWithAuth.service';
-
+import type {
+	IAccounRegister,
+	IAccountLogin,
+	IAuthResponse,
+	IEmail,
+	INewPassword,
+	IVerifyCode,
+} from '@/interfaces/auth.interface';
 const creatApiAuthWithAuth = creatApiWithAuth('AuthApi', ['Auth']);
 
 export const authApi = creatApiAuthWithAuth.injectEndpoints({
 	endpoints: (builder) => ({
-		login: builder.mutation({
-			query: (body: { email: string; password: string }) => ({
+		login: builder.mutation<IAuthResponse, IAccountLogin>({
+			query: (body) => ({
 				url: '/auth/login',
 				method: 'POST',
 				body,
 			}),
 		}),
-		register: builder.mutation({
-			query: (body: {
-				firstName: string;
-				email: string;
-				password: string;
-				lastName: string;
-				phoneNumber: string;
-				role: string;
-			}) => {
+		register: builder.mutation<IAuthResponse, IAccounRegister>({
+			query: (body) => {
 				return {
 					url: '/auth/register',
 					method: 'post',
@@ -27,41 +27,47 @@ export const authApi = creatApiAuthWithAuth.injectEndpoints({
 				};
 			},
 		}),
-		registerVerification: builder.mutation({
-			query: (body: { email: string; code: string }) => ({
-				url: '/auth/verify',
+		registerVerification: builder.mutation<IAuthResponse, IVerifyCode>({
+			query: (body) => ({
+				url: '/auth/register/verify',
 				method: 'POST',
 				body,
 			}),
 		}),
-		resendEmail: builder.mutation({
-			query: (body: { email: string }) => ({
+		resendEmail: builder.mutation<IAuthResponse, IEmail>({
+			query: (body) => ({
 				url: '/auth/resend-verification',
 				method: 'POST',
 				body,
 			}),
 		}),
-		forgotPassword: builder.mutation({
-			query: (body: { email: string }) => ({
+		forgotPassword: builder.mutation<IAuthResponse, IEmail>({
+			query: (body) => ({
 				url: '/auth/forgot-password',
 				method: 'POST',
 				body,
 			}),
 		}),
-		forgotPasswordVerify: builder.mutation({
-			query: (body: { email: string; code: string }) => ({
+		forgotPasswordVerify: builder.mutation<IAuthResponse, IVerifyCode>({
+			query: (body) => ({
 				url: '/auth/forgot-password/verify',
 				method: 'POST',
 				body,
 			}),
 		}),
-		resetPassword: builder.mutation({
-			query: (body: {
-				email: string;
-				password: string;
-				code: string;
-			}) => ({
+		resetPassword: builder.mutation<IAuthResponse, INewPassword>({
+			query: (body) => ({
 				url: '/auth/reset-password',
+				method: 'POST',
+				body,
+			}),
+		}),
+		continueWithGG: builder.mutation<
+			IAuthResponse,
+			{ accessToken: string }
+		>({
+			query: (body) => ({
+				url: '/auth/google/callback',
 				method: 'POST',
 				body,
 			}),
@@ -77,4 +83,5 @@ export const {
 	useForgotPasswordVerifyMutation,
 	useResendEmailMutation,
 	useResetPasswordMutation,
+	useContinueWithGGMutation,
 } = authApi;

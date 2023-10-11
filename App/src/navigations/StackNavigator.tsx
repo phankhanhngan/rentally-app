@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import 'react-native-gesture-handler';
+import { initializeState } from '@/redux/features/auth/auth.slice';
+import { useAppDispatch } from '@/redux/hook';
 import ForgotPassword from '@/screens/ForgotPassword';
 import Home from '@/screens/Home';
 import Login from '@/screens/Login';
@@ -22,11 +24,23 @@ export type RootStackParams = {
 };
 
 const StackNavigator = () => {
+	const dispatch = useAppDispatch();
+	useEffect(() => {
+		dispatch(initializeState());
+	}, []);
 	const Stack = createNativeStackNavigator<RootStackParams>();
 	const Tab = createBottomTabNavigator();
 	function BottomTabs() {
 		return (
 			<Tab.Navigator>
+				<Tab.Screen
+					name="Profile"
+					component={Profile}
+					options={{
+						tabBarLabel: 'Home',
+						tabBarLabelStyle: { color: '#008E97' },
+					}}
+				/>
 				<Tab.Screen
 					name="Home"
 					component={Home}
@@ -36,14 +50,6 @@ const StackNavigator = () => {
 						headerShown: false,
 					}}
 				/>
-				<Tab.Screen
-					name="Profile"
-					component={Profile}
-					options={{
-						tabBarLabel: 'Home',
-						tabBarLabelStyle: { color: '#008E97' },
-					}}
-				/>
 			</Tab.Navigator>
 		);
 	}
@@ -51,8 +57,8 @@ const StackNavigator = () => {
 		<NavigationContainer>
 			<Stack.Navigator>
 				<Stack.Screen
-					name="Login"
-					component={Login}
+					name="Main"
+					component={BottomTabs}
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
@@ -61,6 +67,12 @@ const StackNavigator = () => {
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
+					name="Login"
+					component={Login}
+					options={{ headerShown: false }}
+				/>
+
+				<Stack.Screen
 					name="ForgotPassword"
 					component={ForgotPassword}
 					options={{ headerShown: false }}
@@ -68,11 +80,6 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="ResetPassword"
 					component={ResetPassword}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="Main"
-					component={BottomTabs}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>

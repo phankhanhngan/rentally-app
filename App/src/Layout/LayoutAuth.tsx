@@ -3,6 +3,7 @@ import React from 'react';
 import {
 	Image,
 	KeyboardAvoidingView,
+	Platform,
 	SafeAreaView,
 	Text,
 	View,
@@ -13,10 +14,11 @@ import Logo from '../assets/images/Logo.svg';
 
 const LayoutAuth: React.FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<SafeAreaView
+		<KeyboardAvoidingView
 			style={{
 				backgroundColor: '#1D5868',
 			}}
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 		>
 			<View
 				style={{
@@ -65,7 +67,7 @@ const LayoutAuth: React.FC<PropsWithChildren> = ({ children }) => {
 					style={{ marginTop: -40 }}
 				/>
 			</View>
-			<KeyboardAvoidingView
+			<SafeAreaView
 				style={{
 					backgroundColor: 'white',
 					alignItems: 'center',
@@ -76,8 +78,8 @@ const LayoutAuth: React.FC<PropsWithChildren> = ({ children }) => {
 					style={{ width: 60, height: 60, marginTop: 10 }}
 				/>
 				<View>{children}</View>
-			</KeyboardAvoidingView>
-		</SafeAreaView>
+			</SafeAreaView>
+		</KeyboardAvoidingView>
 	);
 };
 

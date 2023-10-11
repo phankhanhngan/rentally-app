@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import {
+	KeyboardAvoidingView,
+	Pressable,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
-import { useAppDispatch, useAppSelector } from '../hooks/redux.hook';
+import { useAppDispatch } from '../hooks/redux.hook';
 import LayoutAuth from '@/Layout/LayoutAuth';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
+// import { useAppSelector } from '@/redux/hook';
 import { useLoginMutation } from '@/redux/services/auth/auth.service';
+// import { getData, storeData } from '@/utils/helpers/asyncStorage';
 // import { showError } from '../utils/helperFunction';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
@@ -44,7 +53,9 @@ const Login = () => {
 		}
 		return errors;
 	};
+	// console.log(useAppSelector((state) => state.auth.accessToken));
 
+	// console.log('2',getData('jwt'));
 	const submitForm = async (values: Values) => {
 		console.log(values);
 		const res = await login(values).unwrap();
@@ -78,94 +89,96 @@ const Login = () => {
 								alignItems: 'center',
 							}}
 						>
-							<Text
-								style={{
-									color: '#1D5868',
-									fontSize: 26,
-									fontWeight: '600',
-								}}
-							>
-								Login to your account
-							</Text>
-							<View
-								style={{
-									marginTop: 15,
-									flexDirection: 'row',
-									alignSelf: 'flex-start',
-								}}
-							>
+							<ScrollView>
 								<Text
 									style={{
 										color: '#1D5868',
-										fontSize: 12,
+										fontSize: 26,
+										fontWeight: '600',
 									}}
 								>
-									Not a member?
+									Login to your account
 								</Text>
-								<Pressable
-									onPress={() =>
-										navigation.navigate('Register')
-									}
+								<View
+									style={{
+										marginTop: 15,
+										flexDirection: 'row',
+										alignSelf: 'flex-start',
+									}}
 								>
 									<Text
 										style={{
-											color: '#E36414',
+											color: '#1D5868',
 											fontSize: 12,
-											fontWeight: '600',
-											paddingBottom: 10,
 										}}
 									>
-										{' '}
-										Create account{' '}
+										Not a member?
 									</Text>
-								</Pressable>
-							</View>
-							<TextInputWithLable
-								placheHolder="Email *"
-								onChangeText={handleChange('email')}
-								type="email"
-								name="email"
-								id="email"
-								value={values.email}
-								label={undefined}
-								isSecure={undefined}
-							/>
-							<TextInputWithLable
-								placheHolder="Password *"
-								type="password"
-								name="password"
-								id="password"
-								value={values.password}
-								onChangeText={handleChange('password')}
-								label={undefined}
-								secureTextEntry={true}
-								isSecure={true}
-							/>
-							<ButtonWithLoader
-								text="Login"
-								onPress={handleSubmit}
-								title="Submit"
-								isLoading={undefined}
-							/>
-							<Pressable
-								onPress={() =>
-									navigation.navigate('ForgotPassword')
-								}
-								style={{
-									marginTop: 15,
-									flexDirection: 'row',
-									alignSelf: 'flex-start',
-								}}
-							>
-								<Text
+									<Pressable
+										onPress={() =>
+											navigation.navigate('Register')
+										}
+									>
+										<Text
+											style={{
+												color: '#E36414',
+												fontSize: 12,
+												fontWeight: '600',
+												paddingBottom: 10,
+											}}
+										>
+											{' '}
+											Create account{' '}
+										</Text>
+									</Pressable>
+								</View>
+								<TextInputWithLable
+									placheHolder="Email *"
+									onChangeText={handleChange('email')}
+									type="email"
+									name="email"
+									id="email"
+									value={values.email}
+									label={undefined}
+									isSecure={undefined}
+								/>
+								<TextInputWithLable
+									placheHolder="Password *"
+									type="password"
+									name="password"
+									id="password"
+									value={values.password}
+									onChangeText={handleChange('password')}
+									label={undefined}
+									secureTextEntry={true}
+									isSecure={true}
+								/>
+								<ButtonWithLoader
+									text="Login"
+									onPress={handleSubmit}
+									title="Submit"
+									isLoading={undefined}
+								/>
+								<Pressable
+									onPress={() =>
+										navigation.navigate('ForgotPassword')
+									}
 									style={{
-										color: '#1D5868',
-										fontSize: 12,
+										marginTop: 15,
+										flexDirection: 'row',
+										alignSelf: 'flex-start',
 									}}
 								>
-									Forgot your password?
-								</Text>
-							</Pressable>
+									<Text
+										style={{
+											color: '#1D5868',
+											fontSize: 12,
+										}}
+									>
+										Forgot your password?
+									</Text>
+								</Pressable>
+							</ScrollView>
 						</SafeAreaView>
 					);
 				}}
