@@ -17,7 +17,7 @@ export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
 	ForgotPassword: undefined;
-	ResetPassword: undefined;
+	ResetPassword: { email: string };
 	Home: undefined;
 	Profile: undefined;
 	Main: undefined;

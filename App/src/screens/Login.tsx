@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-	KeyboardAvoidingView,
+	Alert,
 	Pressable,
 	SafeAreaView,
 	ScrollView,
@@ -12,13 +12,13 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
 import { useAppDispatch } from '../hooks/redux.hook';
+import type { IAuthResponse } from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
-// import { useAppSelector } from '@/redux/hook';
 import { useLoginMutation } from '@/redux/services/auth/auth.service';
-// import { getData, storeData } from '@/utils/helpers/asyncStorage';
-// import { showError } from '../utils/helperFunction';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 
 interface Values {
@@ -30,14 +30,29 @@ type Errors = {
 	password?: string;
 };
 const Login = () => {
-	const navigation = useNavigation();
+	const navigation =
+		useNavigation<NativeStackNavigationProp<RootStackParams>>();
 	const dispatch = useAppDispatch();
-	const [login, { isLoading }] = useLoginMutation();
+	const [login, loginResult] = useLoginMutation();
 
 	const initialValues: Values = {
 		email: '',
 		password: '',
 	};
+	useEffect(() => {
+		if (loginResult.data?.status === 'SUCCESS' && loginResult.data?.data) {
+			dispatch(
+				setCredentials({ accessToken: loginResult.data?.data?.token }),
+			);
+			navigation.replace('Main');
+		}
+		if (loginResult.error && 'data' in loginResult.error) {
+			Alert.alert(
+				'Invalid data!',
+				(loginResult.error?.data as IAuthResponse)?.message,
+			);
+		}
+	}, [loginResult]);
 
 	const validate = (values: Values): Errors => {
 		const errors: Errors = {};
@@ -54,35 +69,21 @@ const Login = () => {
 		}
 		return errors;
 	};
-	// console.log(useAppSelector((state) => state.auth.accessToken));
-
-	// console.log('2',getData('jwt'));
 	const submitForm = async (values: Values) => {
 		console.log(values);
-		const res = await login(values).unwrap();
-		console.log(res);
-		if (res.status === 'SUCCESS') {
-			dispatch(setCredentials({ accessToken: res.data.token }));
-			navigation.replace('Main');
-		}
+		await login(values).unwrap();
 	};
 
 	return (
 		<LayoutAuth>
-			<Spinner visible={isLoading} />
+			<Spinner visible={loginResult.isLoading} />
 			<Formik
 				initialValues={initialValues}
 				validate={validate}
 				onSubmit={submitForm}
 			>
 				{(formik) => {
-					const {
-						values,
-						handleChange,
-						handleSubmit,
-						dirty,
-						isValid,
-					} = formik;
+					const { values, handleChange, handleSubmit } = formik;
 					return (
 						<SafeAreaView
 							style={{
@@ -158,7 +159,6 @@ const Login = () => {
 								<ButtonWithLoader
 									text="Login"
 									onPress={handleSubmit}
-									title="Submit"
 									isLoading={undefined}
 								/>
 								<Pressable

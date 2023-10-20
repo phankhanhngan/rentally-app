@@ -1,56 +1,56 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+	Alert,
 	Image,
 	KeyboardAvoidingView,
 	Pressable,
 	SafeAreaView,
-	StyleSheet,
 	Text,
 	View,
 } from 'react-native';
-import type { IDropdownRef } from 'react-native-element-dropdown';
-import { Dropdown } from 'react-native-element-dropdown';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import Mail from '../assets/images/mailsvg.svg';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
-import type { IAccounRegister } from '@/interfaces/auth.interface';
+import type {
+	IAccounRegister,
+	IAuthResponse,
+} from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
-// import { showError } from '../utils/helperFunction';
 import {
 	useRegisterMutation,
 	useRegisterVerificationMutation,
 	useResendEmailMutation,
 } from '@/redux/services/auth/auth.service';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-type RegisterValues = IAccounRegister & { confirmPassword?: string };
+type RegisterValues = IAccounRegister & {
+	confirmPassword?: string;
+};
 
 interface SendCodeValues {
 	code: string;
 }
 
-const data = [
-	{ value: 'USER', label: 'renter' },
-	{ value: 'MOD', label: 'Landlord' },
-];
 const Register = () => {
-	const navigation = useNavigation();
+	const navigation =
+		useNavigation<NativeStackNavigationProp<RootStackParams>>();
 	const dispatch = useAppDispatch();
 
 	const [isPermitted, setIsPermitted] = useState<boolean>(false);
 	const [email, setEmail] = useState<string>('');
-	const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
-	const [registerVerification, { isLoading: isRegisterVerificationLoading }] =
+	const [register, registerResult] = useRegisterMutation();
+	const [registerVerification, registerVerificationResult] =
 		useRegisterVerificationMutation();
 	const [resendEmail, { isLoading: isResendEmailLoading }] =
 		useResendEmailMutation();
-	const ref = useRef<IDropdownRef>(null);
 	const initialRegisterValues: RegisterValues = {
 		email: '',
 		firstName: '',
@@ -58,12 +58,46 @@ const Register = () => {
 		password: '',
 		confirmPassword: '',
 		phoneNumber: '',
-		role: '',
+		role: 'USER',
 	};
 	const initialSendCodeValues: SendCodeValues = {
 		code: '',
 	};
 
+	useEffect(() => {
+		if (registerResult.data?.status === 'SUCCESS') {
+			setIsPermitted(true);
+		}
+		if (registerResult.error && 'data' in registerResult.error) {
+			Alert.alert(
+				'Invalid data!',
+				(registerResult.error?.data as IAuthResponse)?.message,
+			);
+		}
+	}, [registerResult]);
+	useEffect(() => {
+		if (
+			registerVerificationResult.data?.status === 'SUCCESS' &&
+			registerVerificationResult.data?.data
+		) {
+			dispatch(
+				setCredentials({
+					accessToken: registerVerificationResult.data?.data?.token,
+				}),
+			);
+			navigation.replace('Main');
+		}
+		if (
+			registerVerificationResult.error &&
+			'data' in registerVerificationResult.error
+		) {
+			Alert.alert(
+				'Invalid data!',
+				(registerVerificationResult.error?.data as IAuthResponse)
+					?.message,
+			);
+		}
+	}, [registerVerificationResult]);
 	const RegisterSchema = Yup.object().shape<Record<string, any>>({
 		email: Yup.string()
 			.email('Email is invalid!')
@@ -82,7 +116,6 @@ const Register = () => {
 				'Invalid phone number',
 			)
 			.required('Number phone must be required!'),
-		role: Yup.string().required('Role Required!'),
 	});
 	const sendCodeValidate = (
 		values: SendCodeValues,
@@ -97,11 +130,8 @@ const Register = () => {
 	const submitRegisterForm = async (values: RegisterValues) => {
 		const { confirmPassword, ...body } = values;
 		console.log(body, confirmPassword);
-		const res = await register(body).unwrap();
-		if (res.status === 'SUCCESS') {
-			setIsPermitted(true);
-			setEmail(body.email);
-		}
+		await register(body).unwrap();
+		setEmail(body.email);
 	};
 	const submitCodeForm = async (values: SendCodeValues) => {
 		console.log(values.code);
@@ -109,12 +139,7 @@ const Register = () => {
 			email: email,
 			code: 'R-' + values.code,
 		};
-		const res = await registerVerification(body).unwrap();
-		console.log(res);
-		if (res.status === 'SUCCESS' && res.data) {
-			dispatch(setCredentials({ accessToken: res.data.token }));
-			navigation.replace('Main');
-		}
+		await registerVerification(body).unwrap();
 	};
 	const handleResetPassword = async () => {
 		const res = await resendEmail({ email: email }).unwrap();
@@ -124,8 +149,8 @@ const Register = () => {
 		<SafeAreaView>
 			<Spinner
 				visible={
-					isRegisterLoading ||
-					isRegisterVerificationLoading ||
+					registerResult.isLoading ||
+					registerVerificationResult.isLoading ||
 					isResendEmailLoading
 				}
 			/>
@@ -277,72 +302,10 @@ const Register = () => {
 											label={undefined}
 											keyboardType="numeric"
 										/>
-										<View
-											style={{
-												flexDirection: 'row',
-												alignSelf: 'flex-start',
-												marginTop: -12,
-											}}
-										>
-											<Text
-												style={{
-													color: '#E36414',
-													fontSize: 12,
-												}}
-											>
-												Which describes best your role?
-											</Text>
-										</View>
-										<View
-											style={{
-												marginVertical: 10,
-												flexDirection: 'row',
-												alignItems: 'center',
-												marginBottom: 15,
-											}}
-										>
-											<Dropdown
-												ref={ref}
-												style={{
-													flex: 1,
-													height: 38,
-													borderWidth: 2,
-													borderRadius: 8,
-													borderColor: '#E1E6EF',
-													backgroundColor: '#F1F3F9',
-												}}
-												placeholderStyle={
-													styles.placeholderStyle
-												}
-												selectedTextStyle={
-													styles.selectedTextStyle
-												}
-												inputSearchStyle={
-													styles.inputSearchStyle
-												}
-												iconStyle={styles.iconStyle}
-												data={data}
-												search
-												maxHeight={300}
-												labelField="label"
-												valueField="value"
-												placeholder="Role"
-												searchPlaceholder="Search..."
-												value={values.role}
-												onChange={(item) =>
-													handleChange('role')(
-														item ? item.value : '',
-													)
-												}
-												// eslint-disable-next-line @typescript-eslint/no-empty-function
-												onChangeText={() => {}} // Keep search keyword
-											/>
-										</View>
 
 										<ButtonWithLoader
 											text="Reset password"
 											onPress={handleSubmit}
-											title="Submit"
 											isLoading={undefined}
 										/>
 									</SafeAreaView>
@@ -499,22 +462,3 @@ const Register = () => {
 };
 
 export default Register;
-const styles = StyleSheet.create({
-	placeholderStyle: {
-		fontSize: 14,
-		color: 'rgba(29, 36, 51, 0.8)',
-	},
-	selectedTextStyle: {
-		fontSize: 14,
-		margin: 8,
-		color: 'rgba(29, 36, 51, 0.8)',
-	},
-	iconStyle: {
-		width: 10,
-		height: 10,
-	},
-	inputSearchStyle: {
-		height: 38,
-		fontSize: 14,
-	},
-});

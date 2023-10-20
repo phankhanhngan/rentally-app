@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
-import { Pressable, SafeAreaView, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Pressable, SafeAreaView, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
-import type { IEmail } from '@/interfaces/auth.interface';
+import type { IAuthResponse, IEmail } from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useForgotPasswordMutation } from '@/redux/services/auth/auth.service';
-// import { showError } from '../utils/helperFunction';
 import { useNavigation } from '@react-navigation/native';
-import { Form, Formik } from 'formik';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Formik } from 'formik';
 
 const ForgotPassword: React.FC = () => {
-	const navigation = useNavigation();
+	const navigation =
+		useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-	const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-
+	const [forgotPassword, forgotPasswordResult] = useForgotPasswordMutation();
+	const [email, setEmail] = useState<string>('');
 	const initialValues: IEmail = {
 		email: '',
 	};
-
+	useEffect(() => {
+		if (forgotPasswordResult.isSuccess) {
+			navigation.navigate('ResetPassword', { email: email });
+		}
+		if (
+			forgotPasswordResult.isError &&
+			'status' in forgotPasswordResult.error
+		) {
+			Alert.alert(
+				'Invalid data!',
+				(forgotPasswordResult.error.data as IAuthResponse).message,
+			);
+		}
+	}, [forgotPasswordResult]);
 	const validate = (values: IEmail): Partial<IEmail> => {
 		const errors: Partial<IEmail> = {};
 		const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -33,11 +48,8 @@ const ForgotPassword: React.FC = () => {
 
 	const submitForm = async (values: IEmail) => {
 		console.log(values.email);
-		const res = await forgotPassword({ email: values.email }).unwrap();
-		console.log(res);
-		if (res.status === 'SUCCESS') {
-			navigation.navigate('ResetPassword', { email: values.email });
-		}
+		setEmail(values.email);
+		await forgotPassword({ email: values.email }).unwrap();
 	};
 
 	return (
@@ -50,7 +62,7 @@ const ForgotPassword: React.FC = () => {
 				const { values, handleChange, handleSubmit } = formik;
 				return (
 					<LayoutAuth>
-						<Spinner visible={isLoading} />
+						<Spinner visible={forgotPasswordResult.isLoading} />
 						<SafeAreaView
 							style={{
 								flex: 1,
@@ -89,6 +101,8 @@ const ForgotPassword: React.FC = () => {
 								name="email"
 								id="email"
 								value={values.email}
+								label={undefined}
+								isSecure={undefined}
 							/>
 							<ButtonWithLoader
 								text="Reset password"

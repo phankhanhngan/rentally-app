@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
-import { Pressable, SafeAreaView, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Pressable, SafeAreaView, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import Mail from '../assets/images/mailsvg.svg';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
+import type { IAuthResponse } from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import {
 	useForgotPasswordVerifyMutation,
 	useResendEmailMutation,
 	useResetPasswordMutation,
 } from '@/redux/services/auth/auth.service';
 // import { showError } from '../utils/helperFunction';
-import { useNavigation, useRoute } from '@react-navigation/native';
+// import {
+// 	NavigationContainer,
+// 	useNavigation,
+// 	useRoute,
+// } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 
 interface ResetPasswordValues {
@@ -22,15 +29,18 @@ interface ResetPasswordValues {
 interface SendCodeValues {
 	code: string;
 }
+type Props = NativeStackScreenProps<RootStackParams, 'ResetPassword'>;
+const ResetPassword = ({ navigation, route }: Props) => {
+	// const navigation =
+	// 	useNavigation<
+	// 		NativeStackNavigationProp<RootStackParams, 'ResetPassword'>
+	// 	>();
+	// const route = useRoute();
 
-const ResetPassword: React.FC = () => {
-	const navigation = useNavigation();
-	const route = useRoute();
 	const email = route?.params?.email || '';
-	const [isPermitted, SetIsPermitted] = useState<boolean>(false);
-	const [resetPassword, { isLoading: isResetPasswordLoading }] =
-		useResetPasswordMutation();
-	const [forgotPasswordVerify, { isLoading: isForgotPasswordVerifyLoading }] =
+	const [isPermitted, setIsPermitted] = useState<boolean>(false);
+	const [resetPassword, resetPasswordResult] = useResetPasswordMutation();
+	const [forgotPasswordVerify, forgotPasswordVerifyResult] =
 		useForgotPasswordVerifyMutation();
 	const [resendEmail, { isLoading: isResendEmailLoading }] =
 		useResendEmailMutation();
@@ -43,6 +53,33 @@ const ResetPassword: React.FC = () => {
 	const initialSendCodeValues: SendCodeValues = {
 		code: '',
 	};
+	useEffect(() => {
+		if (resetPasswordResult.data?.status === 'SUCCESS') {
+			navigation.navigate('Login');
+		}
+		if (resetPasswordResult.error && 'data' in resetPasswordResult.error) {
+			Alert.alert(
+				'Invalid data!',
+				(resetPasswordResult.error?.data as IAuthResponse)?.message,
+			);
+		}
+	}, [resetPasswordResult]);
+
+	useEffect(() => {
+		if (forgotPasswordVerifyResult.data?.status === 'SUCCESS') {
+			setIsPermitted(true);
+		}
+		if (
+			forgotPasswordVerifyResult.error &&
+			'data' in forgotPasswordVerifyResult.error
+		) {
+			Alert.alert(
+				'Invalid data!',
+				(forgotPasswordVerifyResult.error?.data as IAuthResponse)
+					?.message,
+			);
+		}
+	}, [forgotPasswordVerifyResult]);
 
 	const resetPasswordValidate = (values: ResetPasswordValues) => {
 		const errors: Partial<ResetPasswordValues> = {};
@@ -69,25 +106,18 @@ const ResetPassword: React.FC = () => {
 	};
 
 	const submitResetPasswordForm = async (values: ResetPasswordValues) => {
-		const res = await resetPassword({
+		await resetPassword({
 			email: email || '',
 			password: values.password,
 			code: 'R-' + code,
 		}).unwrap();
-		if (res.status === 'SUCCESS') {
-			navigation.navigate('Login');
-		}
 	};
 	const submitCodeForm = async (values: SendCodeValues) => {
-		const res = await forgotPasswordVerify({
+		await forgotPasswordVerify({
 			email: email || '',
 			code: 'R-' + values.code,
 		}).unwrap();
-		console.log(res);
-		if (res.status === 'SUCCESS') {
-			SetIsPermitted(true);
-			setCode(values.code);
-		}
+		setCode(values.code);
 	};
 
 	const handleResetPassword = async () => {
@@ -99,9 +129,9 @@ const ResetPassword: React.FC = () => {
 		<LayoutAuth>
 			<Spinner
 				visible={
-					isResendEmailLoading ||
-					isForgotPasswordVerifyLoading ||
-					isResetPasswordLoading
+					resetPasswordResult.isLoading ||
+					forgotPasswordVerifyResult.isLoading ||
+					isResendEmailLoading
 				}
 			/>
 			{!isPermitted ? (
@@ -399,7 +429,6 @@ const ResetPassword: React.FC = () => {
 								<ButtonWithLoader
 									text="Reset password"
 									onPress={handleSubmit}
-									title="Submit"
 									isLoading={undefined}
 								/>
 							</SafeAreaView>
