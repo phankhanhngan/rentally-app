@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {
 	Alert,
+	Button,
 	Pressable,
 	SafeAreaView,
 	ScrollView,
@@ -17,10 +18,18 @@ import LayoutAuth from '@/Layout/LayoutAuth';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
 import { useLoginMutation } from '@/redux/services/auth/auth.service';
+import {
+	GoogleSignin,
+	GoogleSigninButton,
+	statusCodes,
+} from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
-
+GoogleSignin.configure({
+	webClientId:
+		'835753748894-nkpb4ri9qqer621v4sq06u7imce8bnri.apps.googleusercontent.com',
+});
 interface Values {
 	email: string;
 	password: string;
@@ -68,6 +77,25 @@ const Login = () => {
 			errors.password = 'Password too short';
 		}
 		return errors;
+	};
+
+	const signIn = async () => {
+		try {
+			await GoogleSignin.hasPlayServices();
+			const userInfo = await GoogleSignin.signIn();
+			console.log(userInfo);
+		} catch (error) {
+			console.log(error);
+			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+				// user cancelled the login flow
+			} else if (error.code === statusCodes.IN_PROGRESS) {
+				// operation (e.g. sign in) is in progress already
+			} else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+				// play services not available or outdated
+			} else {
+				// some other error happened
+			}
+		}
 	};
 	const submitForm = async (values: Values) => {
 		console.log(values);
@@ -161,6 +189,7 @@ const Login = () => {
 									onPress={handleSubmit}
 									isLoading={undefined}
 								/>
+
 								<Pressable
 									onPress={() =>
 										navigation.navigate('ForgotPassword')
@@ -180,6 +209,11 @@ const Login = () => {
 										Forgot your password?
 									</Text>
 								</Pressable>
+								<GoogleSigninButton
+									size={GoogleSigninButton.Size.Wide}
+									color={GoogleSigninButton.Color.Dark}
+									onPress={signIn}
+								/>
 							</ScrollView>
 						</SafeAreaView>
 					);
