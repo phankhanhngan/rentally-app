@@ -6,7 +6,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // type BaseQueryWithReauthArgs = Parameters<BaseQueryFn>
 
 const baseQuery = fetchBaseQuery({
-	baseUrl: BASE_URL,
+	baseUrl: 'http://192.168.1.12:3003/api/v1',
 	// credentials: 'include',
 	mode: 'cors',
 

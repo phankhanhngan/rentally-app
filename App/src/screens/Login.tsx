@@ -17,7 +17,10 @@ import type { IAuthResponse } from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
-import { useLoginMutation } from '@/redux/services/auth/auth.service';
+import {
+	useContinueWithGGMutation,
+	useLoginMutation,
+} from '@/redux/services/auth/auth.service';
 import {
 	GoogleSignin,
 	GoogleSigninButton,
@@ -28,7 +31,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 GoogleSignin.configure({
 	webClientId:
-		'835753748894-nkpb4ri9qqer621v4sq06u7imce8bnri.apps.googleusercontent.com',
+		'384344099427-pjj0eh2vjks0mf6f3hh3s3vm4fikumd6.apps.googleusercontent.com',
 });
 interface Values {
 	email: string;
@@ -43,6 +46,8 @@ const Login = () => {
 		useNavigation<NativeStackNavigationProp<RootStackParams>>();
 	const dispatch = useAppDispatch();
 	const [login, loginResult] = useLoginMutation();
+	const [continueWithGG, { isLoading: isContinueWithGGLoading }] =
+		useContinueWithGGMutation();
 
 	const initialValues: Values = {
 		email: '',
@@ -83,7 +88,14 @@ const Login = () => {
 		try {
 			await GoogleSignin.hasPlayServices();
 			const userInfo = await GoogleSignin.signIn();
-			console.log(userInfo);
+			console.log(userInfo.idToken);
+			const res = await continueWithGG({
+				accessToken: userInfo.idToken || '',
+			}).unwrap();
+			if (res.status === 'SUCCESS' && res.data) {
+				dispatch(setCredentials({ accessToken: res.data.token }));
+				navigation.replace('Main');
+			}
 		} catch (error) {
 			console.log(error);
 			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -104,7 +116,9 @@ const Login = () => {
 
 	return (
 		<LayoutAuth>
-			<Spinner visible={loginResult.isLoading} />
+			<Spinner
+				visible={loginResult.isLoading || isContinueWithGGLoading}
+			/>
 			<Formik
 				initialValues={initialValues}
 				validate={validate}

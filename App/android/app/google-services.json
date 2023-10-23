@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "406140010560",
-    "project_id": "rentally-7c0e5",
-    "storage_bucket": "rentally-7c0e5.appspot.com"
+    "project_number": "384344099427",
+    "project_id": "rentally-578f8",
+    "storage_bucket": "rentally-578f8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:406140010560:android:aeb6032943d2d90afd5fa5",
+        "mobilesdk_app_id": "1:384344099427:android:8bc7bf0189be5ddfb78656",
         "android_client_info": {
           "package_name": "com.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "406140010560-vktoq0k29177akvk8j2un90hoho8r7pp.apps.googleusercontent.com",
+          "client_id": "384344099427-n36v4pjf40lt16sd2peqk7dmsfa4277k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app",
-            "certificate_hash": "208a84d9238dedfe28a99f3ba72fdcad7aad8957"
+            "certificate_hash": "1e37b2531ce926c36f6670ddb32779cdadfcea36"
           }
         },
         {
-          "client_id": "406140010560-m96aggo3imu12o34ee3luhdk8pv3vq4v.apps.googleusercontent.com",
+          "client_id": "384344099427-pjj0eh2vjks0mf6f3hh3s3vm4fikumd6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDdOqVgDkdgM3275kApYtEA8uKEMxUZhow"
+          "current_key": "AIzaSyA-rgxVp883JKV0tWCVdnkb3nEm8qpIhHE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "406140010560-m96aggo3imu12o34ee3luhdk8pv3vq4v.apps.googleusercontent.com",
+              "client_id": "384344099427-pjj0eh2vjks0mf6f3hh3s3vm4fikumd6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
