@@ -21,6 +21,7 @@ import {
 	useContinueWithGGMutation,
 	useLoginMutation,
 } from '@/redux/services/auth/auth.service';
+import { signInWithGoogle } from '@/utils/helpers/auth';
 import {
 	GoogleSignin,
 	GoogleSigninButton,
@@ -29,10 +30,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
-GoogleSignin.configure({
-	webClientId:
-		'384344099427-pjj0eh2vjks0mf6f3hh3s3vm4fikumd6.apps.googleusercontent.com',
-});
+
 interface Values {
 	email: string;
 	password: string;
@@ -67,6 +65,12 @@ const Login = () => {
 			);
 		}
 	}, [loginResult]);
+	const handleSignIn = async () => {
+		const userCredential = await signInWithGoogle();
+		if (userCredential) {
+			navigation.replace('Main');
+		}
+	};
 
 	const validate = (values: Values): Errors => {
 		const errors: Errors = {};
@@ -84,31 +88,6 @@ const Login = () => {
 		return errors;
 	};
 
-	const signIn = async () => {
-		try {
-			await GoogleSignin.hasPlayServices();
-			const userInfo = await GoogleSignin.signIn();
-			console.log(userInfo.idToken);
-			const res = await continueWithGG({
-				accessToken: userInfo.idToken || '',
-			}).unwrap();
-			if (res.status === 'SUCCESS' && res.data) {
-				dispatch(setCredentials({ accessToken: res.data.token }));
-				navigation.replace('Main');
-			}
-		} catch (error) {
-			console.log(error);
-			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-				// user cancelled the login flow
-			} else if (error.code === statusCodes.IN_PROGRESS) {
-				// operation (e.g. sign in) is in progress already
-			} else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-				// play services not available or outdated
-			} else {
-				// some other error happened
-			}
-		}
-	};
 	const submitForm = async (values: Values) => {
 		console.log(values);
 		await login(values).unwrap();
@@ -203,6 +182,19 @@ const Login = () => {
 									onPress={handleSubmit}
 									isLoading={undefined}
 								/>
+								<View
+									style={{
+										flex: 1,
+										justifyContent: 'center',
+										alignItems: 'center',
+									}}
+								>
+									<GoogleSigninButton
+										size={GoogleSigninButton.Size.Wide}
+										color={GoogleSigninButton.Color.Dark}
+										onPress={handleSignIn}
+									/>
+								</View>
 
 								<Pressable
 									onPress={() =>
@@ -223,11 +215,6 @@ const Login = () => {
 										Forgot your password?
 									</Text>
 								</Pressable>
-								<GoogleSigninButton
-									size={GoogleSigninButton.Size.Wide}
-									color={GoogleSigninButton.Color.Dark}
-									onPress={signIn}
-								/>
 							</ScrollView>
 						</SafeAreaView>
 					);

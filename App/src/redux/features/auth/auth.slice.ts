@@ -36,7 +36,6 @@ const authSlice = createSlice({
 		},
 
 		logOut: (state) => {
-			console.log('222');
 			state.accessToken = null;
 			state.userInfo = null;
 			removeDate('jwt');

@@ -9,8 +9,8 @@ import Login from '@/screens/Login';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
-import { BASE_URL } from '@env';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type RootStackParams = {
@@ -25,13 +25,13 @@ export type RootStackParams = {
 
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
-	console.log(BASE_URL);
 
 	useEffect(() => {
 		dispatch(initializeState());
 	}, []);
 	const Stack = createNativeStackNavigator<RootStackParams>();
 	const Tab = createBottomTabNavigator();
+	// const Drawer = createDrawerNavigator();
 	function BottomTabs() {
 		return (
 			<Tab.Navigator>
@@ -55,6 +55,14 @@ const StackNavigator = () => {
 			</Tab.Navigator>
 		);
 	}
+	// function DrawerTabs() {
+	// 	return (
+	// 		<Drawer.Navigator>
+	// 			<Drawer.Screen name="Profile" component={Profile} />
+	// 			<Drawer.Screen name="Home" component={Home} />
+	// 		</Drawer.Navigator>
+	// 	);
+	// }
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>

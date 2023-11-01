@@ -1,11 +1,16 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { Platform } from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
 
+import 'react-native-gesture-handler';
 import StackNavigator from './src/navigations/StackNavigator';
 import { store } from './src/redux/store';
 
 const App = () => {
+	useEffect(() => {
+		if (Platform.OS === 'android') SplashScreen.hide();
+	}, []);
 	return (
 		<Provider store={store}>
 			<StackNavigator />
@@ -14,9 +19,3 @@ const App = () => {
 };
 
 export default App;
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-	},
-});

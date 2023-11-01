@@ -35,8 +35,8 @@ const TextInputWithLable = ({
 
 const styles = StyleSheet.create({
 	inputStyle: {
-		height: 38,
-		width: 260,
+		height: 48,
+		width: 320,
 		borderWidth: 2,
 		borderRadius: 8,
 		borderColor: '#E1E6EF',
