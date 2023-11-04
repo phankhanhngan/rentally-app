@@ -157,7 +157,7 @@ const Login = () => {
 									</Pressable>
 								</View>
 								<TextInputWithLable
-									placheHolder="Email *"
+									placeHolder="Email *"
 									onChangeText={handleChange('email')}
 									type="email"
 									name="email"
@@ -167,7 +167,7 @@ const Login = () => {
 									isSecure={undefined}
 								/>
 								<TextInputWithLable
-									placheHolder="Password *"
+									placeHolder="Password *"
 									type="password"
 									name="password"
 									id="password"

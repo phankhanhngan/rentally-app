@@ -7,7 +7,7 @@ const TextInputWithLable = ({
 	label,
 	value,
 	name,
-	placheHolder,
+	placeHolder,
 	isSecure,
 	onChangeText,
 	...props
@@ -16,7 +16,7 @@ const TextInputWithLable = ({
 		<View style={{ marginBottom: 16 }}>
 			<TextInput
 				value={value}
-				placeholder={placheHolder}
+				placeholder={placeHolder}
 				onChangeText={onChangeText}
 				style={styles.inputStyle}
 				placeholderTextColor="rgba(29, 36, 51, 0.8)"

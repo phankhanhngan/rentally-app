@@ -240,7 +240,7 @@ const Register = () => {
 													</Pressable>
 												</View>
 												<TextInputWithLable
-													placheHolder="Email *"
+													placeHolder="Email *"
 													type="email"
 													name="email"
 													id="email"
@@ -252,7 +252,7 @@ const Register = () => {
 													label={undefined}
 												/>
 												<TextInputWithLable
-													placheHolder="Password *"
+													placeHolder="Password *"
 													secureTextEntry={true}
 													label={undefined}
 													isSecure={undefined}
@@ -265,7 +265,7 @@ const Register = () => {
 													)}
 												/>
 												<TextInputWithLable
-													placheHolder="Confirm password *"
+													placeHolder="Confirm password *"
 													secureTextEntry={true}
 													label={undefined}
 													isSecure={undefined}
@@ -280,7 +280,7 @@ const Register = () => {
 													)}
 												/>
 												<TextInputWithLable
-													placheHolder="Firstname *"
+													placeHolder="Firstname *"
 													type="firstName"
 													name="firstName"
 													id="firstName"
@@ -292,7 +292,7 @@ const Register = () => {
 													label={undefined}
 												/>
 												<TextInputWithLable
-													placheHolder="Lastname *"
+													placeHolder="Lastname *"
 													type="lastName"
 													name="lastName"
 													id="lastName"
@@ -304,7 +304,7 @@ const Register = () => {
 													label={undefined}
 												/>
 												<TextInputWithLable
-													placheHolder="Phone number *"
+													placeHolder="Phone number *"
 													type="phoneNumber"
 													name="phoneNumber"
 													id="phoneNumber"
@@ -388,7 +388,7 @@ const Register = () => {
 												</Text>
 											</View>
 											<TextInputWithLable
-												placheHolder="Code *"
+												placeHolder="Code *"
 												onChangeText={handleChange(
 													'code',
 												)}

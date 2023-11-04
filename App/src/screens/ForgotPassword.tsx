@@ -95,7 +95,7 @@ const ForgotPassword: React.FC = () => {
 								</Text>
 							</View>
 							<TextInputWithLable
-								placheHolder="Email *"
+								placeHolder="Email *"
 								onChangeText={handleChange('email')}
 								type="email"
 								name="email"
