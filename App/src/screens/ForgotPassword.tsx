@@ -101,8 +101,6 @@ const ForgotPassword: React.FC = () => {
 								name="email"
 								id="email"
 								value={values.email}
-								label={undefined}
-								isSecure={undefined}
 							/>
 							<ButtonWithLoader
 								text="Reset password"

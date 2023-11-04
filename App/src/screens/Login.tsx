@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-	Alert,
-	Button,
-	Pressable,
-	SafeAreaView,
-	ScrollView,
-	Text,
-	View,
-} from 'react-native';
+import { Alert, Pressable, SafeAreaView, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import ButtonWithLoader from '../components/ButtonWithLoader';
@@ -163,8 +155,6 @@ const Login = () => {
 									name="email"
 									id="email"
 									value={values.email}
-									label={undefined}
-									isSecure={undefined}
 								/>
 								<TextInputWithLable
 									placeHolder="Password *"
@@ -173,9 +163,7 @@ const Login = () => {
 									id="password"
 									value={values.password}
 									onChangeText={handleChange('password')}
-									label={undefined}
 									secureTextEntry={true}
-									isSecure={true}
 								/>
 								<ButtonWithLoader
 									text="Login"

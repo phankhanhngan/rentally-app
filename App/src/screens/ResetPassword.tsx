@@ -195,8 +195,6 @@ const ResetPassword = ({ navigation, route }: Props) => {
 									placeHolder="Code *"
 									onChangeText={handleChange('code')}
 									value={values.code}
-									isSecure={undefined}
-									label={undefined}
 									name="code"
 									id="code"
 								/>
@@ -405,8 +403,6 @@ const ResetPassword = ({ navigation, route }: Props) => {
 								<TextInputWithLable
 									placeHolder="Password *"
 									secureTextEntry={true}
-									label={undefined}
-									isSecure={undefined}
 									type="password"
 									name="password"
 									id="password"
@@ -416,8 +412,6 @@ const ResetPassword = ({ navigation, route }: Props) => {
 								<TextInputWithLable
 									placeHolder="Confirm password *"
 									secureTextEntry={true}
-									label={undefined}
-									isSecure={undefined}
 									type="password"
 									name="password"
 									id="password"

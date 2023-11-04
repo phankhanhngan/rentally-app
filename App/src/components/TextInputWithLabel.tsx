@@ -1,10 +1,23 @@
+import type { FC } from 'react';
 import React from 'react';
+import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { ErrorMessage } from 'formik';
 
-const TextInputWithLable = ({
-	label,
+interface TextInputWithLabelProps {
+	value: string | undefined;
+	name?: string;
+	id?: string;
+	type?: string;
+	keyboardType?: KeyboardTypeOptions;
+	secureTextEntry?: boolean;
+	placeHolder?: string;
+	isSecure?: boolean;
+	onChangeText?: (text: string) => void;
+}
+
+const TextInputWithLabel: FC<TextInputWithLabelProps> = ({
 	value,
 	name,
 	placeHolder,
@@ -24,9 +37,8 @@ const TextInputWithLable = ({
 				{...props}
 			/>
 			<ErrorMessage
-				component={Text}
 				name={name || ''}
-				style={styles.mesStyle}
+				render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
 			/>
 		</View>
 	);
@@ -52,4 +64,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default TextInputWithLable;
+export default TextInputWithLabel;

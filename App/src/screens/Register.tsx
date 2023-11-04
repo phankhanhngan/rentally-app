@@ -248,14 +248,10 @@ const Register = () => {
 													onChangeText={handleChange(
 														'email',
 													)}
-													isSecure={undefined}
-													label={undefined}
 												/>
 												<TextInputWithLable
 													placeHolder="Password *"
 													secureTextEntry={true}
-													label={undefined}
-													isSecure={undefined}
 													type="password"
 													name="password"
 													id="password"
@@ -267,8 +263,6 @@ const Register = () => {
 												<TextInputWithLable
 													placeHolder="Confirm password *"
 													secureTextEntry={true}
-													label={undefined}
-													isSecure={undefined}
 													type="password"
 													name="password"
 													id="password"
@@ -288,8 +282,6 @@ const Register = () => {
 													onChangeText={handleChange(
 														'firstName',
 													)}
-													isSecure={undefined}
-													label={undefined}
 												/>
 												<TextInputWithLable
 													placeHolder="Lastname *"
@@ -300,8 +292,6 @@ const Register = () => {
 													onChangeText={handleChange(
 														'lastName',
 													)}
-													isSecure={undefined}
-													label={undefined}
 												/>
 												<TextInputWithLable
 													placeHolder="Phone number *"
@@ -312,8 +302,6 @@ const Register = () => {
 													onChangeText={handleChange(
 														'phoneNumber',
 													)}
-													isSecure={undefined}
-													label={undefined}
 													keyboardType="numeric"
 												/>
 
@@ -393,8 +381,6 @@ const Register = () => {
 													'code',
 												)}
 												value={values.code}
-												isSecure={undefined}
-												label={undefined}
 												name="code"
 												id="code"
 											/>
