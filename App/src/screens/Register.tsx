@@ -5,6 +5,7 @@ import {
 	KeyboardAvoidingView,
 	Pressable,
 	SafeAreaView,
+	ScrollView,
 	Text,
 	View,
 } from 'react-native';
@@ -146,318 +147,339 @@ const Register = () => {
 		console.log(res);
 	};
 	return (
-		<SafeAreaView>
-			<Spinner
-				visible={
-					registerResult.isLoading ||
-					registerVerificationResult.isLoading ||
-					isResendEmailLoading
-				}
-			/>
-			{!isPermitted ? (
-				<Formik
-					initialValues={initialRegisterValues}
-					validationSchema={RegisterSchema}
-					onSubmit={submitRegisterForm}
-				>
-					{(formik) => {
-						const { values, handleChange, handleSubmit } = formik;
+		<KeyboardAvoidingView
+			style={{ flex: 1, backgroundColor: 'white' }}
+			behavior={'height'}
+		>
+			<SafeAreaView>
+				<ScrollView>
+					<Spinner
+						visible={
+							registerResult.isLoading ||
+							registerVerificationResult.isLoading ||
+							isResendEmailLoading
+						}
+					/>
+					{!isPermitted ? (
+						<Formik
+							initialValues={initialRegisterValues}
+							validationSchema={RegisterSchema}
+							onSubmit={submitRegisterForm}
+						>
+							{(formik) => {
+								const { values, handleChange, handleSubmit } =
+									formik;
 
-						return (
-							<KeyboardAvoidingView
-								style={{
-									backgroundColor: 'white',
-									alignItems: 'center',
-								}}
-							>
-								<Image
-									source={require('../assets/images/rentallyLogo.png')}
-									style={{
-										width: 60,
-										height: 60,
-										marginTop: 30,
-									}}
-								/>
-								<View>
-									<SafeAreaView
+								return (
+									<KeyboardAvoidingView
 										style={{
-											marginTop: 20,
-											flex: 1,
 											backgroundColor: 'white',
 											alignItems: 'center',
 										}}
 									>
-										<Text
+										<Image
+											source={require('../assets/images/rentallyLogo.png')}
 											style={{
-												color: '#1D5868',
-												fontSize: 26,
-												fontWeight: '600',
+												width: 60,
+												height: 60,
+												marginTop: 60,
 											}}
-										>
-											Create new account
-										</Text>
-										<View
-											style={{
-												marginTop: 15,
-												flexDirection: 'row',
-												alignSelf: 'flex-start',
-											}}
-										>
-											<Text
+										/>
+										<View>
+											<SafeAreaView
 												style={{
-													color: '#1D5868',
-													fontSize: 12,
+													marginTop: 20,
+													flex: 1,
+													backgroundColor: 'white',
+													alignItems: 'center',
 												}}
 											>
-												Already a member?
-											</Text>
-											<Pressable
-												onPress={() =>
-													navigation.navigate('Login')
-												}
+												<Text
+													style={{
+														color: '#1D5868',
+														fontSize: 26,
+														fontWeight: '600',
+													}}
+												>
+													Create new account
+												</Text>
+												<View
+													style={{
+														marginTop: 15,
+														flexDirection: 'row',
+														alignSelf: 'flex-start',
+													}}
+												>
+													<Text
+														style={{
+															color: '#1D5868',
+															fontSize: 12,
+														}}
+													>
+														Already a member?
+													</Text>
+													<Pressable
+														onPress={() =>
+															navigation.navigate(
+																'Login',
+															)
+														}
+													>
+														<Text
+															style={{
+																color: '#E36414',
+																fontSize: 12,
+																fontWeight:
+																	'600',
+																paddingBottom: 10,
+															}}
+														>
+															{' '}
+															Login now{' '}
+														</Text>
+													</Pressable>
+												</View>
+												<TextInputWithLable
+													placheHolder="Email *"
+													type="email"
+													name="email"
+													id="email"
+													value={values.email}
+													onChangeText={handleChange(
+														'email',
+													)}
+													isSecure={undefined}
+													label={undefined}
+												/>
+												<TextInputWithLable
+													placheHolder="Password *"
+													secureTextEntry={true}
+													label={undefined}
+													isSecure={undefined}
+													type="password"
+													name="password"
+													id="password"
+													value={values.password}
+													onChangeText={handleChange(
+														'password',
+													)}
+												/>
+												<TextInputWithLable
+													placheHolder="Confirm password *"
+													secureTextEntry={true}
+													label={undefined}
+													isSecure={undefined}
+													type="password"
+													name="password"
+													id="password"
+													value={
+														values.confirmPassword
+													}
+													onChangeText={handleChange(
+														'confirmPassword',
+													)}
+												/>
+												<TextInputWithLable
+													placheHolder="Firstname *"
+													type="firstName"
+													name="firstName"
+													id="firstName"
+													value={values.firstName}
+													onChangeText={handleChange(
+														'firstName',
+													)}
+													isSecure={undefined}
+													label={undefined}
+												/>
+												<TextInputWithLable
+													placheHolder="Lastname *"
+													type="lastName"
+													name="lastName"
+													id="lastName"
+													value={values.lastName}
+													onChangeText={handleChange(
+														'lastName',
+													)}
+													isSecure={undefined}
+													label={undefined}
+												/>
+												<TextInputWithLable
+													placheHolder="Phone number *"
+													type="phoneNumber"
+													name="phoneNumber"
+													id="phoneNumber"
+													value={values.phoneNumber}
+													onChangeText={handleChange(
+														'phoneNumber',
+													)}
+													isSecure={undefined}
+													label={undefined}
+													keyboardType="numeric"
+												/>
+
+												<ButtonWithLoader
+													text="Reset password"
+													onPress={handleSubmit}
+													isLoading={undefined}
+												/>
+											</SafeAreaView>
+										</View>
+									</KeyboardAvoidingView>
+								);
+							}}
+						</Formik>
+					) : (
+						<Formik
+							initialValues={initialSendCodeValues}
+							validate={sendCodeValidate}
+							onSubmit={submitCodeForm}
+						>
+							{(formik) => {
+								const { values, handleChange, handleSubmit } =
+									formik;
+								return (
+									<LayoutAuth>
+										<SafeAreaView
+											style={{
+												flex: 1,
+												backgroundColor: 'white',
+												alignItems: 'center',
+											}}
+										>
+											<View
+												style={{
+													flexDirection: 'row',
+													gap: 10,
+													alignContent: 'center',
+												}}
 											>
+												<Mail height={40} />
+												<Text
+													style={{
+														color: '#1D5868',
+														fontSize: 24,
+														fontWeight: '600',
+													}}
+												>
+													Check your email!
+												</Text>
+											</View>
+
+											<View style={{ marginTop: 15 }}>
+												<Text
+													style={{
+														color: '#1D5868',
+														fontSize: 12,
+														width: 260,
+													}}
+												>
+													We sent a verification code
+													to
+												</Text>
 												<Text
 													style={{
 														color: '#E36414',
 														fontSize: 12,
-														fontWeight: '600',
+														width: 260,
 														paddingBottom: 10,
 													}}
 												>
-													{' '}
-													Login now{' '}
+													{email}
 												</Text>
-											</Pressable>
-										</View>
-										<TextInputWithLable
-											placheHolder="Email *"
-											type="email"
-											name="email"
-											id="email"
-											value={values.email}
-											onChangeText={handleChange('email')}
-											isSecure={undefined}
-											label={undefined}
-										/>
-										<TextInputWithLable
-											placheHolder="Password *"
-											secureTextEntry={true}
-											label={undefined}
-											isSecure={undefined}
-											type="password"
-											name="password"
-											id="password"
-											value={values.password}
-											onChangeText={handleChange(
-												'password',
-											)}
-										/>
-										<TextInputWithLable
-											placheHolder="Confirm password *"
-											secureTextEntry={true}
-											label={undefined}
-											isSecure={undefined}
-											type="password"
-											name="password"
-											id="password"
-											value={values.confirmPassword}
-											onChangeText={handleChange(
-												'confirmPassword',
-											)}
-										/>
-										<TextInputWithLable
-											placheHolder="Firstname *"
-											type="firstName"
-											name="firstName"
-											id="firstName"
-											value={values.firstName}
-											onChangeText={handleChange(
-												'firstName',
-											)}
-											isSecure={undefined}
-											label={undefined}
-										/>
-										<TextInputWithLable
-											placheHolder="Lastname *"
-											type="lastName"
-											name="lastName"
-											id="lastName"
-											value={values.lastName}
-											onChangeText={handleChange(
-												'lastName',
-											)}
-											isSecure={undefined}
-											label={undefined}
-										/>
-										<TextInputWithLable
-											placheHolder="Phone number *"
-											type="phoneNumber"
-											name="phoneNumber"
-											id="phoneNumber"
-											value={values.phoneNumber}
-											onChangeText={handleChange(
-												'phoneNumber',
-											)}
-											isSecure={undefined}
-											label={undefined}
-											keyboardType="numeric"
-										/>
+											</View>
+											<TextInputWithLable
+												placheHolder="Code *"
+												onChangeText={handleChange(
+													'code',
+												)}
+												value={values.code}
+												isSecure={undefined}
+												label={undefined}
+												name="code"
+												id="code"
+											/>
 
-										<ButtonWithLoader
-											text="Reset password"
-											onPress={handleSubmit}
-											isLoading={undefined}
-										/>
-									</SafeAreaView>
-								</View>
-							</KeyboardAvoidingView>
-						);
-					}}
-				</Formik>
-			) : (
-				<Formik
-					initialValues={initialSendCodeValues}
-					validate={sendCodeValidate}
-					onSubmit={submitCodeForm}
-				>
-					{(formik) => {
-						const { values, handleChange, handleSubmit } = formik;
-						return (
-							<LayoutAuth>
-								<SafeAreaView
-									style={{
-										flex: 1,
-										backgroundColor: 'white',
-										alignItems: 'center',
-									}}
-								>
-									<View
-										style={{
-											flexDirection: 'row',
-											gap: 10,
-											alignContent: 'center',
-										}}
-									>
-										<Mail height={40} />
-										<Text
-											style={{
-												color: '#1D5868',
-												fontSize: 24,
-												fontWeight: '600',
-											}}
-										>
-											Check your email!
-										</Text>
-									</View>
-
-									<View style={{ marginTop: 15 }}>
-										<Text
-											style={{
-												color: '#1D5868',
-												fontSize: 12,
-												width: 260,
-											}}
-										>
-											We sent a verification code to
-										</Text>
-										<Text
-											style={{
-												color: '#E36414',
-												fontSize: 12,
-												width: 260,
-												paddingBottom: 10,
-											}}
-										>
-											{email}
-										</Text>
-									</View>
-									<TextInputWithLable
-										placheHolder="Code *"
-										onChangeText={handleChange('code')}
-										value={values.code}
-										isSecure={undefined}
-										label={undefined}
-										name="code"
-										id="code"
-									/>
-
-									<ButtonWithLoader
-										text="Register"
-										onPress={handleSubmit}
-										isLoading={undefined}
-									/>
-									<View
-										style={{
-											marginTop: 15,
-											flexDirection: 'row',
-											alignSelf: 'flex-start',
-										}}
-									>
-										<Text
-											style={{
-												color: '#1D5868',
-												fontSize: 12,
-											}}
-										>
-											Didn't receive the email?
-										</Text>
-										<Pressable
-											onPress={() => {
-												handleResetPassword();
-											}}
-										>
-											<Text
+											<ButtonWithLoader
+												text="Register"
+												onPress={handleSubmit}
+												isLoading={undefined}
+											/>
+											<View
 												style={{
-													color: '#E36414',
-													fontSize: 12,
-													fontWeight: '600',
-													paddingBottom: 10,
+													marginTop: 15,
+													flexDirection: 'row',
+													alignSelf: 'flex-start',
 												}}
 											>
-												{' '}
-												Click to resend
-											</Text>
-										</Pressable>
-									</View>
-									<View
-										style={{
-											marginTop: 40,
-											flexDirection: 'row',
-										}}
-									>
-										<Text
-											style={{
-												color: '#1D5868',
-												fontSize: 12,
-											}}
-										>
-											Back to?
-										</Text>
-										<Pressable
-											onPress={() =>
-												navigation.navigate('Login')
-											}
-										>
-											<Text
+												<Text
+													style={{
+														color: '#1D5868',
+														fontSize: 12,
+													}}
+												>
+													Didn't receive the email?
+												</Text>
+												<Pressable
+													onPress={() => {
+														handleResetPassword();
+													}}
+												>
+													<Text
+														style={{
+															color: '#E36414',
+															fontSize: 12,
+															fontWeight: '600',
+															paddingBottom: 10,
+														}}
+													>
+														{' '}
+														Click to resend
+													</Text>
+												</Pressable>
+											</View>
+											<View
 												style={{
-													color: '#E36414',
-													fontSize: 12,
-													fontWeight: '600',
-													paddingBottom: 10,
+													marginTop: 40,
+													flexDirection: 'row',
 												}}
 											>
-												{' '}
-												Login
-											</Text>
-										</Pressable>
-									</View>
-								</SafeAreaView>
-							</LayoutAuth>
-						);
-					}}
-				</Formik>
-			)}
-		</SafeAreaView>
+												<Text
+													style={{
+														color: '#1D5868',
+														fontSize: 12,
+													}}
+												>
+													Back to?
+												</Text>
+												<Pressable
+													onPress={() =>
+														navigation.navigate(
+															'Login',
+														)
+													}
+												>
+													<Text
+														style={{
+															color: '#E36414',
+															fontSize: 12,
+															fontWeight: '600',
+															paddingBottom: 10,
+														}}
+													>
+														{' '}
+														Login
+													</Text>
+												</Pressable>
+											</View>
+										</SafeAreaView>
+									</LayoutAuth>
+								);
+							}}
+						</Formik>
+					)}
+				</ScrollView>
+			</SafeAreaView>
+		</KeyboardAvoidingView>
 	);
 };
 

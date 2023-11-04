@@ -113,7 +113,7 @@ const Login = () => {
 								alignItems: 'center',
 							}}
 						>
-							<ScrollView>
+							<View>
 								<Text
 									style={{
 										color: '#1D5868',
@@ -182,19 +182,12 @@ const Login = () => {
 									onPress={handleSubmit}
 									isLoading={undefined}
 								/>
-								<View
-									style={{
-										flex: 1,
-										justifyContent: 'center',
-										alignItems: 'center',
-									}}
-								>
-									<GoogleSigninButton
-										size={GoogleSigninButton.Size.Wide}
-										color={GoogleSigninButton.Color.Dark}
-										onPress={handleSignIn}
-									/>
-								</View>
+
+								<GoogleSigninButton
+									size={GoogleSigninButton.Size.Wide}
+									color={GoogleSigninButton.Color.Dark}
+									onPress={handleSignIn}
+								/>
 
 								<Pressable
 									onPress={() =>
@@ -215,7 +208,7 @@ const Login = () => {
 										Forgot your password?
 									</Text>
 								</Pressable>
-							</ScrollView>
+							</View>
 						</SafeAreaView>
 					);
 				}}

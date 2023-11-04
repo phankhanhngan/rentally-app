@@ -10,7 +10,6 @@ const TextInputWithLable = ({
 	placheHolder,
 	isSecure,
 	onChangeText,
-
 	...props
 }) => {
 	return (
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#F1F3F9',
 	},
 	mesStyle: {
-		top: 40,
+		top: 48,
 		left: 10,
 		fontSize: 10,
 		color: 'red',
