@@ -105,7 +105,7 @@ const Login = () => {
 								alignItems: 'center',
 							}}
 						>
-							<View>
+							<View style={{ alignItems: 'center' }}>
 								<Text
 									style={{
 										color: '#1D5868',
@@ -170,32 +170,47 @@ const Login = () => {
 									onPress={handleSubmit}
 									isLoading={undefined}
 								/>
-
-								<GoogleSigninButton
-									size={GoogleSigninButton.Size.Wide}
-									color={GoogleSigninButton.Color.Dark}
-									onPress={handleSignIn}
-								/>
-
-								<Pressable
-									onPress={() =>
-										navigation.navigate('ForgotPassword')
-									}
-									style={{
-										marginTop: 15,
-										flexDirection: 'row',
-										alignSelf: 'flex-start',
-									}}
+								<View
+								// style={{
+								// 	alignItems: 'center',
+								// 	justifyContent: 'space-between',
+								// 	flexDirection: 'row',
+								// }}
 								>
-									<Text
+									<Pressable
+										onPress={() =>
+											navigation.navigate(
+												'ForgotPassword',
+											)
+										}
 										style={{
-											color: '#1D5868',
-											fontSize: 12,
+											marginTop: 15,
+											flexDirection: 'row',
+											alignSelf: 'flex-start',
 										}}
 									>
-										Forgot your password?
-									</Text>
-								</Pressable>
+										<Text
+											style={{
+												color: '#1D5868',
+												fontSize: 12,
+											}}
+										>
+											Forgot your password?
+										</Text>
+									</Pressable>
+									<Pressable
+										// size={GoogleSigninButton.Size.Wide}
+										// color={GoogleSigninButton.Color.Dark}
+										onPress={handleSignIn}
+										style={{
+											marginTop: 15,
+											flexDirection: 'row',
+											alignSelf: 'flex-start',
+										}}
+									>
+										<Text>Login with GG</Text>
+									</Pressable>
+								</View>
 							</View>
 						</SafeAreaView>
 					);
