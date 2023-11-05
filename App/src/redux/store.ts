@@ -6,7 +6,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 const rootReducer = combineReducers({
 	[userApi.reducerPath]: userApi.reducer,
 	[authApi.reducerPath]: authApi.reducer,
-	auth: authSlice.reducer,
+	auth: authSlice,
 });
 
 export const store = configureStore({

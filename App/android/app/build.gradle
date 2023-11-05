@@ -83,9 +83,13 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
+            // storeFile file('debug.keystore')
+            // storePassword 'android'
+            // keyAlias 'androiddebugkey'
+            // keyPassword 'android'
+            storeFile file('my_release_key.keystore')
             storePassword 'android'
-            keyAlias 'androiddebugkey'
+            keyAlias 'my_key_alias'
             keyPassword 'android'
         }
     }
@@ -104,6 +108,11 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-splash-screen')
+    implementation "androidx.browser:browser:1.2.0"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0' 
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
@@ -121,3 +130,4 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'

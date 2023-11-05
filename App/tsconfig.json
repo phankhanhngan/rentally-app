@@ -2,6 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Default",
   "compilerOptions": {
+	"target": "es2017",
+	"module": "commonjs",
     "composite": false,
     "declaration": true,
     "jsx": "react",
@@ -19,7 +21,8 @@
     "strictNullChecks": true,
     "paths": {
       "@/*": ["./src/*", "./dist/*"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules"]
 }

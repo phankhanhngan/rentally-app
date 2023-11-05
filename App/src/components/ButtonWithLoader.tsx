@@ -1,4 +1,4 @@
-//import liraries
+import type { FC } from 'react';
 import React from 'react';
 import {
 	ActivityIndicator,
@@ -7,8 +7,17 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 
-// create a component
-const ButtonWithLoader = ({ isLoading, text, onPress }) => {
+interface ButtonWithLoaderProps {
+	isLoading?: boolean;
+	text?: string;
+	onPress?: () => void;
+}
+
+const ButtonWithLoader: FC<ButtonWithLoaderProps> = ({
+	isLoading,
+	text,
+	onPress,
+}) => {
 	return (
 		<TouchableOpacity onPress={onPress} style={styles.btnStyle}>
 			{isLoading ? (
@@ -20,23 +29,21 @@ const ButtonWithLoader = ({ isLoading, text, onPress }) => {
 	);
 };
 
-// define your styles
 const styles = StyleSheet.create({
 	btnStyle: {
-		height: 48,
-		backgroundColor: 'blue',
+		height: 40,
+		width: 320,
+		backgroundColor: '#E36414',
 		alignItems: 'center',
 		justifyContent: 'center',
-		borderRadius: 10,
+		borderRadius: 8,
 		paddingHorizontal: 16,
 	},
 	textStyle: {
 		fontSize: 16,
-		textTransform: 'uppercase',
-		fontWeight: 'bold',
+		fontWeight: '500',
 		color: 'white',
 	},
 });
 
-//make this component available to the app
 export default ButtonWithLoader;
