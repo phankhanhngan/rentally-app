@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import 'react-native-gesture-handler';
+import ExploreHeader from '@/components/ExploreHeader';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import ForgotPassword from '@/screens/ForgotPassword';
@@ -39,7 +40,7 @@ const StackNavigator = () => {
 					name="Profile"
 					component={Profile}
 					options={{
-						tabBarLabel: 'Home',
+						tabBarLabel: 'Profile',
 						tabBarLabelStyle: { color: '#008E97' },
 					}}
 				/>
@@ -47,9 +48,8 @@ const StackNavigator = () => {
 					name="Home"
 					component={Home}
 					options={{
-						tabBarLabel: 'Home',
-						tabBarLabelStyle: { color: '#008E97' },
-						headerShown: false,
+						headerStyle: { height: 300 },
+						header: () => <ExploreHeader />,
 					}}
 				/>
 			</Tab.Navigator>

@@ -6,16 +6,24 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 
 const ExploreHeader = () => {
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+		<SafeAreaView style={{ height: 100, backgroundColor: '#fff' }}>
 			<View style={styles.container}>
 				<View style={styles.actionRow}>
 					<TouchableOpacity>
 						<View style={styles.searchBtn}>
+							<Icon2 name="search" size={24} color={'#000'} />
 							<View>
-								<Text style={{ fontFamily: 'mon-sb' }}>
+								<Text
+									style={{
+										fontFamily: 'mon-sb',
+										fontWeight: '700',
+										color: '#000',
+									}}
+								>
 									Where to?
 								</Text>
 								<Text
@@ -30,9 +38,9 @@ const ExploreHeader = () => {
 						</View>
 					</TouchableOpacity>
 
-					<TouchableOpacity
-						style={styles.filterBtn}
-					></TouchableOpacity>
+					<TouchableOpacity style={styles.filterBtn}>
+						<Icon2 name="options" size={24} color={'#000'} />
+					</TouchableOpacity>
 				</View>
 			</View>
 		</SafeAreaView>
@@ -41,7 +49,7 @@ const ExploreHeader = () => {
 
 const styles = StyleSheet.create({
 	container: {
-		paddingTop: 12,
+		paddingTop: 20,
 		backgroundColor: '#fff',
 		elevation: 2,
 		shadowColor: '#000',
@@ -64,9 +72,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		flexDirection: 'row',
 		gap: 10,
-		padding: 14,
+		padding: 12,
+		paddingHorizontal: 20,
 		alignItems: 'center',
-		width: 280,
+		width: 320,
 		borderWidth: StyleSheet.hairlineWidth,
 		borderColor: '#c2c2c2',
 		borderRadius: 30,
@@ -82,7 +91,7 @@ const styles = StyleSheet.create({
 	filterBtn: {
 		padding: 10,
 		borderWidth: 1,
-		borderColor: '#A2A0A2',
+		borderColor: '#000',
 		borderRadius: 24,
 	},
 	categoryText: {
