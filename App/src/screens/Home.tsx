@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
-type Props = {};
+import ExploreHeader from '@/components/ExploreHeader';
+import Listings from '@/components/Listings';
 
-const Home = (props: Props) => {
+const Home = () => {
+	const mapRef = useRef();
 	return (
-		<View>
-			<Text>Home</Text>
+		<View style={styles.screenContainer}>
+			<ExploreHeader />
+			<Listings />
+			{/* <MapView
+				style={styles.mapStyle}
+				ref={mapRef}
+				zoomControlEnabled={true}
+				showsMyLocationButton={true}
+				provider={PROVIDER_GOOGLE}
+			></MapView> */}
 		</View>
 	);
 };
 
-export default Home;
+const styles = StyleSheet.create({
+	screenContainer: {
+		flex: 1,
+	},
+	mapStyle: {
+		width: 400,
+		height: 100,
+	},
+});
 
-const styles = StyleSheet.create({});
+export default Home;
