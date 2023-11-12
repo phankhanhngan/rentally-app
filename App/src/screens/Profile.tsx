@@ -9,6 +9,7 @@ const Profile: React.FC = () => {
 	const navigation = useNavigation();
 	const dispatch = useAppDispatch();
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
+	const userInfo = useAppSelector((state) => state.auth.accessToken);
 
 	return (
 		<View>

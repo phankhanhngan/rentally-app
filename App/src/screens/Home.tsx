@@ -1,25 +1,34 @@
 import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
-import ExploreHeader from '@/components/ExploreHeader';
-import Listings from '@/components/Listings';
-
-const Home = () => {
+import { dataRooms } from '../../mockdata';
+import Listing from '@/components/Listing';
+import type { RootStackParams } from '@/navigations/StackNavigator';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type Props = NativeStackScreenProps<RootStackParams, 'RoomsStack'>;
+const Home = ({ navigation }: Props) => {
 	// const mapRef = useRef();
 	return (
 		<View style={styles.screenContainer}>
-			{/* <ExploreHeader /> */}
 			<ScrollView>
-				<Listings />
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: '#FDFFFF',
+					}}
+				>
+					{dataRooms?.map((dataRoom, index) => (
+						<Listing
+							key={index}
+							data={dataRoom}
+							name={dataRoom.id}
+							onPress={(name) => {
+								navigation.navigate('Room', { name });
+							}}
+						/>
+					))}
+				</View>
 			</ScrollView>
-			{/* <MapView
-				style={styles.mapStyle}
-				ref={mapRef}
-				zoomControlEnabled={true}
-				showsMyLocationButton={true}
-				provider={PROVIDER_GOOGLE}
-			></MapView> */}
 		</View>
 	);
 };

@@ -10,7 +10,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 
 const ExploreHeader = () => {
 	return (
-		<SafeAreaView style={{ height: 100, backgroundColor: '#fff' }}>
+		<SafeAreaView style={{ height: 80, backgroundColor: '#fff' }}>
 			<View style={styles.container}>
 				<View style={styles.actionRow}>
 					<TouchableOpacity>
@@ -49,7 +49,7 @@ const ExploreHeader = () => {
 
 const styles = StyleSheet.create({
 	container: {
-		paddingTop: 20,
+		paddingTop: 12,
 		backgroundColor: '#fff',
 		elevation: 2,
 		shadowColor: '#000',
