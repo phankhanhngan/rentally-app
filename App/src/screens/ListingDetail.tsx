@@ -8,9 +8,34 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Utility from '@/components/Utility';
+import type { IUtiltity } from '@/interfaces/utility.interface';
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
+
+const utilities: IUtiltity[] = [
+	{
+		id: 1,
+		name: 'Electricity',
+		note: 'Power supply for the property',
+		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Electricity.png',
+	},
+	{
+		id: 2,
+		name: 'Water',
+		note: 'Hot and cold water supply',
+		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Water.png',
+	},
+	{
+		id: 4,
+		name: 'Gas',
+		note: 'Natural gas supply',
+		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Gas.png',
+	},
+];
 
 const ListingDetail = () => {
 	return (
@@ -28,13 +53,62 @@ const ListingDetail = () => {
 				/>
 
 				<View style={styles.infoContainer}>
-					<Text style={styles.name}>Hoang</Text>
-					<Text style={styles.location}>in</Text>
-					<Text style={styles.rooms}>
-						guests · bedrooms ·bed · bathrooms
+					<Text style={styles.name}>467 Mraz Avenue</Text>
+					<Text style={styles.location}>
+						West Virginia, Port Ignacio
 					</Text>
-					<View style={{ flexDirection: 'row', gap: 4 }}>
-						<Text style={styles.ratings}>reviews</Text>
+					<Text style={styles.description}>hahahhahahahhaha</Text>
+					<View
+						style={{
+							flexDirection: 'row',
+							gap: 4,
+							marginTop: 16,
+							borderRadius: 10,
+							width: '100%',
+							padding: 16,
+							borderColor: '#ccc',
+							borderWidth: 1,
+							justifyContent: 'space-between',
+						}}
+					>
+						<View
+							style={{
+								flexDirection: 'row',
+								alignItems: 'center',
+								justifyContent: 'center',
+								gap: 6,
+							}}
+						>
+							<Text style={styles.ratings}>5.0</Text>
+							<View style={{ flexDirection: 'row', gap: 2 }}>
+								<Icon name="star" size={18} color="#000" />
+								<Icon name="star" size={18} color="#000" />
+								<Icon name="star" size={18} color="#000" />
+								<Icon name="star" size={18} color="#000" />
+								<Icon name="star" size={18} color="#000" />
+							</View>
+						</View>
+						<View
+							style={{
+								flexDirection: 'row',
+								alignItems: 'center',
+								justifyContent: 'center',
+								gap: 6,
+							}}
+						>
+							<Text style={styles.ratings}>6</Text>
+							<Text
+								style={{
+									fontSize: 16,
+									fontFamily: 'mon-sb',
+									color: '#000',
+									fontWeight: 'bold',
+									textDecorationLine: 'underline',
+								}}
+							>
+								Reviews
+							</Text>
+						</View>
 					</View>
 					<View style={styles.divider} />
 
@@ -48,22 +122,25 @@ const ListingDetail = () => {
 
 						<View>
 							<Text style={{ fontWeight: '500', fontSize: 16 }}>
-								Hosted by
+								Hosted by HoangDeptrai
 							</Text>
-							<Text>Host since </Text>
+							<Text>admin@gmail.com · 0852336242 </Text>
 						</View>
 					</View>
 
 					<View style={styles.divider} />
-
-					<Text style={styles.description}>hahahhahahahhaha</Text>
+					<View style={{ gap: 12, flexDirection: 'column' }}>
+						{utilities.map((ultility) => (
+							<Utility key={ultility.id} utility={ultility} />
+						))}
+					</View>
 				</View>
 			</ScrollView>
 
 			<View
 				style={{
 					position: 'absolute',
-					height: 100,
+					height: 70,
 					bottom: 0,
 					left: 0,
 					right: 0,
@@ -83,7 +160,7 @@ const ListingDetail = () => {
 				>
 					<TouchableOpacity style={styles.footerText}>
 						<Text style={styles.footerPrice}>€ 1000</Text>
-						<Text>night</Text>
+						<Text> month</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
@@ -105,7 +182,7 @@ const ListingDetail = () => {
 								fontFamily: 'mon-b',
 							}}
 						>
-							Reserve
+							Prepare contract
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -124,18 +201,24 @@ const styles = StyleSheet.create({
 		width: width,
 	},
 	infoContainer: {
-		padding: 24,
+		padding: 12,
 		backgroundColor: '#fff',
 	},
 	name: {
 		fontSize: 26,
 		fontWeight: 'bold',
 		fontFamily: 'mon-sb',
+		color: '#000',
+		paddingHorizontal: 12,
+		paddingTop: 12,
 	},
 	location: {
-		fontSize: 18,
+		fontSize: 20,
 		marginTop: 10,
 		fontFamily: 'mon-sb',
+		paddingHorizontal: 12,
+
+		color: '#000',
 	},
 	rooms: {
 		fontSize: 16,
@@ -144,24 +227,29 @@ const styles = StyleSheet.create({
 		fontFamily: 'mon',
 	},
 	ratings: {
-		fontSize: 16,
+		fontSize: 18,
 		fontFamily: 'mon-sb',
+		color: '#000',
+		fontWeight: 'bold',
 	},
 	divider: {
 		height: StyleSheet.hairlineWidth,
 		backgroundColor: '#5E5D5E',
 		marginVertical: 16,
+		marginHorizontal: 12,
 	},
 	host: {
 		width: 50,
 		height: 50,
 		borderRadius: 50,
 		backgroundColor: '#5E5D5E',
+		paddingHorizontal: 12,
 	},
 	hostView: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		gap: 12,
+		paddingHorizontal: 12,
 	},
 	footerText: {
 		height: '100%',
@@ -171,6 +259,7 @@ const styles = StyleSheet.create({
 		gap: 4,
 	},
 	footerPrice: {
+		color: '#000',
 		fontSize: 18,
 		fontFamily: 'mon-sb',
 	},
@@ -200,6 +289,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		marginTop: 10,
 		fontFamily: 'mon',
+		paddingHorizontal: 12,
 	},
 });
 

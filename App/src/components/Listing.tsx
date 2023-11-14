@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	Animated,
-	Dimensions,
 	Image,
+	Pressable,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -12,10 +12,6 @@ import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
-import type { RootStackParams } from '@/navigations/StackNavigator';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-type Props = NativeStackScreenProps<RootStackParams, 'RoomsStack'>;
 
 interface ListingProps {
 	data: IRoomFinding;
@@ -36,12 +32,23 @@ const CustomPagination = (
 
 	Animated.timing(dotOpacity, {
 		toValue: 1,
-		duration: 300, // Thời gian animation
-		useNativeDriver: false, // Sử dụng native driver để tối ưu hóa
+		duration: 30,
+		useNativeDriver: false,
 	}).start();
 
 	return (
-		<Animated.View style={[styles.pagination, { opacity: dotOpacity }]}>
+		<Animated.View
+			style={[
+				styles.pagination,
+				{
+					opacity: dotOpacity,
+					position: 'absolute',
+					bottom: 10,
+					width: '100%',
+					justifyContent: 'center',
+				},
+			]}
+		>
 			{Array.from({ length: total }).map((_, i) => (
 				<View
 					style={[
@@ -57,7 +64,7 @@ const CustomPagination = (
 
 const Listing = ({ data, onPress, name }: ListingProps) => {
 	return (
-		<TouchableOpacity onPress={() => onPress(name)} style={{ flex: 1 }}>
+		<Pressable onPress={() => onPress(name)} style={{ flex: 1 }}>
 			<View style={styles.listing}>
 				<Swiper
 					style={{ height: 300 }}
@@ -88,6 +95,7 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 						flexDirection: 'row',
 						justifyContent: 'space-between',
 						gap: 2,
+						marginTop: 8,
 					}}
 				>
 					<Text
@@ -127,20 +135,20 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 								padding: 3,
 								borderRadius: 10,
 								backgroundColor: '#D9D9D9',
-								width: 30,
-								height: 30,
+								width: 24,
+								height: 24,
 							}}
 						>
 							<Image
 								source={{ uri: utilities.icon }}
 								style={{
-									padding: 12,
+									padding: 8,
 								}}
 							/>
 						</View>
 					))}
 				</View>
-				<Text style={{ fontFamily: 'mon' }}>Vacant at Oct 23 -28</Text>
+
 				<View style={{ flexDirection: 'row', gap: 4 }}>
 					<Text
 						style={{
@@ -157,7 +165,7 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 					</Text>
 				</View>
 			</View>
-		</TouchableOpacity>
+		</Pressable>
 	);
 };
 
