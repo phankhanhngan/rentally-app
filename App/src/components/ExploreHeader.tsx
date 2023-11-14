@@ -10,7 +10,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 
 const ExploreHeader = () => {
 	return (
-		<SafeAreaView style={{ height: 80, backgroundColor: '#fff' }}>
+		<SafeAreaView style={{ height: 60, backgroundColor: '#fff' }}>
 			<View style={styles.container}>
 				<View style={styles.actionRow}>
 					<TouchableOpacity>
@@ -66,16 +66,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		paddingHorizontal: 24,
 		paddingBottom: 16,
+		gap: 8,
 	},
 
 	searchBtn: {
 		backgroundColor: '#fff',
 		flexDirection: 'row',
 		gap: 10,
-		padding: 12,
+		padding: 8,
 		paddingHorizontal: 20,
 		alignItems: 'center',
-		width: 260,
+		width: 240,
 		borderWidth: StyleSheet.hairlineWidth,
 		borderColor: '#c2c2c2',
 		borderRadius: 30,
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
 	filterBtn: {
 		padding: 10,
 		borderWidth: 1,
-		borderColor: '#000',
+		borderColor: '#c2c2c2',
 		borderRadius: 24,
 	},
 	categoryText: {

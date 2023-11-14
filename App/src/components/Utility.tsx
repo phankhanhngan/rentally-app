@@ -36,7 +36,7 @@ const Ultility = ({ utility }: ListingProps) => {
 				>
 					{utility.name}
 				</Text>
-				<Text>{utility.note} </Text>
+				<Text style={{ color: '#5E5D5E' }}>{utility.note} </Text>
 			</View>
 		</View>
 	);

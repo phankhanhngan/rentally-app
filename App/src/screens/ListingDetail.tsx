@@ -136,11 +136,17 @@ const ListingDetail = ({ navigation, route }: Props) => {
 
 							<View>
 								<Text
-									style={{ fontWeight: '500', fontSize: 16 }}
+									style={{
+										fontWeight: '500',
+										fontSize: 16,
+										color: '#5E5D5E',
+									}}
 								>
 									Hosted by HoangDeptrai
 								</Text>
-								<Text>admin@gmail.com · 0852336242 </Text>
+								<Text style={{ color: '#5E5D5E' }}>
+									admin@gmail.com · 0852336242{' '}
+								</Text>
 							</View>
 						</View>
 
@@ -177,7 +183,7 @@ const ListingDetail = ({ navigation, route }: Props) => {
 				>
 					<TouchableOpacity style={styles.footerText}>
 						<Text style={styles.footerPrice}>€ 1000</Text>
-						<Text> month</Text>
+						<Text style={{ color: '#5E5D5E' }}> month</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
@@ -307,6 +313,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		fontFamily: 'mon',
 		paddingHorizontal: 12,
+		color: '#5E5D5E',
 	},
 });
 
