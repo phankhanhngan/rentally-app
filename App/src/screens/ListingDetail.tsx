@@ -3,6 +3,7 @@ import {
 	Dimensions,
 	Image,
 	ScrollView,
+	StatusBar,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -10,8 +11,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import BackButton from '@/components/BackButton';
 import Utility from '@/components/Utility';
 import type { IUtiltity } from '@/interfaces/utility.interface';
+import type { RootStackParams } from '@/navigations/StackNavigator';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type Props = NativeStackScreenProps<RootStackParams>;
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
@@ -37,105 +42,117 @@ const utilities: IUtiltity[] = [
 	},
 ];
 
-const ListingDetail = () => {
+const ListingDetail = ({ navigation, route }: Props) => {
+	const BackHandler = () => {
+		navigation.pop();
+	};
+
 	return (
 		<View style={styles.container}>
-			<ScrollView
-				contentContainerStyle={{ paddingBottom: 100 }}
-				scrollEventThrottle={16}
-			>
-				<Image
-					source={{
-						uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
-					}}
-					style={[styles.image]}
-					resizeMode="cover"
-				/>
+			<StatusBar backgroundColor={'#0C0F14'} />
+			<BackButton onPress={BackHandler} />
 
-				<View style={styles.infoContainer}>
-					<Text style={styles.name}>467 Mraz Avenue</Text>
-					<Text style={styles.location}>
-						West Virginia, Port Ignacio
-					</Text>
-					<Text style={styles.description}>hahahhahahahhaha</Text>
-					<View
-						style={{
-							flexDirection: 'row',
-							gap: 4,
-							marginTop: 16,
-							borderRadius: 10,
-							width: '100%',
-							padding: 16,
-							borderColor: '#ccc',
-							borderWidth: 1,
-							justifyContent: 'space-between',
+			<View style={{ position: 'relative' }}>
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 100 }}
+					scrollEventThrottle={16}
+				>
+					<Image
+						source={{
+							uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
 						}}
-					>
+						style={[styles.image]}
+						resizeMode="cover"
+					/>
+
+					<View style={styles.infoContainer}>
+						<Text style={styles.name}>467 Mraz Avenue</Text>
+						<Text style={styles.location}>
+							West Virginia, Port Ignacio
+						</Text>
+						<Text style={styles.description}>hahahhahahahhaha</Text>
 						<View
 							style={{
 								flexDirection: 'row',
-								alignItems: 'center',
-								justifyContent: 'center',
-								gap: 6,
+								gap: 4,
+								marginTop: 16,
+								borderRadius: 10,
+								width: '100%',
+								padding: 16,
+								borderColor: '#ccc',
+								borderWidth: 1,
+								justifyContent: 'space-between',
 							}}
 						>
-							<Text style={styles.ratings}>5.0</Text>
-							<View style={{ flexDirection: 'row', gap: 2 }}>
-								<Icon name="star" size={18} color="#000" />
-								<Icon name="star" size={18} color="#000" />
-								<Icon name="star" size={18} color="#000" />
-								<Icon name="star" size={18} color="#000" />
-								<Icon name="star" size={18} color="#000" />
-							</View>
-						</View>
-						<View
-							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
-								justifyContent: 'center',
-								gap: 6,
-							}}
-						>
-							<Text style={styles.ratings}>6</Text>
-							<Text
+							<View
 								style={{
-									fontSize: 16,
-									fontFamily: 'mon-sb',
-									color: '#000',
-									fontWeight: 'bold',
-									textDecorationLine: 'underline',
+									flexDirection: 'row',
+									alignItems: 'center',
+									justifyContent: 'center',
+									gap: 6,
 								}}
 							>
-								Reviews
-							</Text>
+								<Text style={styles.ratings}>5.0</Text>
+								<View style={{ flexDirection: 'row', gap: 2 }}>
+									<Icon name="star" size={18} color="#000" />
+									<Icon name="star" size={18} color="#000" />
+									<Icon name="star" size={18} color="#000" />
+									<Icon name="star" size={18} color="#000" />
+									<Icon name="star" size={18} color="#000" />
+								</View>
+							</View>
+							<View
+								style={{
+									flexDirection: 'row',
+									alignItems: 'center',
+									justifyContent: 'center',
+									gap: 6,
+								}}
+							>
+								<Text style={styles.ratings}>6</Text>
+								<Text
+									style={{
+										fontSize: 16,
+										fontFamily: 'mon-sb',
+										color: '#000',
+										fontWeight: 'bold',
+										textDecorationLine: 'underline',
+									}}
+								>
+									Reviews
+								</Text>
+							</View>
+						</View>
+						<View style={styles.divider} />
+
+						<View style={styles.hostView}>
+							<Image
+								source={{
+									uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+								}}
+								style={styles.host}
+							/>
+
+							<View>
+								<Text
+									style={{ fontWeight: '500', fontSize: 16 }}
+								>
+									Hosted by HoangDeptrai
+								</Text>
+								<Text>admin@gmail.com · 0852336242 </Text>
+							</View>
+						</View>
+
+						<View style={styles.divider} />
+						<View style={{ gap: 12, flexDirection: 'column' }}>
+							{utilities.map((ultility) => (
+								<Utility key={ultility.id} utility={ultility} />
+							))}
 						</View>
 					</View>
-					<View style={styles.divider} />
-
-					<View style={styles.hostView}>
-						<Image
-							source={{
-								uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
-							}}
-							style={styles.host}
-						/>
-
-						<View>
-							<Text style={{ fontWeight: '500', fontSize: 16 }}>
-								Hosted by HoangDeptrai
-							</Text>
-							<Text>admin@gmail.com · 0852336242 </Text>
-						</View>
-					</View>
-
-					<View style={styles.divider} />
-					<View style={{ gap: 12, flexDirection: 'column' }}>
-						{utilities.map((ultility) => (
-							<Utility key={ultility.id} utility={ultility} />
-						))}
-					</View>
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</View>
 
 			<View
 				style={{
@@ -278,12 +295,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		gap: 10,
 	},
-	header: {
-		backgroundColor: '#fff',
-		height: 100,
-		borderBottomWidth: StyleSheet.hairlineWidth,
-		borderColor: '#5E5D5E',
-	},
+	// header: {
+	// 	backgroundColor: '#fff',
+	// 	height: 100,
+	// 	borderBottomWidth: StyleSheet.hairlineWidth,
+	// 	borderColor: '#5E5D5E',
+	// },
 
 	description: {
 		fontSize: 16,

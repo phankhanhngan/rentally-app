@@ -19,7 +19,6 @@ import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import type { NavigatorScreenParams } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type RootStackParams = {
@@ -28,49 +27,12 @@ export type RootStackParams = {
 	ForgotPassword: undefined;
 	ResetPassword: { email: string };
 	Home: undefined;
-	RoomsStack: NavigatorScreenParams<RoomsStackParams>;
 	Profile: undefined;
+	Rooms: undefined;
 	Main: undefined;
 	Room: {
 		name: string;
 	};
-};
-
-export type RoomsStackParams = {
-	Rooms: undefined;
-	Room: {
-		name: string;
-	};
-};
-
-const RoomsStack = createNativeStackNavigator<RoomsStackParams>();
-
-const RoomsScreenStack = () => {
-	return (
-		<RoomsStack.Navigator
-			initialRouteName="Rooms"
-			screenOptions={{
-				headerShown: false,
-			}}
-		>
-			<RoomsStack.Screen
-				name="Rooms"
-				component={Home}
-				options={{
-					headerShown: true,
-
-					header: () => <ExploreHeader />,
-				}}
-			/>
-			<RoomsStack.Screen
-				name="Room"
-				component={ListingDetail}
-				options={{
-					headerShown: true,
-				}}
-			/>
-		</RoomsStack.Navigator>
-	);
 };
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
@@ -92,10 +54,11 @@ const StackNavigator = () => {
 				}}
 			>
 				<Tab.Screen
-					name="Home"
-					component={RoomsScreenStack}
+					name="Rooms"
+					component={Home}
 					options={{
-						headerShown: false,
+						headerShown: true,
+						header: () => <ExploreHeader />,
 						tabBarIcon: ({ size, color }) => (
 							<Icon3 name="home" size={24} color={color} />
 						),
@@ -136,7 +99,7 @@ const StackNavigator = () => {
 
 	return (
 		<NavigationContainer>
-			<Stack.Navigator>
+			<Stack.Navigator screenOptions={{ headerShown: false }}>
 				<Stack.Screen
 					name="Main"
 					component={BottomTabs}
@@ -145,28 +108,30 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Register"
 					component={Register}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 				<Stack.Screen
 					name="Login"
 					component={Login}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 
 				<Stack.Screen
 					name="ForgotPassword"
 					component={ForgotPassword}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 				<Stack.Screen
 					name="ResetPassword"
 					component={ResetPassword}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 				<Stack.Screen
-					name="RoomsStack"
-					component={RoomsScreenStack}
-					options={{ headerShown: false }}
+					name="Room"
+					component={ListingDetail}
+					options={{
+						animation: 'slide_from_right',
+					}}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>
