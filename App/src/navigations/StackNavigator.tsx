@@ -1,16 +1,26 @@
 import React, { useEffect } from 'react';
+import Icon2 from 'react-native-vector-icons/AntDesign';
+import Icon4 from 'react-native-vector-icons/EvilIcons';
+import Icon3 from 'react-native-vector-icons/Feather';
+// import { createDrawerNavigator } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
+import ExploreHeader from '@/components/ExploreHeader';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
+import CheckList from '@/screens/CheckList';
+import Comments from '@/screens/Comments';
 import ForgotPassword from '@/screens/ForgotPassword';
 import Home from '@/screens/Home';
+import ListingDetail from '@/screens/ListingDetail';
 import Login from '@/screens/Login';
+import MyRental from '@/screens/MyRental';
+import PrepareContract from '@/screens/PrepareContract';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type RootStackParams = {
@@ -18,11 +28,15 @@ export type RootStackParams = {
 	Register: undefined;
 	ForgotPassword: undefined;
 	ResetPassword: { email: string };
-	Home: undefined;
 	Profile: undefined;
+	Rooms: undefined;
 	Main: undefined;
+	Comments: undefined;
+	PrepareContract: undefined;
+	Room: {
+		name: string;
+	};
 };
-
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
 
@@ -34,38 +48,61 @@ const StackNavigator = () => {
 	// const Drawer = createDrawerNavigator();
 	function BottomTabs() {
 		return (
-			<Tab.Navigator>
+			<Tab.Navigator
+				screenOptions={{
+					tabBarActiveTintColor: '#E36414',
+					tabBarLabelStyle: {
+						fontFamily: 'mon-sb',
+					},
+				}}
+			>
+				<Tab.Screen
+					name="Rooms"
+					component={Home}
+					options={{
+						headerShown: true,
+						header: () => <ExploreHeader />,
+						tabBarIcon: ({ color }) => (
+							<Icon3 name="home" size={24} color={color} />
+						),
+					}}
+				/>
+				<Tab.Screen
+					name="CheckList"
+					component={CheckList}
+					options={{
+						tabBarIcon: ({ color }) => (
+							<Icon name="heart-o" size={24} color={color} />
+						),
+					}}
+				/>
+				<Tab.Screen
+					name="MyRental"
+					component={MyRental}
+					options={{
+						tabBarIcon: ({ color }) => (
+							<Icon2 name="profile" size={24} color={color} />
+						),
+					}}
+				/>
 				<Tab.Screen
 					name="Profile"
 					component={Profile}
 					options={{
-						tabBarLabel: 'Home',
-						tabBarLabelStyle: { color: '#008E97' },
-					}}
-				/>
-				<Tab.Screen
-					name="Home"
-					component={Home}
-					options={{
-						tabBarLabel: 'Home',
-						tabBarLabelStyle: { color: '#008E97' },
-						headerShown: false,
+						tabBarLabel: 'Profile',
+
+						tabBarIcon: ({ color }) => (
+							<Icon4 name="user" size={40} color={color} />
+						),
 					}}
 				/>
 			</Tab.Navigator>
 		);
 	}
-	// function DrawerTabs() {
-	// 	return (
-	// 		<Drawer.Navigator>
-	// 			<Drawer.Screen name="Profile" component={Profile} />
-	// 			<Drawer.Screen name="Home" component={Home} />
-	// 		</Drawer.Navigator>
-	// 	);
-	// }
+
 	return (
 		<NavigationContainer>
-			<Stack.Navigator>
+			<Stack.Navigator screenOptions={{ headerShown: false }}>
 				<Stack.Screen
 					name="Main"
 					component={BottomTabs}
@@ -74,23 +111,44 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Register"
 					component={Register}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 				<Stack.Screen
 					name="Login"
 					component={Login}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 
 				<Stack.Screen
 					name="ForgotPassword"
 					component={ForgotPassword}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
 				/>
 				<Stack.Screen
 					name="ResetPassword"
 					component={ResetPassword}
-					options={{ headerShown: false }}
+					options={{ animation: 'slide_from_right' }}
+				/>
+				<Stack.Screen
+					name="Room"
+					component={ListingDetail}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Comments"
+					component={Comments}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="PrepareContract"
+					component={PrepareContract}
+					options={{
+						animation: 'slide_from_right',
+					}}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>
