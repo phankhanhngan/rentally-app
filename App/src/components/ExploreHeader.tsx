@@ -13,7 +13,7 @@ const ExploreHeader = () => {
 		<SafeAreaView style={{ height: 60, backgroundColor: '#fff' }}>
 			<View style={styles.container}>
 				<View style={styles.actionRow}>
-					<TouchableOpacity>
+					<TouchableOpacity style={{ flex: 1 }}>
 						<View style={styles.searchBtn}>
 							<Icon2 name="search" size={24} color={'#000'} />
 							<View>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		paddingHorizontal: 24,
 		paddingBottom: 16,
-		gap: 8,
+		gap: 12,
 	},
 
 	searchBtn: {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 		padding: 8,
 		paddingHorizontal: 20,
 		alignItems: 'center',
-		width: 240,
+		width: '100%',
 		borderWidth: StyleSheet.hairlineWidth,
 		borderColor: '#c2c2c2',
 		borderRadius: 30,

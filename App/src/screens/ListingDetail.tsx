@@ -42,7 +42,7 @@ const utilities: IUtiltity[] = [
 	},
 ];
 
-const ListingDetail = ({ navigation, route }: Props) => {
+const ListingDetail = ({ navigation }: Props) => {
 	const BackHandler = () => {
 		navigation.pop();
 	};
@@ -102,27 +102,33 @@ const ListingDetail = ({ navigation, route }: Props) => {
 									<Icon name="star" size={18} color="#000" />
 								</View>
 							</View>
-							<View
-								style={{
-									flexDirection: 'row',
-									alignItems: 'center',
-									justifyContent: 'center',
-									gap: 6,
+							<TouchableOpacity
+								onPress={() => {
+									navigation.navigate('Comments');
 								}}
 							>
-								<Text style={styles.ratings}>6</Text>
-								<Text
+								<View
 									style={{
-										fontSize: 16,
-										fontFamily: 'mon-sb',
-										color: '#000',
-										fontWeight: 'bold',
-										textDecorationLine: 'underline',
+										flexDirection: 'row',
+										alignItems: 'center',
+										justifyContent: 'center',
+										gap: 6,
 									}}
 								>
-									Reviews
-								</Text>
-							</View>
+									<Text style={styles.ratings}>6</Text>
+									<Text
+										style={{
+											fontSize: 16,
+											fontFamily: 'mon-sb',
+											color: '#000',
+											fontWeight: 'bold',
+											textDecorationLine: 'underline',
+										}}
+									>
+										Reviews
+									</Text>
+								</View>
+							</TouchableOpacity>
 						</View>
 						<View style={styles.divider} />
 
@@ -187,6 +193,9 @@ const ListingDetail = ({ navigation, route }: Props) => {
 					</TouchableOpacity>
 
 					<TouchableOpacity
+						onPress={() => {
+							navigation.navigate('PrepareContract');
+						}}
 						style={[
 							{
 								backgroundColor: '#E36414',

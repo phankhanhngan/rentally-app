@@ -23,11 +23,7 @@ const RoomImage = ({ item }: { item: string }) => (
 	<Image source={{ uri: item }} style={styles.image} />
 );
 
-const CustomPagination = (
-	index: number,
-	total: number,
-	context: Swiper,
-): React.ReactNode => {
+const CustomPagination = (index: number, total: number): React.ReactNode => {
 	const dotOpacity = new Animated.Value(0);
 
 	Animated.timing(dotOpacity, {

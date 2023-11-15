@@ -10,11 +10,13 @@ import ExploreHeader from '@/components/ExploreHeader';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import CheckList from '@/screens/CheckList';
+import Comments from '@/screens/Comments';
 import ForgotPassword from '@/screens/ForgotPassword';
 import Home from '@/screens/Home';
 import ListingDetail from '@/screens/ListingDetail';
 import Login from '@/screens/Login';
 import MyRental from '@/screens/MyRental';
+import PrepareContract from '@/screens/PrepareContract';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
@@ -26,10 +28,11 @@ export type RootStackParams = {
 	Register: undefined;
 	ForgotPassword: undefined;
 	ResetPassword: { email: string };
-	Home: undefined;
 	Profile: undefined;
 	Rooms: undefined;
 	Main: undefined;
+	Comments: undefined;
+	PrepareContract: undefined;
 	Room: {
 		name: string;
 	};
@@ -59,7 +62,7 @@ const StackNavigator = () => {
 					options={{
 						headerShown: true,
 						header: () => <ExploreHeader />,
-						tabBarIcon: ({ size, color }) => (
+						tabBarIcon: ({ color }) => (
 							<Icon3 name="home" size={24} color={color} />
 						),
 					}}
@@ -129,6 +132,20 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Room"
 					component={ListingDetail}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Comments"
+					component={Comments}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="PrepareContract"
+					component={PrepareContract}
 					options={{
 						animation: 'slide_from_right',
 					}}
