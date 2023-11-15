@@ -71,6 +71,7 @@ const StackNavigator = () => {
 					name="CheckList"
 					component={CheckList}
 					options={{
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<Icon name="heart-o" size={24} color={color} />
 						),
