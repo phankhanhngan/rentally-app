@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import OverView from './Components/OverView';
+import PersonalInformation from './Components/PersonalInformation';
 import RentalInformation from './Components/RentalInformation';
 import BackButton from '@/components/BackButton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
@@ -45,6 +46,15 @@ const PrepareContract = ({ navigation }: Props) => {
 						}}
 					/>
 					<RentalInformation />
+					<View
+						style={{
+							height: StyleSheet.hairlineWidth,
+							backgroundColor: '#5E5D5E',
+							marginVertical: 16,
+							marginHorizontal: 12,
+						}}
+					/>
+					<PersonalInformation />
 				</ScrollView>
 			</View>
 		</View>

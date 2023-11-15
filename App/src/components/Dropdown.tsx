@@ -30,7 +30,7 @@ export default () => {
 				Lease term
 			</Text>
 			<Dropdown
-				style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+				style={[styles.dropdown, isFocus && { borderColor: '#E36414' }]}
 				placeholderStyle={styles.placeholderStyle}
 				selectedTextStyle={styles.selectedTextStyle}
 				inputSearchStyle={styles.inputSearchStyle}

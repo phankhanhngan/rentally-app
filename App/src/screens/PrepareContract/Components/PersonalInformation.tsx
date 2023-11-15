@@ -1,10 +1,11 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import BasicInput from '@/components/BasicInput';
 import DateInput from '@/components/DateInput';
 import Dropdown from '@/components/Dropdown';
 
-const RentalInformation = () => {
+const PersonalInformation = () => {
 	return (
 		<View
 			style={{
@@ -14,13 +15,15 @@ const RentalInformation = () => {
 			}}
 		>
 			<Text style={{ fontWeight: '800', fontSize: 24, color: '#000' }}>
-				Rental information
+				Personal information
 			</Text>
-			<DateInput />
-			<Dropdown />
+			<BasicInput value={''} />
+			<BasicInput value={''} />
+			<BasicInput value={''} />
+			<BasicInput value={''} />
 			<Dropdown />
 		</View>
 	);
 };
 
-export default RentalInformation;
+export default PersonalInformation;
