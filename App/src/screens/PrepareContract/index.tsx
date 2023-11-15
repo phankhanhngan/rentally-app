@@ -1,5 +1,12 @@
 import React from 'react';
-import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {
+	ScrollView,
+	StatusBar,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 
 import OverView from './Components/OverView';
 import PersonalInformation from './Components/PersonalInformation';
@@ -22,7 +29,7 @@ const PrepareContract = ({ navigation }: Props) => {
 			<View style={{ position: 'relative' }}>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ paddingBottom: 100 }}
+					contentContainerStyle={{ paddingBottom: 24 }}
 					scrollEventThrottle={16}
 				>
 					<Text
@@ -55,6 +62,33 @@ const PrepareContract = ({ navigation }: Props) => {
 						}}
 					/>
 					<PersonalInformation />
+					<TouchableOpacity
+						onPress={() => {
+							// navigation.navigate('PrepareContract');
+						}}
+						style={[
+							{
+								backgroundColor: '#E36414',
+								height: 50,
+								borderRadius: 8,
+								margin: 24,
+								marginBottom: 0,
+								justifyContent: 'center',
+								alignItems: 'center',
+							},
+							{ paddingRight: 20, paddingLeft: 20 },
+						]}
+					>
+						<Text
+							style={{
+								color: '#fff',
+								fontSize: 16,
+								fontFamily: 'mon-b',
+							}}
+						>
+							Request rent
+						</Text>
+					</TouchableOpacity>
 				</ScrollView>
 			</View>
 		</View>
