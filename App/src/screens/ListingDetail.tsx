@@ -71,7 +71,17 @@ const ListingDetail = ({ navigation }: Props) => {
 						<Text style={styles.location}>
 							West Virginia, Port Ignacio
 						</Text>
-						<Text style={styles.description}>hahahhahahahhaha</Text>
+						<Text style={styles.description}>
+							Green Ribbon Villa is a perfect getaway spot to
+							celebrate big parties and lifetime events! It is
+							located only 4 minutes from 54-hole Phoenix Golf
+							Resort and 1 hour from Hanoi. The villa is located
+							on its 13,000 m² land with high quality services and
+							facilities. To name a few of the villa's facilities,
+							there are private tennis court, private mountain
+							cave, outdoor hut on mountain, BBQ grill, daily
+							housekeeping.
+						</Text>
 						<View
 							style={{
 								flexDirection: 'row',

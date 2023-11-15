@@ -2,7 +2,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 import BasicInput from '@/components/BasicInput';
-import Dropdown from '@/components/Dropdown';
+import DateInput from '@/components/DateInput';
+// import Dropdown from '@/components/Dropdown';
 
 const PersonalInformation = () => {
 	return (
@@ -39,7 +40,8 @@ const PersonalInformation = () => {
 			<BasicInput value={''} />
 			<BasicInput value={''} />
 			<BasicInput value={''} />
-			<Dropdown />
+			<DateInput />
+			{/* <Dropdown /> */}
 		</View>
 	);
 };

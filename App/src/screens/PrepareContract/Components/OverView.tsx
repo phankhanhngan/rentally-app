@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Comments = () => {
+const OverView = () => {
 	return (
 		<View
 			style={{
@@ -34,7 +34,7 @@ const Comments = () => {
 					<Text style={{ color: '#5E5D5E' }}>
 						144 Nguyễn Lương Bằng
 					</Text>
-					<Text style={{ color: '#000', fontSize: 16 }}>
+					<Text style={{ color: '#000', fontSize: 14 }}>
 						Liên Chiểu, Đà Nẵng
 					</Text>
 				</View>
@@ -47,11 +47,11 @@ const Comments = () => {
 							gap: 4,
 						}}
 					>
-						<Icon name="star" size={18} color="#000" />
+						<Icon name="star" size={16} color="#000" />
 						<Text
 							style={{
 								color: '#000',
-								fontSize: 16,
+								fontSize: 14,
 								fontFamily: 'mon-sb',
 							}}
 						>
@@ -60,7 +60,7 @@ const Comments = () => {
 						<Text
 							style={{
 								color: '#5E5D5E',
-								fontSize: 14,
+								fontSize: 12,
 								fontFamily: 'mon-sb',
 							}}
 						>
@@ -92,4 +92,4 @@ const Comments = () => {
 	);
 };
 
-export default Comments;
+export default OverView;

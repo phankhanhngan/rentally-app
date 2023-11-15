@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-	Dimensions,
-	Image,
-	ScrollView,
-	StatusBar,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { ScrollView, StatusBar, Text, View } from 'react-native';
 
+import Comment from './Components/Comment';
+import OverView from './Components/Overview';
 import BackButton from '@/components/BackButton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -31,7 +24,28 @@ const Comments = ({ navigation }: Props) => {
 					contentContainerStyle={{ paddingBottom: 100 }}
 					scrollEventThrottle={16}
 				>
-					<Text>Comments</Text>
+					<OverView />
+					<Text
+						style={{
+							margin: 24,
+							color: '#000',
+							fontWeight: '500',
+							fontSize: 24,
+						}}
+					>
+						80 reviews
+					</Text>
+					<View
+						style={{
+							marginHorizontal: 24,
+							gap: 28,
+						}}
+					>
+						<Comment />
+						<Comment />
+						<Comment />
+						<Comment />
+					</View>
 				</ScrollView>
 			</View>
 		</View>

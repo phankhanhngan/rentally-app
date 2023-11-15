@@ -1,24 +1,16 @@
 import React from 'react';
 import { useState } from 'react';
-import {
-	Modal,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default () => {
 	const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+
 	const today = new Date();
-	const startDate = getFormatedDate(
-		today.setDate(today.getDate() + 1),
-		'YYYY/MM/DD',
-	);
+	today.setDate(today.getDate() + 1);
+	const startDate = getFormatedDate(today, 'YYYY/MM/DD');
+
 	const [selectedStartDate, setSelectedStartDate] = useState('');
 	const [startedDate, setStartedDate] = useState('12/12/2023');
 
@@ -67,7 +59,7 @@ export default () => {
 							mode="calendar"
 							minimumDate={startDate}
 							selected={startedDate}
-							onDateChanged={handleChangeStartDate}
+							onDateChange={handleChangeStartDate}
 							onSelectedChange={(date: string) =>
 								setSelectedStartDate(date)
 							}
