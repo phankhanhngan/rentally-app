@@ -81,6 +81,7 @@ const StackNavigator = () => {
 					name="MyRental"
 					component={MyRental}
 					options={{
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<Icon2 name="profile" size={24} color={color} />
 						),

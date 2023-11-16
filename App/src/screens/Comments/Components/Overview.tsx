@@ -10,12 +10,13 @@ const OverView = () => {
 		<View style={{ flex: 1 }}>
 			<View
 				style={{
-					marginTop: 40,
+					paddingTop: 40,
 					justifyContent: 'center',
 					alignItems: 'center',
 					flexDirection: 'row',
-					marginBottom: 24,
-					gap: 4,
+					paddingBottom: 24,
+					gap: 12,
+					backgroundColor: '#F8F8F8',
 				}}
 			>
 				<Icon4 name="livestream" size={46} color={'#5E5D5E'} />
@@ -24,7 +25,7 @@ const OverView = () => {
 						fontSize: 80,
 						fontWeight: '800',
 						marginBottom: 24,
-						color: '#2F2828',
+						color: '#000',
 					}}
 				>
 					4.94
@@ -47,6 +48,7 @@ const OverView = () => {
 					paddingBottom: 32,
 					borderColor: '#5E5D5E',
 					borderBottomWidth: 0.5,
+					backgroundColor: '#F8F8F8',
 				}}
 			>
 				<View
