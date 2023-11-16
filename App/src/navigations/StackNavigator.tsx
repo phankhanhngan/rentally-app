@@ -15,7 +15,8 @@ import ForgotPassword from '@/screens/ForgotPassword';
 import Home from '@/screens/Home';
 import ListingDetail from '@/screens/ListingDetail';
 import Login from '@/screens/Login';
-import MyRental from '@/screens/MyRental';
+import MyRental from '@/screens/MyRentals';
+import MyRentalDetail from '@/screens/MyRentalDetail';
 import PrepareContract from '@/screens/PrepareContract';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
@@ -33,6 +34,7 @@ export type RootStackParams = {
 	Main: undefined;
 	Comments: undefined;
 	PrepareContract: undefined;
+	Rental: { name: string };
 	Room: {
 		name: string;
 	};
@@ -148,6 +150,13 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="PrepareContract"
 					component={PrepareContract}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Rental"
+					component={MyRentalDetail}
 					options={{
 						animation: 'slide_from_right',
 					}}

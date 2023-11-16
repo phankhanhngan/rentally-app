@@ -90,7 +90,11 @@ const CheckList = ({ navigation }: Props) => {
 					}}
 				>
 					{Array.from({ length: 10 }).map((_, index) => (
-						<View
+						<TouchableOpacity
+							activeOpacity={0.7}
+							onPress={() => {
+								navigation.navigate('Rental', { name: '' });
+							}}
 							key={index}
 							style={{
 								width: '100%',
@@ -202,7 +206,7 @@ const CheckList = ({ navigation }: Props) => {
 									/>
 								</View>
 							</View>
-						</View>
+						</TouchableOpacity>
 					))}
 				</View>
 			</ScrollView>
