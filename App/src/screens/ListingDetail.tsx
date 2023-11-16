@@ -75,6 +75,7 @@ const ListingDetail = ({ navigation }: Props) => {
 								alignItems: 'center',
 								marginTop: 8,
 								paddingHorizontal: 8,
+								paddingBottom: 2,
 							}}
 						>
 							<Icon2

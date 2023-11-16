@@ -133,12 +133,20 @@ const MyRentalDetail = ({ navigation }: Props) => {
 
 					<View style={styles.infoContainer}>
 						<StatusText rentalStatus={STATUS.COMPLETED} />
-						<Text style={styles.name}>467 Mraz Avenue</Text>
+						<TouchableOpacity
+							activeOpacity={0.7}
+							onPress={() => {
+								navigation.navigate('Room', { name: '' });
+							}}
+						>
+							<Text style={styles.name}>467 Mraz Avenue</Text>
+						</TouchableOpacity>
 						<View
 							style={{
 								flexDirection: 'row',
 								alignItems: 'center',
 								marginTop: 8,
+								paddingBottom: 2,
 								paddingHorizontal: 8,
 							}}
 						>

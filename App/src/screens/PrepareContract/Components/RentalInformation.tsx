@@ -1,17 +1,19 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+// import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { SlideInDown } from 'react-native-reanimated';
 
 import DateInput from '@/components/DateInput';
 import Dropdown from '@/components/Dropdown';
-
 const RentalInformation = () => {
 	return (
-		<View
+		<Animated.View
 			style={{
 				paddingHorizontal: 24,
 				paddingBottom: 16,
 				gap: 12,
 			}}
+			entering={SlideInDown}
 		>
 			<Text style={{ fontWeight: '800', fontSize: 24, color: '#000' }}>
 				Rental information
@@ -19,7 +21,7 @@ const RentalInformation = () => {
 			<DateInput />
 			<Dropdown />
 			<Dropdown />
-		</View>
+		</Animated.View>
 	);
 };
 

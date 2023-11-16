@@ -1,14 +1,15 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { dataRooms } from '../../mockdata';
+import { dataRooms } from '../../../mockdata';
 import Listing from '@/components/Listing';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 const Home = ({ navigation }: Props) => {
 	return (
-		<View style={styles.screenContainer}>
+		<GestureHandlerRootView style={styles.screenContainer}>
 			<ScrollView>
 				<View
 					style={{
@@ -28,7 +29,7 @@ const Home = ({ navigation }: Props) => {
 					))}
 				</View>
 			</ScrollView>
-		</View>
+		</GestureHandlerRootView>
 	);
 };
 

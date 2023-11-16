@@ -17,7 +17,7 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	<Text
 		style={{
 			color: STATUS_COLORS[rentalStatus] as string,
-			fontSize: 14,
+			fontSize: 12,
 			fontWeight: '700',
 		}}
 	>
@@ -98,7 +98,7 @@ const CheckList = ({ navigation }: Props) => {
 							key={index}
 							style={{
 								width: '100%',
-								height: 180,
+								height: 160,
 								marginBottom: 24,
 								borderWidth: StyleSheet.hairlineWidth,
 								borderColor: '#c2c2c2',
@@ -145,7 +145,7 @@ const CheckList = ({ navigation }: Props) => {
 									<Text
 										style={{
 											color: '#000',
-											fontSize: 18,
+											fontSize: 16,
 											fontWeight: '700',
 										}}
 									>
@@ -219,12 +219,12 @@ export default CheckList;
 const styles = StyleSheet.create({
 	textTitle: {
 		color: '#5E5D5E',
-		fontSize: 12,
+		fontSize: 11,
 		fontWeight: '500',
 	},
 	textInfo: {
 		color: '#000',
-		fontSize: 13,
+		fontSize: 11,
 		fontWeight: '500',
 	},
 });
