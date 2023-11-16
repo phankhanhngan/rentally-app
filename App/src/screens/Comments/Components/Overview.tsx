@@ -18,7 +18,7 @@ const OverView = () => {
 					gap: 4,
 				}}
 			>
-				<Icon4 name="livestream" size={46} color={'#2F2828'} />
+				<Icon4 name="livestream" size={46} color={'#5E5D5E'} />
 				<Text
 					style={{
 						fontSize: 80,
@@ -31,7 +31,7 @@ const OverView = () => {
 				</Text>
 				<Icon4
 					name="livestream"
-					color={'#2F2828'}
+					color={'#5E5D5E'}
 					size={46}
 					style={{ transform: [{ scaleX: -1 }] }}
 				/>

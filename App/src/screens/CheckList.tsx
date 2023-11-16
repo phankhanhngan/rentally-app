@@ -67,7 +67,7 @@ const CheckList = ({ navigation }: Props) => {
 							key={index}
 							style={{
 								width: '48%',
-								height: 246,
+								height: 220,
 								marginBottom: 24,
 							}}
 						>
@@ -78,6 +78,7 @@ const CheckList = ({ navigation }: Props) => {
 									borderColor: '#c2c2c2',
 									elevation: 2,
 									padding: 6,
+									backgroundColor: '#fff',
 									borderRadius: 12,
 									shadowColor: '#000',
 									shadowOpacity: 0.12,
@@ -146,7 +147,7 @@ const CheckList = ({ navigation }: Props) => {
 								style={{
 									paddingTop: 8,
 									color: '#000',
-									fontSize: 18,
+									fontSize: 16,
 									fontWeight: '500',
 								}}
 							>
@@ -155,11 +156,11 @@ const CheckList = ({ navigation }: Props) => {
 							<Text
 								style={{
 									color: '#5E5D5E',
-									fontSize: 14,
+									fontSize: 12,
 									fontWeight: '500',
 								}}
 							>
-								Hương Thủy, Huế
+								Hương Thủy, Thừa Thiên Huế
 							</Text>
 						</View>
 					))}

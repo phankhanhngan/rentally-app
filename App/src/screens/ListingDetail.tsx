@@ -9,6 +9,7 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import Icon2 from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import BackButton from '@/components/BackButton';
@@ -68,9 +69,23 @@ const ListingDetail = ({ navigation }: Props) => {
 
 					<View style={styles.infoContainer}>
 						<Text style={styles.name}>467 Mraz Avenue</Text>
-						<Text style={styles.location}>
-							West Virginia, Port Ignacio
-						</Text>
+						<View
+							style={{
+								flexDirection: 'row',
+								alignItems: 'center',
+								marginTop: 8,
+								paddingHorizontal: 8,
+							}}
+						>
+							<Icon2
+								name="location"
+								size={26}
+								color={'#E36414'}
+							/>
+							<Text style={styles.location}>
+								West Virginia, Port Ignacio
+							</Text>
+						</View>
 						<Text style={styles.description}>
 							Green Ribbon Villa is a perfect getaway spot to
 							celebrate big parties and lifetime events! It is
@@ -105,11 +120,31 @@ const ListingDetail = ({ navigation }: Props) => {
 							>
 								<Text style={styles.ratings}>5.0</Text>
 								<View style={{ flexDirection: 'row', gap: 2 }}>
-									<Icon name="star" size={18} color="#000" />
-									<Icon name="star" size={18} color="#000" />
-									<Icon name="star" size={18} color="#000" />
-									<Icon name="star" size={18} color="#000" />
-									<Icon name="star" size={18} color="#000" />
+									<Icon
+										name="star"
+										size={18}
+										color="#E36414"
+									/>
+									<Icon
+										name="star"
+										size={18}
+										color="#E36414"
+									/>
+									<Icon
+										name="star"
+										size={18}
+										color="#E36414"
+									/>
+									<Icon
+										name="star"
+										size={18}
+										color="#E36414"
+									/>
+									<Icon
+										name="star"
+										size={18}
+										color="#E36414"
+									/>
 								</View>
 							</View>
 							<TouchableOpacity
@@ -247,7 +282,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	name: {
-		fontSize: 26,
+		fontSize: 24,
 		fontWeight: 'bold',
 		fontFamily: 'mon-sb',
 		color: '#000',
@@ -256,9 +291,8 @@ const styles = StyleSheet.create({
 	},
 	location: {
 		fontSize: 20,
-		marginTop: 10,
+
 		fontFamily: 'mon-sb',
-		paddingHorizontal: 12,
 
 		color: '#000',
 	},
@@ -328,7 +362,7 @@ const styles = StyleSheet.create({
 	// },
 
 	description: {
-		fontSize: 16,
+		fontSize: 14,
 		marginTop: 10,
 		fontFamily: 'mon',
 		paddingHorizontal: 12,
