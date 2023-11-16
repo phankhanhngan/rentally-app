@@ -4,7 +4,7 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
 
-export default () => {
+export default ({ label = 'Move in date' }: { label: string }) => {
 	const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
 	const today = new Date();
@@ -36,7 +36,7 @@ export default () => {
 						fontSize: 16,
 					}}
 				>
-					Move in data
+					{label}
 				</Text>
 
 				<TouchableOpacity

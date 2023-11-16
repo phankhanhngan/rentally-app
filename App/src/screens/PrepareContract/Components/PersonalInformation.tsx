@@ -36,11 +36,11 @@ const PersonalInformation = () => {
 					confirmation
 				</Text>
 			</View>
-			<BasicInput value={''} />
-			<BasicInput value={''} />
-			<BasicInput value={''} />
-			<BasicInput value={''} />
-			<DateInput />
+			<BasicInput label="Phone" value={''} />
+			<BasicInput label="Identity number" value={''} />
+			<BasicInput label="Identity date of issue" value={''} />
+			<BasicInput label="Identity place of issue" value={''} />
+			<DateInput label="Birthday" />
 			{/* <Dropdown /> */}
 		</View>
 	);

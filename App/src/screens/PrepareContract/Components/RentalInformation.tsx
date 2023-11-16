@@ -18,9 +18,9 @@ const RentalInformation = () => {
 			<Text style={{ fontWeight: '800', fontSize: 24, color: '#000' }}>
 				Rental information
 			</Text>
-			<DateInput />
-			<Dropdown />
-			<Dropdown />
+			<DateInput label="Move in date" />
+			<Dropdown label="Lease term" value={undefined} />
+			<Dropdown label="Number of tenants" value={undefined} />
 		</Animated.View>
 	);
 };
