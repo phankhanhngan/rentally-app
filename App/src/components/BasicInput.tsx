@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-interface TextInputWithLabelProps {
+interface BasicInputProps {
+	label?: string;
 	value: string | undefined;
 	name?: string;
 	id?: string;
@@ -14,8 +15,9 @@ interface TextInputWithLabelProps {
 	onChangeText?: (text: string) => void;
 }
 
-const TextInputWithLabel: FC<TextInputWithLabelProps> = ({
+const TextInputWithLabel: FC<BasicInputProps> = ({
 	value,
+	label = 'label',
 	name,
 	onChangeText,
 	...props
@@ -31,9 +33,9 @@ const TextInputWithLabel: FC<TextInputWithLabelProps> = ({
 	};
 
 	return (
-		<View style={{ flex: 1, width: '100%' }}>
+		<View style={{ width: '100%' }}>
 			<Text style={{ color: '#000', fontWeight: '500', fontSize: 16 }}>
-				Identity number
+				{label}
 			</Text>
 			<TextInput
 				// value={value}

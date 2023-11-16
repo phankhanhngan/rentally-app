@@ -1,5 +1,7 @@
+import type { FC } from 'react';
 import React from 'react';
 import {
+	Pressable,
 	SafeAreaView,
 	StyleSheet,
 	Text,
@@ -8,12 +10,24 @@ import {
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 
-const ExploreHeader = () => {
+interface ExploreHeaderProps {
+	onSearchPress?: () => void;
+	onFilterPress?: () => void;
+}
+
+const ExploreHeader: FC<ExploreHeaderProps> = ({
+	onFilterPress,
+	onSearchPress,
+}) => {
 	return (
-		<SafeAreaView style={{ height: 60, backgroundColor: '#fff' }}>
+		<SafeAreaView style={{ height: 80, backgroundColor: '#fff' }}>
 			<View style={styles.container}>
 				<View style={styles.actionRow}>
-					<TouchableOpacity style={{ flex: 1 }}>
+					<TouchableOpacity
+						style={{ flex: 1 }}
+						activeOpacity={0.7}
+						onPress={onSearchPress}
+					>
 						<View style={styles.searchBtn}>
 							<Icon2 name="search" size={24} color={'#000'} />
 							<View>
@@ -38,7 +52,10 @@ const ExploreHeader = () => {
 						</View>
 					</TouchableOpacity>
 
-					<TouchableOpacity style={styles.filterBtn}>
+					<TouchableOpacity
+						style={styles.filterBtn}
+						onPress={onFilterPress}
+					>
 						<Icon2 name="options" size={24} color={'#000'} />
 					</TouchableOpacity>
 				</View>

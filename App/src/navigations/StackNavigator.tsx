@@ -62,8 +62,7 @@ const StackNavigator = () => {
 					name="Rooms"
 					component={Home}
 					options={{
-						headerShown: true,
-						header: () => <ExploreHeader />,
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<Icon3 name="home" size={24} color={color} />
 						),

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,12 +15,19 @@ const data = [
 	{ label: 'Item 7', value: '7' },
 	{ label: 'Item 8', value: '8' },
 ];
-
-export default () => {
+interface BasicInputProps {
+	label: string;
+	value: string | undefined;
+	name?: string;
+	id?: string;
+	keyboardType?: KeyboardTypeOptions;
+	onChangeText?: (text: string) => void;
+}
+export default ({ label = 'Label' }: BasicInputProps) => {
 	const [value, setValue] = useState('');
 	const [isFocus, setIsFocus] = useState(false);
 	return (
-		<View style={{ flex: 1, width: '100%' }}>
+		<View style={{ width: '100%' }}>
 			<Text
 				style={{
 					color: '#000',
@@ -27,7 +35,7 @@ export default () => {
 					fontSize: 16,
 				}}
 			>
-				Lease term
+				{label}
 			</Text>
 			<Dropdown
 				style={[styles.dropdown, isFocus && { borderColor: '#E36414' }]}
