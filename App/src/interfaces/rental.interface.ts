@@ -21,4 +21,5 @@ export interface IRentalInfo {
 export interface IRentalResponse {
 	message: string;
 	status: string;
+	success?: boolean;
 }

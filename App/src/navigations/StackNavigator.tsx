@@ -6,7 +6,6 @@ import Icon3 from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
-import ExploreHeader from '@/components/ExploreHeader';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import CheckList from '@/screens/CheckList';
@@ -30,7 +29,6 @@ export type RootStackParams = {
 	Register: undefined;
 	ForgotPassword: undefined;
 	ResetPassword: { email: string };
-	Profile: undefined;
 	Rooms: undefined;
 	Main: undefined;
 	Comments: undefined;

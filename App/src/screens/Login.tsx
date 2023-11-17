@@ -14,11 +14,11 @@ import {
 	useLoginMutation,
 } from '@/redux/services/auth/auth.service';
 import { signInWithGoogle } from '@/utils/helpers/auth';
-import {
-	GoogleSignin,
-	GoogleSigninButton,
-	statusCodes,
-} from '@react-native-google-signin/google-signin';
+// import {
+// 	GoogleSignin,
+// 	GoogleSigninButton,
+// 	statusCodes,
+// } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
