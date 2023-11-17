@@ -8,7 +8,6 @@ import StackNavigator from './src/navigations/StackNavigator';
 import { store } from './src/redux/store';
 
 const App = () => {
-	
 	useEffect(() => {
 		if (Platform.OS === 'android') SplashScreen.hide();
 	}, []);

@@ -16,7 +16,7 @@ type Props = NativeStackScreenProps<RootStackParams>;
 const Home = ({ navigation }: Props) => {
 	const [searchParamsObject, setSearchParamsObject] = useState<
 		Record<string, string[]>
-	>({ page: ['2'] });
+	>({ page: ['1'] });
 	const [isOpenSearch, setOpenSearch] = useState(false);
 	const [isOpenFilter, setOpenFilter] = useState(false);
 	const { data, isLoading, isFetching } =

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
-import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+import type { FormikErrors } from 'formik';
 
 const data = [
 	{ label: 'Item 1', value: '1' },
@@ -17,11 +17,13 @@ const data = [
 ];
 interface BasicInputProps {
 	label: string;
-	value: string | undefined;
+	value: string;
 	name?: string;
-	id?: string;
-	keyboardType?: KeyboardTypeOptions;
-	onChangeText?: (text: string) => void;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
 }
 export default ({ label = 'Label' }: BasicInputProps) => {
 	const [value, setValue] = useState('');

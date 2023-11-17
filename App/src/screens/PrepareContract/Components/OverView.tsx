@@ -91,7 +91,17 @@ const OverView = ({ overView }: OverViewProps) => {
 							</Text>
 						</View>
 					) : (
-						<Text>No reviews yet</Text>
+						<Text
+							style={{
+								fontSize: 14,
+								marginTop: 10,
+								fontFamily: 'mon',
+
+								color: '#5E5D5E',
+							}}
+						>
+							No reviews yet
+						</Text>
 					)}
 					<View
 						style={{

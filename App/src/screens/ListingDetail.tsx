@@ -181,7 +181,9 @@ const ListingDetail = ({ navigation, route }: Props) => {
 								</TouchableOpacity>
 							</View>
 						) : (
-							<Text style={{ padding: 16 }}>No reviews yet</Text>
+							<Text style={styles.description}>
+								No reviews yet
+							</Text>
 						)}
 						<View style={styles.divider} />
 

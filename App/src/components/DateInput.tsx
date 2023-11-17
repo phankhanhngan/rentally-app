@@ -4,24 +4,32 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
 
-export default ({ label = 'Move in date' }: { label: string }) => {
+import type { FormikErrors } from 'formik';
+import { ErrorMessage } from 'formik';
+
+export default ({
+	label = 'Move in date',
+	setFieldValue,
+	value,
+	name,
+}: {
+	name: string;
+	label: string;
+	value: string;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
+}) => {
 	const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
 	const today = new Date();
 	today.setDate(today.getDate() + 1);
 	const startDate = getFormatedDate(today, 'YYYY/MM/DD');
-
-	const [selectedStartDate, setSelectedStartDate] = useState('');
-	const [startedDate, setStartedDate] = useState('12/12/2023');
-
-	function handleChangeStartDate(propDate: string) {
-		setStartedDate(propDate);
-	}
-
 	const handleOnPressStartDate = () => {
 		setOpenStartDatePicker(!openStartDatePicker);
 	};
-
 	return (
 		<View style={{ flex: 1, alignItems: 'center' }}>
 			<View
@@ -43,11 +51,26 @@ export default ({ label = 'Move in date' }: { label: string }) => {
 					style={styles.inputBtn}
 					onPress={handleOnPressStartDate}
 				>
-					<Text>{selectedStartDate}</Text>
+					<Text>{value}</Text>
 				</TouchableOpacity>
+				<ErrorMessage
+					name={name || ''}
+					render={(msg) => (
+						<Text
+							style={{
+								top: 86,
+								left: 10,
+								fontSize: 10,
+								color: 'red',
+								position: 'absolute',
+							}}
+						>
+							{msg}
+						</Text>
+					)}
+				/>
 			</View>
 
-			{/* Create modal for date picker */}
 			<Modal
 				animationType="slide"
 				transparent={true}
@@ -58,11 +81,9 @@ export default ({ label = 'Move in date' }: { label: string }) => {
 						<DatePicker
 							mode="calendar"
 							minimumDate={startDate}
-							selected={startedDate}
-							onDateChange={handleChangeStartDate}
-							onSelectedChange={(date: string) =>
-								setSelectedStartDate(date)
-							}
+							onDateChange={(newDate) => {
+								setFieldValue(name, newDate);
+							}}
 							options={{
 								backgroundColor: '#fff',
 								textHeaderColor: '#E36414',
