@@ -32,9 +32,9 @@ const PrepareContract = ({ navigation, route }: Props) => {
 	};
 
 	const RentalSchema = Yup.object().shape<Record<string, any>>({
-		// leaseTerm: Yup.string().required('Lease term Required!'),
+		leaseTerm: Yup.string().required('Lease term Required!'),
 		moveInDate: Yup.string().required('Move in date Required!'),
-		// numberOfTenants: Yup.string().required('Number of tenants Required!'),
+		numberOfTenants: Yup.string().required('Number of tenants Required!'),
 
 		// identityNumber: Yup.string().required('identity number Required!'),
 		// identityDateOfIssue: Yup.string().required(

@@ -3,30 +3,26 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
-import type { FormikErrors } from 'formik';
+import { type FormikErrors, ErrorMessage } from 'formik';
 
-const data = [
-	{ label: 'Item 1', value: '1' },
-	{ label: 'Item 2', value: '2' },
-	{ label: 'Item 3', value: '3' },
-	{ label: 'Item 4', value: '4' },
-	{ label: 'Item 5', value: '5' },
-	{ label: 'Item 6', value: '6' },
-	{ label: 'Item 7', value: '7' },
-	{ label: 'Item 8', value: '8' },
-];
 interface BasicInputProps {
 	label: string;
 	value: string;
-	name?: string;
+	name: string;
+	data: { label: string; value: string }[];
 	setFieldValue: (
 		field: string,
 		value: any,
 		shouldValidate?: boolean | undefined,
 	) => Promise<void | FormikErrors<any>>;
 }
-export default ({ label = 'Label' }: BasicInputProps) => {
-	const [value, setValue] = useState('');
+export default ({
+	label = 'Label',
+	name,
+	data,
+	setFieldValue,
+	value,
+}: BasicInputProps) => {
 	const [isFocus, setIsFocus] = useState(false);
 	return (
 		<View style={{ width: '100%' }}>
@@ -39,6 +35,22 @@ export default ({ label = 'Label' }: BasicInputProps) => {
 			>
 				{label}
 			</Text>
+			<ErrorMessage
+				name={name || ''}
+				render={(msg) => (
+					<Text
+						style={{
+							top: 86,
+							left: 10,
+							fontSize: 10,
+							color: 'red',
+							position: 'absolute',
+						}}
+					>
+						{msg}
+					</Text>
+				)}
+			/>
 			<Dropdown
 				style={[styles.dropdown, isFocus && { borderColor: '#E36414' }]}
 				placeholderStyle={styles.placeholderStyle}
@@ -57,7 +69,7 @@ export default ({ label = 'Label' }: BasicInputProps) => {
 				onBlur={() => setIsFocus(false)}
 				onChange={(item) => {
 					setIsFocus(false);
-					setValue(item.value);
+					setFieldValue(name, item.value);
 				}}
 			/>
 		</View>

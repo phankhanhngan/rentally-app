@@ -7,6 +7,20 @@ import DateInput from '@/components/DateInput';
 import Dropdown from '@/components/Dropdown';
 import type { FormikErrors } from 'formik';
 
+const leaseTermData = [
+	{ label: '3 months', value: '3' },
+	{ label: '6 months', value: '6' },
+	{ label: '9 months', value: '9' },
+	{ label: '12 months', value: '12' },
+];
+
+const tenantsData = [
+	{ label: '1 tenant', value: '1' },
+	{ label: '2 tenants', value: '2' },
+	{ label: '3 tenants', value: '3' },
+	{ label: '4 tenants', value: '4' },
+];
+
 const RentalInformation = ({
 	values,
 	setFieldValue,
@@ -36,8 +50,20 @@ const RentalInformation = ({
 				name="moveInDate"
 				setFieldValue={setFieldValue}
 			/>
-			<Dropdown label="Lease term" value={undefined} />
-			<Dropdown label="Number of tenants" value={undefined} />
+			<Dropdown
+				data={leaseTermData}
+				label="Lease term"
+				value={values.numberOfTenants}
+				name="numberOfTenants"
+				setFieldValue={setFieldValue}
+			/>
+			<Dropdown
+				data={tenantsData}
+				label="Number of tenants"
+				value={values.leaseTerm}
+				name="leaseTerm"
+				setFieldValue={setFieldValue}
+			/>
 		</Animated.View>
 	);
 };
