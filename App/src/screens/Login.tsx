@@ -81,7 +81,6 @@ const Login = () => {
 	};
 
 	const submitForm = async (values: Values) => {
-		console.log(values);
 		await login(values).unwrap();
 	};
 

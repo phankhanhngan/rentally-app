@@ -8,7 +8,16 @@ const createApifindingRoomWithAuth = createApiWithAuth('findingRoomApi', [
 export const findingRoomApi = createApifindingRoomWithAuth.injectEndpoints({
 	endpoints: (builder) => ({
 		getFindingRooms: builder.query<
-			{ message: string; status: number; data?: IRoomFinding[] },
+			{
+				message: string;
+				status: number;
+				data?: {
+					numberOfPage: number;
+					rooms: IRoomFinding[];
+					currentPage: number;
+					totalRoom: number;
+				};
+			},
 			any
 		>({
 			query: (params) => {

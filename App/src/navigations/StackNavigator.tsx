@@ -18,6 +18,7 @@ import Login from '@/screens/Login';
 import MyRentalDetail from '@/screens/MyRentalDetail';
 import MyRental from '@/screens/MyRentals';
 import PrepareContract from '@/screens/PrepareContract';
+import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
@@ -33,10 +34,13 @@ export type RootStackParams = {
 	Rooms: undefined;
 	Main: undefined;
 	Comments: undefined;
-	PrepareContract: undefined;
+	PrepareContract: {
+		id: string;
+		overView: IOverView;
+	};
 	Rental: { name: string };
 	Room: {
-		name: string;
+		id: string;
 	};
 };
 const StackNavigator = () => {

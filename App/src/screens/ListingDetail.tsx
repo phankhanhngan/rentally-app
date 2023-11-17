@@ -14,40 +14,45 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import BackButton from '@/components/BackButton';
 import Utility from '@/components/Utility';
+import type { IRoomBlock } from '@/interfaces/block.interface';
+import type { IRoomDetail } from '@/interfaces/room-detail.interface';
+import type { ILandlord } from '@/interfaces/user.interface';
 import type { IUtiltity } from '@/interfaces/utility.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { useGetRoomDetailQuery } from '@/redux/services/room-detail/room-detail.service';
+import { formatNumberWithCommas } from '@/utils/helpers';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
+type Props = NativeStackScreenProps<RootStackParams, 'Room'>;
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
-const utilities: IUtiltity[] = [
-	{
-		id: 1,
-		name: 'Electricity',
-		note: 'Power supply for the property',
-		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Electricity.png',
-	},
-	{
-		id: 2,
-		name: 'Water',
-		note: 'Hot and cold water supply',
-		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Water.png',
-	},
-	{
-		id: 4,
-		name: 'Gas',
-		note: 'Natural gas supply',
-		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Gas.png',
-	},
-];
-
-const ListingDetail = ({ navigation }: Props) => {
+const ListingDetail = ({ navigation, route }: Props) => {
 	const BackHandler = () => {
 		navigation.pop();
 	};
 
+	const { data, isLoading } = useGetRoomDetailQuery({
+		id: route?.params?.id,
+	});
+
+	const roomDetail = data?.data || ({} as IRoomDetail);
+
+	const {
+		id,
+		price,
+		images = [],
+		utilities = [],
+		roomblock = {} as IRoomBlock,
+		landlord = {} as ILandlord,
+		ratingDetail = {
+			ratings: [],
+			totalRating: 0,
+		},
+	} = roomDetail;
+	// const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
+
+	if (isLoading) return <Text>Loading</Text>;
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor={'#0C0F14'} />
@@ -61,14 +66,14 @@ const ListingDetail = ({ navigation }: Props) => {
 				>
 					<Image
 						source={{
-							uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+							uri: images[0],
 						}}
 						style={[styles.image]}
 						resizeMode="cover"
 					/>
 
 					<View style={styles.infoContainer}>
-						<Text style={styles.name}>467 Mraz Avenue</Text>
+						<Text style={styles.name}>{roomblock.address}</Text>
 						<View
 							style={{
 								flexDirection: 'row',
@@ -84,73 +89,25 @@ const ListingDetail = ({ navigation }: Props) => {
 								color={'#E36414'}
 							/>
 							<Text style={styles.location}>
-								West Virginia, Port Ignacio
+								{roomblock.district}, {roomblock.city}
 							</Text>
 						</View>
 						<Text style={styles.description}>
-							Green Ribbon Villa is a perfect getaway spot to
-							celebrate big parties and lifetime events! It is
-							located only 4 minutes from 54-hole Phoenix Golf
-							Resort and 1 hour from Hanoi. The villa is located
-							on its 13,000 m² land with high quality services and
-							facilities. To name a few of the villa's facilities,
-							there are private tennis court, private mountain
-							cave, outdoor hut on mountain, BBQ grill, daily
-							housekeeping.
+							{roomblock.description}
 						</Text>
-						<View
-							style={{
-								flexDirection: 'row',
-								gap: 4,
-								marginTop: 16,
-								borderRadius: 10,
-								width: '100%',
-								padding: 16,
-								borderColor: '#ccc',
-								borderWidth: 1,
-								justifyContent: 'space-between',
-							}}
-						>
+
+						{ratingDetail.totalRating ? (
 							<View
 								style={{
 									flexDirection: 'row',
-									alignItems: 'center',
-									justifyContent: 'center',
-									gap: 6,
-								}}
-							>
-								<Text style={styles.ratings}>5.0</Text>
-								<View style={{ flexDirection: 'row', gap: 2 }}>
-									<Icon
-										name="star"
-										size={18}
-										color="#E36414"
-									/>
-									<Icon
-										name="star"
-										size={18}
-										color="#E36414"
-									/>
-									<Icon
-										name="star"
-										size={18}
-										color="#E36414"
-									/>
-									<Icon
-										name="star"
-										size={18}
-										color="#E36414"
-									/>
-									<Icon
-										name="star"
-										size={18}
-										color="#E36414"
-									/>
-								</View>
-							</View>
-							<TouchableOpacity
-								onPress={() => {
-									navigation.navigate('Comments');
+									gap: 4,
+									marginTop: 16,
+									borderRadius: 10,
+									width: '100%',
+									padding: 16,
+									borderColor: '#ccc',
+									borderWidth: 1,
+									justifyContent: 'space-between',
 								}}
 							>
 								<View
@@ -161,27 +118,77 @@ const ListingDetail = ({ navigation }: Props) => {
 										gap: 6,
 									}}
 								>
-									<Text style={styles.ratings}>6</Text>
-									<Text
+									<Text style={styles.ratings}>
+										{ratingDetail.totalRating}
+									</Text>
+									<View
+										style={{ flexDirection: 'row', gap: 2 }}
+									>
+										<Icon
+											name="star"
+											size={18}
+											color="#E36414"
+										/>
+										<Icon
+											name="star"
+											size={18}
+											color="#E36414"
+										/>
+										<Icon
+											name="star"
+											size={18}
+											color="#E36414"
+										/>
+										<Icon
+											name="star"
+											size={18}
+											color="#E36414"
+										/>
+										<Icon
+											name="star"
+											size={18}
+											color="#E36414"
+										/>
+									</View>
+								</View>
+
+								<TouchableOpacity
+									onPress={() => {
+										navigation.navigate('Comments');
+									}}
+								>
+									<View
 										style={{
-											fontSize: 16,
-											fontFamily: 'mon-sb',
-											color: '#000',
-											fontWeight: 'bold',
-											textDecorationLine: 'underline',
+											flexDirection: 'row',
+											alignItems: 'center',
+											justifyContent: 'center',
+											gap: 6,
 										}}
 									>
-										Reviews
-									</Text>
-								</View>
-							</TouchableOpacity>
-						</View>
+										<Text style={styles.ratings}>6</Text>
+										<Text
+											style={{
+												fontSize: 16,
+												fontFamily: 'mon-sb',
+												color: '#000',
+												fontWeight: 'bold',
+												textDecorationLine: 'underline',
+											}}
+										>
+											Reviews
+										</Text>
+									</View>
+								</TouchableOpacity>
+							</View>
+						) : (
+							<Text style={{ padding: 16 }}>No reviews yet</Text>
+						)}
 						<View style={styles.divider} />
 
 						<View style={styles.hostView}>
 							<Image
 								source={{
-									uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+									uri: landlord.photo,
 								}}
 								style={styles.host}
 							/>
@@ -194,10 +201,10 @@ const ListingDetail = ({ navigation }: Props) => {
 										color: '#5E5D5E',
 									}}
 								>
-									Hosted by HoangDeptrai
+									Hosted by {landlord.name}
 								</Text>
 								<Text style={{ color: '#5E5D5E' }}>
-									admin@gmail.com · 0852336242{' '}
+									{landlord.email} · {landlord.phoneNumber}
 								</Text>
 							</View>
 						</View>
@@ -234,13 +241,27 @@ const ListingDetail = ({ navigation }: Props) => {
 					}}
 				>
 					<TouchableOpacity style={styles.footerText}>
-						<Text style={styles.footerPrice}>€ 1000</Text>
+						<Text style={styles.footerPrice}>
+							VND {formatNumberWithCommas(price || '')}
+						</Text>
 						<Text style={{ color: '#5E5D5E' }}> month</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate('PrepareContract');
+							navigation.navigate('PrepareContract', {
+								id: id,
+								overView: {
+									price: price,
+									image: images[0],
+									totalRating: ratingDetail.totalRating,
+									numberOfReviews:
+										ratingDetail.ratings.length,
+									district: roomblock.district,
+									province: roomblock.city,
+									address: roomblock.address,
+								},
+							});
 						}}
 						style={[
 							{

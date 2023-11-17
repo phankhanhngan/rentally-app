@@ -1,4 +1,4 @@
-import { creatApiWithAuth } from '../apiWithAuth.service';
+import { createApiWithAuth } from '../apiWithAuth.service';
 import type {
 	IAccounRegister,
 	IAccountLogin,
@@ -7,9 +7,9 @@ import type {
 	INewPassword,
 	IVerifyCode,
 } from '@/interfaces/auth.interface';
-const creatApiAuthWithAuth = creatApiWithAuth('AuthApi', ['Auth']);
+const createApiAuthWithAuth = createApiWithAuth('AuthApi', ['Auth']);
 
-export const authApi = creatApiAuthWithAuth.injectEndpoints({
+export const authApi = createApiAuthWithAuth.injectEndpoints({
 	endpoints: (builder) => ({
 		login: builder.mutation<IAuthResponse, IAccountLogin>({
 			query: (body) => ({

@@ -130,12 +130,11 @@ const Register = () => {
 
 	const submitRegisterForm = async (values: RegisterValues) => {
 		const { confirmPassword, ...body } = values;
-		console.log(body, confirmPassword);
+
 		await register(body).unwrap();
 		setEmail(body.email);
 	};
 	const submitCodeForm = async (values: SendCodeValues) => {
-		console.log(values.code);
 		const body = {
 			email: email,
 			code: 'R-' + values.code,
@@ -144,7 +143,6 @@ const Register = () => {
 	};
 	const handleResetPassword = async () => {
 		const res = await resendEmail({ email: email }).unwrap();
-		console.log(res);
 	};
 	return (
 		<KeyboardAvoidingView

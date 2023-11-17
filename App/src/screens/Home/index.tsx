@@ -1,28 +1,39 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { dataRooms } from '../../../mockdata';
 import Filter from './Components/Filter';
 import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
+import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { useGetFindingRoomsQuery } from '@/redux/services/findingRoom/findingRoom.service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 type Props = NativeStackScreenProps<RootStackParams>;
 const Home = ({ navigation }: Props) => {
+	const [searchParamsObject, setSearchParamsObject] = useState<
+		Record<string, string[]>
+	>({ page: ['2'] });
 	const [isOpenSearch, setOpenSearch] = useState(false);
 	const [isOpenFilter, setOpenFilter] = useState(false);
-
+	const { data, isLoading, isFetching } =
+		useGetFindingRoomsQuery(searchParamsObject);
 	const toggleSheetSearch = () => {
 		setOpenSearch((prev) => !prev);
 	};
 	const toggleSheetFilter = () => {
 		setOpenFilter((prev) => !prev);
 	};
+	if (isLoading || isFetching) {
+		return <Text>Loading</Text>;
+	}
 
+	if (data?.data?.length === 0) {
+		return <Text>No match</Text>;
+	}
 	return (
 		<GestureHandlerRootView style={styles.screenContainer}>
 			<ExploreHeader
@@ -36,13 +47,15 @@ const Home = ({ navigation }: Props) => {
 						backgroundColor: '#FDFFFF',
 					}}
 				>
-					{dataRooms?.map((dataRoom, index) => (
+					{data?.data?.rooms.map((dataRoom: IRoomFinding) => (
 						<Listing
-							key={index}
+							key={dataRoom.id}
 							data={dataRoom}
 							name={dataRoom.id}
-							onPress={(name) => {
-								navigation.navigate('Room', { name });
+							onPress={(id) => {
+								navigation.navigate('Room', {
+									id,
+								});
 							}}
 						/>
 					))}

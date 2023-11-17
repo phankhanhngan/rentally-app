@@ -14,9 +14,10 @@ import RentalInformation from './Components/RentalInformation';
 import BackButton from '@/components/BackButton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
+type Props = NativeStackScreenProps<RootStackParams, 'PrepareContract'>;
 
-const PrepareContract = ({ navigation }: Props) => {
+const PrepareContract = ({ navigation, route }: Props) => {
+	const { id, overView } = route?.params || {};
 	const BackHandler = () => {
 		navigation.pop();
 	};
@@ -43,7 +44,7 @@ const PrepareContract = ({ navigation }: Props) => {
 					>
 						Prepare contract
 					</Text>
-					<OverView />
+					<OverView overView={overView} />
 					<View
 						style={{
 							height: StyleSheet.hairlineWidth,

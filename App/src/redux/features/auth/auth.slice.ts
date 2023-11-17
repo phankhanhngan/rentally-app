@@ -12,7 +12,7 @@ const initialState: IAuth = {
 export const initializeState = () => async (dispatch: any) => {
 	try {
 		const token = await getData('jwt');
-		console.log(token);
+		
 		if (token) dispatch(setCredentials({ accessToken: token }));
 	} catch (error) {
 		console.error('Error initializing state:', error);

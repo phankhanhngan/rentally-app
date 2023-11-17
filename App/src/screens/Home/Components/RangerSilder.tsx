@@ -147,7 +147,6 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
 			}`,
 		};
 	});
-	console.log(maxLabelText);
 	return (
 		<View style={[styles.sliderContainer, { width: sliderWidth }]}>
 			<View style={[styles.sliderBack, { width: sliderWidth }]} />
