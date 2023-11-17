@@ -73,9 +73,9 @@ const Search = ({ onSearchPress }: SearchProps) => {
 				</TouchableOpacity>
 			</View>
 			<View style={{ flexDirection: 'column', flex: 1, gap: 2 }}>
-				<BasicInput label="Keyword" value={undefined} />
-				<Dropdown label="Province" value={undefined} />
-				<Dropdown label="District" value={undefined} />
+				{/* <BasicInput label="Keyword" value={''} />
+				<Dropdown label="Province" value={''} />
+				<Dropdown label="District" value={''} /> */}
 			</View>
 		</Animated.View>
 	);

@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { type FormikErrors, ErrorMessage } from 'formik';
