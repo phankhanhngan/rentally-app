@@ -1,18 +1,40 @@
+import { findingRoomApi } from './services/findingRoom/findingRoom.service';
+import { helpApi } from './services/help/help.service';
+import { rentalApi } from './services/rental/rental.service';
+import { roomDetailApi } from './services/room-detail/room-detail.service';
 import authSlice from '@/redux/features/auth/auth.slice';
 import { authApi } from '@/redux/services/auth/auth.service';
 import { userApi } from '@/redux/services/user/user.service';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import {
+	combineReducers,
+	configureStore,
+	getDefaultMiddleware,
+} from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
-	[userApi.reducerPath]: userApi.reducer,
 	[authApi.reducerPath]: authApi.reducer,
-	auth: authSlice,
+	[helpApi.reducerPath]: helpApi.reducer,
+	[findingRoomApi.reducerPath]: findingRoomApi.reducer,
+	[userApi.reducerPath]: userApi.reducer,
+	[roomDetailApi.reducerPath]: roomDetailApi.reducer,
+	[rentalApi.reducerPath]: rentalApi.reducer,
+	auth: authSlice.reducer,
+});
+
+const customizedMiddleware = getDefaultMiddleware({
+	serializableCheck: false,
 });
 
 export const store = configureStore({
 	reducer: rootReducer,
-	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(userApi.middleware, authApi.middleware),
+	middleware: customizedMiddleware.concat(
+		userApi.middleware,
+		authApi.middleware,
+		helpApi.middleware,
+		findingRoomApi.middleware,
+		roomDetailApi.middleware,
+		rentalApi.middleware,
+	),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
