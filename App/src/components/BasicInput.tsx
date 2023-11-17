@@ -3,24 +3,24 @@ import React, { useState } from 'react';
 import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { type FormikErrors, ErrorMessage } from 'formik';
+
 interface BasicInputProps {
-	label?: string;
-	value: string | undefined;
-	name?: string;
-	id?: string;
-	type?: string;
-	keyboardType?: KeyboardTypeOptions;
-	placeHolder?: string;
-	isSecure?: boolean;
-	onChangeText?: (text: string) => void;
+	name: string;
+	value: string;
+	label: string;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
 }
 
 const TextInputWithLabel: FC<BasicInputProps> = ({
 	value,
-	label = 'label',
+	setFieldValue,
+	label,
 	name,
-	onChangeText,
-	...props
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 
@@ -38,21 +38,20 @@ const TextInputWithLabel: FC<BasicInputProps> = ({
 				{label}
 			</Text>
 			<TextInput
-				// value={value}
-				onChangeText={onChangeText}
+				value={value}
+				onChangeText={(text) => setFieldValue(name, text)}
 				onFocus={handleFocus}
 				onBlur={handleBlur}
 				style={[
 					styles.inputStyle,
 					isFocused && { borderColor: '#E36414' },
 				]}
-				{...props}
 			/>
-			{/* Uncomment the following lines if you want to display an error message */}
-			{/* <ErrorMessage
-        name={name || ''}
-        render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
-      /> */}
+
+			<ErrorMessage
+				name={name || ''}
+				render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
+			/>
 		</View>
 	);
 };
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
 		color: 'gray',
 	},
 	mesStyle: {
-		top: 48,
+		top: 86,
 		left: 10,
 		fontSize: 10,
 		color: 'red',

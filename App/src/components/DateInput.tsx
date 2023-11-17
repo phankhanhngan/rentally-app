@@ -78,22 +78,41 @@ export default ({
 			>
 				<View style={styles.centeredView}>
 					<View style={styles.modalView}>
-						<DatePicker
-							mode="calendar"
-							minimumDate={startDate}
-							onDateChange={(newDate) => {
-								setFieldValue(name, newDate);
-							}}
-							options={{
-								backgroundColor: '#fff',
-								textHeaderColor: '#E36414',
-								textDefaultColor: '#000',
-								selectedTextColor: '#000',
-								mainColor: '#E36414',
-								textSecondaryColor: '#000',
-								borderColor: 'rgba(122, 146, 165, 0.1)',
-							}}
-						/>
+						{name === 'moveInDate' ? (
+							<DatePicker
+								mode="calendar"
+								minimumDate={startDate}
+								onDateChange={(newDate) => {
+									setFieldValue(name, newDate);
+								}}
+								options={{
+									backgroundColor: '#fff',
+									textHeaderColor: '#E36414',
+									textDefaultColor: '#000',
+									selectedTextColor: '#000',
+									mainColor: '#E36414',
+									textSecondaryColor: '#000',
+									borderColor: 'rgba(122, 146, 165, 0.1)',
+								}}
+							/>
+						) : (
+							<DatePicker
+								mode="calendar"
+								maximumDate={startDate}
+								onDateChange={(newDate) => {
+									setFieldValue(name, newDate);
+								}}
+								options={{
+									backgroundColor: '#fff',
+									textHeaderColor: '#E36414',
+									textDefaultColor: '#000',
+									selectedTextColor: '#000',
+									mainColor: '#E36414',
+									textSecondaryColor: '#000',
+									borderColor: 'rgba(122, 146, 165, 0.1)',
+								}}
+							/>
+						)}
 
 						<TouchableOpacity onPress={handleOnPressStartDate}>
 							<Text style={{ color: 'black' }}>Close</Text>

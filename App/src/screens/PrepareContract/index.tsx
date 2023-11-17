@@ -36,20 +36,20 @@ const PrepareContract = ({ navigation, route }: Props) => {
 		moveInDate: Yup.string().required('Move in date Required!'),
 		numberOfTenants: Yup.string().required('Number of tenants Required!'),
 
-		// identityNumber: Yup.string().required('identity number Required!'),
-		// identityDateOfIssue: Yup.string().required(
-		// 	'identity date of issue Required!',
-		// ),
-		// identityPlaceOfIssue: Yup.string().required(
-		// 	'identity place of issue Required!',
-		// ),
-		// birthday: Yup.string().required('Birthday is reqired!'),
-		// phone: Yup.string()
-		// 	.matches(
-		// 		/^[\\+]?[(]?[0-9]{3}[)]?[-\s\\.]?[0-9]{3}[-\s\\.]?[0-9]{4,6}$/im,
-		// 		'Invalid phone number',
-		// 	)
-		// 	.required('Number phone must be required!'),
+		identityNumber: Yup.string().required('identity number Required!'),
+		identityDateOfIssue: Yup.string().required(
+			'identity date of issue Required!',
+		),
+		identityPlaceOfIssue: Yup.string().required(
+			'identity place of issue Required!',
+		),
+		birthday: Yup.string().required('Birthday is reqired!'),
+		phone: Yup.string()
+			.matches(
+				/^[\\+]?[(]?[0-9]{3}[)]?[-\s\\.]?[0-9]{3}[-\s\\.]?[0-9]{4,6}$/im,
+				'Invalid phone number',
+			)
+			.required('Number phone must be required!'),
 	});
 	const submitRentalForm = async (values: any) => {
 		console.log(values);
@@ -112,7 +112,10 @@ const PrepareContract = ({ navigation, route }: Props) => {
 										marginHorizontal: 12,
 									}}
 								/>
-								{/* <PersonalInformation /> */}
+								<PersonalInformation
+									values={values}
+									setFieldValue={setFieldValue}
+								/>
 								<TouchableOpacity
 									onPress={handleSubmit}
 									style={[

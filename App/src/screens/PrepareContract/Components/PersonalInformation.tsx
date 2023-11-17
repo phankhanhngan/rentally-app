@@ -3,9 +3,20 @@ import { Text, View } from 'react-native';
 
 import BasicInput from '@/components/BasicInput';
 import DateInput from '@/components/DateInput';
+import type { FormikErrors } from 'formik';
 // import Dropdown from '@/components/Dropdown';
 
-const PersonalInformation = () => {
+const PersonalInformation = ({
+	values,
+	setFieldValue,
+}: {
+	values: any;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
+}) => {
 	return (
 		<View
 			style={{
@@ -36,11 +47,37 @@ const PersonalInformation = () => {
 					confirmation
 				</Text>
 			</View>
-			<BasicInput label="Phone" value={''} />
-			<BasicInput label="Identity number" value={''} />
-			<BasicInput label="Identity date of issue" value={''} />
-			<BasicInput label="Identity place of issue" value={''} />
-			<DateInput label="Birthday" />
+			<BasicInput
+				label="Phone"
+				value={values.phone}
+				name="phone"
+				setFieldValue={setFieldValue}
+			/>
+			<DateInput
+				label="Birthday"
+				value={values.birthday}
+				name="birthday"
+				setFieldValue={setFieldValue}
+			/>
+			<BasicInput
+				label="Identity number"
+				value={values.identityNumber}
+				name="identityNumber"
+				setFieldValue={setFieldValue}
+			/>
+			<DateInput
+				label="Identity date of issue"
+				value={values.identityDateOfIssue}
+				name="identityDateOfIssue"
+				setFieldValue={setFieldValue}
+			/>
+			<BasicInput
+				label="Identity place of issue"
+				value={values.identityPlaceOfIssue}
+				name="identityPlaceOfIssue"
+				setFieldValue={setFieldValue}
+			/>
+
 			{/* <Dropdown /> */}
 		</View>
 	);
