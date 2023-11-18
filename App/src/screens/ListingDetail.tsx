@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+	Animated,
 	Dimensions,
 	Image,
 	ScrollView,
@@ -9,6 +10,7 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import Swiper from 'react-native-swiper';
 import Icon2 from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -17,7 +19,6 @@ import Utility from '@/components/Utility';
 import type { IRoomBlock } from '@/interfaces/block.interface';
 import type { IRoomDetail } from '@/interfaces/room-detail.interface';
 import type { ILandlord } from '@/interfaces/user.interface';
-import type { IUtiltity } from '@/interfaces/utility.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useGetRoomDetailQuery } from '@/redux/services/room-detail/room-detail.service';
 import { formatNumberWithCommas } from '@/utils/helpers';
@@ -26,6 +27,44 @@ type Props = NativeStackScreenProps<RootStackParams, 'Room'>;
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
+
+const RoomImage = ({ item }: { item: string }) => (
+	<Image source={{ uri: item }} style={styles.image} />
+);
+const CustomPagination = (index: number, total: number): React.ReactNode => {
+	const dotOpacity = new Animated.Value(0);
+
+	Animated.timing(dotOpacity, {
+		toValue: 1,
+		duration: 30,
+		useNativeDriver: false,
+	}).start();
+
+	return (
+		<Animated.View
+			style={[
+				styles.pagination,
+				{
+					opacity: dotOpacity,
+					position: 'absolute',
+					bottom: 10,
+					width: '100%',
+					justifyContent: 'center',
+				},
+			]}
+		>
+			{Array.from({ length: total }).map((_, i) => (
+				<View
+					style={[
+						styles.paginationDot,
+						i === index ? styles.paginationDotActive : null,
+					]}
+					key={i}
+				/>
+			))}
+		</Animated.View>
+	);
+};
 
 const ListingDetail = ({ navigation, route }: Props) => {
 	const BackHandler = () => {
@@ -64,14 +103,30 @@ const ListingDetail = ({ navigation, route }: Props) => {
 					contentContainerStyle={{ paddingBottom: 100 }}
 					scrollEventThrottle={16}
 				>
-					<Image
-						source={{
-							uri: images[0],
-						}}
-						style={[styles.image]}
-						resizeMode="cover"
-					/>
-
+					<Swiper
+						style={{ height: 300 }}
+						autoplay={false}
+						renderPagination={CustomPagination}
+						loop={false}
+					>
+						{images?.map((image, index) => (
+							<RoomImage item={image} key={index} />
+						))}
+					</Swiper>
+					<TouchableOpacity
+						style={{ position: 'absolute', right: 16, top: 16 }}
+					>
+						<Icon
+							name="heart"
+							size={20}
+							style={{
+								position: 'absolute',
+								right: 0,
+								top: 0,
+								opacity: 1,
+							}}
+						/>
+					</TouchableOpacity>
 					<View style={styles.infoContainer}>
 						<Text style={styles.name}>{roomblock.address}</Text>
 						<View
@@ -165,7 +220,9 @@ const ListingDetail = ({ navigation, route }: Props) => {
 											gap: 6,
 										}}
 									>
-										<Text style={styles.ratings}>6</Text>
+										<Text style={styles.ratings}>
+											{ratingDetail.ratings.length}
+										</Text>
 										<Text
 											style={{
 												fontSize: 16,
@@ -378,13 +435,26 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		gap: 10,
 	},
-	// header: {
-	// 	backgroundColor: '#fff',
-	// 	height: 100,
-	// 	borderBottomWidth: StyleSheet.hairlineWidth,
-	// 	borderColor: '#5E5D5E',
-	// },
-
+	swiperArrow: {
+		color: '#FFF',
+		fontSize: 60,
+		fontWeight: '300',
+	},
+	pagination: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	paginationDot: {
+		width: 8,
+		height: 8,
+		borderRadius: 4,
+		backgroundColor: 'rgba(255,255,255,0.4)',
+		margin: 5,
+	},
+	paginationDotActive: {
+		backgroundColor: '#FFF',
+	},
 	description: {
 		fontSize: 14,
 		marginTop: 10,

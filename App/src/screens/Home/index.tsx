@@ -31,7 +31,7 @@ const Home = ({ navigation }: Props) => {
 		return <Text>Loading</Text>;
 	}
 
-	if (data?.data?.length === 0) {
+	if (data?.data?.rooms?.length === 0) {
 		return <Text>No match</Text>;
 	}
 	return (
