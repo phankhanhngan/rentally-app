@@ -7,6 +7,7 @@ import Filter from './Components/Filter';
 import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
+import Loading from '@/components/Loading';
 import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useGetFindingRoomsQuery } from '@/redux/services/findingRoom/findingRoom.service';
@@ -28,11 +29,27 @@ const Home = ({ navigation }: Props) => {
 		setOpenFilter((prev) => !prev);
 	};
 	if (isLoading || isFetching) {
-		return <Text>Loading</Text>;
+		return (
+			<View style={{ flex: 1 }}>
+				<ExploreHeader
+					onSearchPress={toggleSheetSearch}
+					onFilterPress={toggleSheetFilter}
+				/>
+				<Loading />
+			</View>
+		);
 	}
 
 	if (data?.data?.rooms?.length === 0) {
-		return <Text>No match</Text>;
+		return (
+			<View style={{ flex: 1 }}>
+				<ExploreHeader
+					onSearchPress={toggleSheetSearch}
+					onFilterPress={toggleSheetFilter}
+				/>
+				<Text>Hoong co gi ma oi</Text>
+			</View>
+		);
 	}
 	return (
 		<GestureHandlerRootView style={styles.screenContainer}>

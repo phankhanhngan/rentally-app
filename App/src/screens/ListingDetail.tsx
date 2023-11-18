@@ -15,6 +15,7 @@ import Icon2 from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import BackButton from '@/components/BackButton';
+import Loading from '@/components/Loading';
 import Utility from '@/components/Utility';
 import type { IRoomBlock } from '@/interfaces/block.interface';
 import type { IRoomDetail } from '@/interfaces/room-detail.interface';
@@ -91,7 +92,7 @@ const ListingDetail = ({ navigation, route }: Props) => {
 	} = roomDetail;
 	// const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
 
-	if (isLoading) return <Text>Loading</Text>;
+	if (isLoading) return <Loading />;
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor={'#0C0F14'} />
