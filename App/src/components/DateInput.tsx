@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
+import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
 import type { FormikErrors } from 'formik';
 import { ErrorMessage } from 'formik';
@@ -31,7 +32,11 @@ export default ({
 		setOpenStartDatePicker(!openStartDatePicker);
 	};
 	return (
-		<View style={{ flex: 1, alignItems: 'center' }}>
+		<Animated.View
+			entering={SlideInDown.springify().damping(15)}
+			exiting={SlideOutDown}
+			style={{ flex: 1, alignItems: 'center' }}
+		>
 			<View
 				style={{
 					width: '100%',
@@ -120,7 +125,7 @@ export default ({
 					</View>
 				</View>
 			</Modal>
-		</View>
+		</Animated.View>
 	);
 };
 
