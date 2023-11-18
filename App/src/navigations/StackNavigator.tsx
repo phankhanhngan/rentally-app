@@ -18,12 +18,12 @@ import MyRentalDetail from '@/screens/MyRentalDetail';
 import MyRental from '@/screens/MyRentals';
 import PrepareContract from '@/screens/PrepareContract';
 import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
-import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Profile from '@/screens/Profile';
 export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
