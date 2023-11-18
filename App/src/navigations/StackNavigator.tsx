@@ -6,13 +6,14 @@ import { useAppDispatch } from '@/redux/hook';
 import ForgotPassword from '@/screens/ForgotPassword';
 import Home from '@/screens/Home';
 import Login from '@/screens/Login';
-import Profile from '@/screens/Profile';
+import Map from '@/screens/Map';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Profile from '@/screens/Profile';
 export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
