@@ -11,6 +11,8 @@ import {
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
+import Loading from '@/components/Loading';
+import { useGetMyRentalQuery } from '@/redux/services/myRental/myRental.service';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
@@ -62,6 +64,20 @@ const ActionButton = ({ rentalStatus }: { rentalStatus: STATUS }) => {
 };
 
 const CheckList = ({ navigation }: Props) => {
+	const { data, isLoading, isFetching } = useGetMyRentalQuery('');
+
+	if (isLoading || isFetching) {
+		return (
+			<View style={{ flex: 1 }}>
+				<Loading />
+			</View>
+		);
+	}
+	if (data?.data.length) {
+		<View style={{ flex: 1 }}>
+			<Text>Hoong co gi ma oi</Text>
+		</View>;
+	}
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
 			<ScrollView
@@ -89,13 +105,13 @@ const CheckList = ({ navigation }: Props) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					{Array.from({ length: 10 }).map((_, index) => (
+					{data?.data.map((myRental) => (
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
 								navigation.navigate('Rental', { name: '' });
 							}}
-							key={index}
+							key={myRental.rentalInfo.id}
 							style={{
 								width: '100%',
 								height: 160,
@@ -120,7 +136,9 @@ const CheckList = ({ navigation }: Props) => {
 						>
 							<Image
 								source={{
-									uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+									uri:
+										myRental.roomInfo.images &&
+										(myRental.roomInfo.images[0] as string),
 								}}
 								style={{
 									width: '35%',
@@ -152,7 +170,7 @@ const CheckList = ({ navigation }: Props) => {
 										Room F103
 									</Text>
 									<StatusText
-										rentalStatus={STATUS.COMPLETED}
+										rentalStatus={myRental.status}
 									/>
 								</View>
 								<View
@@ -175,7 +193,7 @@ const CheckList = ({ navigation }: Props) => {
 											Monthly rent
 										</Text>
 										<Text style={styles.textInfo}>
-											2,000,000 VND
+											{myRental.roomInfo.price} VND
 										</Text>
 									</View>
 									<View style={{ flex: 1 }}>
@@ -189,7 +207,8 @@ const CheckList = ({ navigation }: Props) => {
 											Deposit amount
 										</Text>
 										<Text style={styles.textInfo}>
-											2,000,000 VND
+											{myRental.roomInfo.depositAmount}{' '}
+											VND
 										</Text>
 									</View>
 								</View>
@@ -202,7 +221,7 @@ const CheckList = ({ navigation }: Props) => {
 									}}
 								>
 									<ActionButton
-										rentalStatus={STATUS.COMPLETED}
+										rentalStatus={myRental.status}
 									/>
 								</View>
 							</View>

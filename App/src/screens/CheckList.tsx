@@ -19,13 +19,18 @@ const CheckList = ({ navigation }: Props) => {
 	const [isEdit, setIsEdit] = useState(false);
 
 	const { data, isLoading, isFetching } = useGetCheckListQuery('');
-	console.log(data);
+
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
 				<Loading />
 			</View>
 		);
+	}
+	if (data?.data?.length) {
+		<View style={{ flex: 1 }}>
+			<Text>Hoong co gi ma oi</Text>
+		</View>;
 	}
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -74,9 +79,9 @@ const CheckList = ({ navigation }: Props) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					{Array.from({ length: 10 }).map((_, index) => (
+					{data?.data?.map((room) => (
 						<View
-							key={index}
+							key={room.id}
 							style={{
 								width: '48%',
 								height: 220,
@@ -103,7 +108,9 @@ const CheckList = ({ navigation }: Props) => {
 									},
 								}}
 								onPress={() => {
-									navigation.navigate('Room', { id: '' });
+									navigation.navigate('Room', {
+										id: room.id,
+									});
 								}}
 							>
 								{isEdit && (
@@ -144,7 +151,7 @@ const CheckList = ({ navigation }: Props) => {
 								)}
 								<Image
 									source={{
-										uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+										uri: room.images[0],
 									}}
 									style={{
 										width: '100%',
@@ -163,7 +170,7 @@ const CheckList = ({ navigation }: Props) => {
 									fontWeight: '500',
 								}}
 							>
-								117 Tân Trào
+								{room.address}
 							</Text>
 							<Text
 								style={{
@@ -172,7 +179,7 @@ const CheckList = ({ navigation }: Props) => {
 									fontWeight: '500',
 								}}
 							>
-								Hương Thủy, Thừa Thiên Huế
+								{room.district}, {room.city}
 							</Text>
 						</View>
 					))}

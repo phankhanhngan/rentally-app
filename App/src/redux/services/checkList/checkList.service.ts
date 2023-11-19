@@ -1,4 +1,5 @@
 import { createApiWithAuth } from '../apiWithAuth.service';
+import type { ICheckList } from '@/interfaces/checkList.interface';
 import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 
 const createApiCheckListWithAuth = createApiWithAuth('checkListApi', [
@@ -11,9 +12,9 @@ export const checkListApi = createApiCheckListWithAuth.injectEndpoints({
 			{
 				message: string;
 				status: number;
-				data?: any;
+				data?: ICheckList[];
 			},
-			any
+			string
 		>({
 			query: () => {
 				return {

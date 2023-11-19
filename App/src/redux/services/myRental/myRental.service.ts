@@ -1,5 +1,5 @@
 import { createApiWithAuth } from '../apiWithAuth.service';
-import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
+import type { IMyRental } from '@/interfaces/rental.interface';
 
 const createApiMyRentalWithAuth = createApiWithAuth('myRentalApi', [
 	'myRental',
@@ -11,9 +11,9 @@ export const myRentalApi = createApiMyRentalWithAuth.injectEndpoints({
 			{
 				message: string;
 				success: boolean;
-				data?: any;
+				data: IMyRental[];
 			},
-			any
+			string
 		>({
 			query: () => {
 				return {
