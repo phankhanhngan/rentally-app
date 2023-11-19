@@ -10,11 +10,23 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import Loading from '@/components/Loading';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { useGetCheckListQuery } from '@/redux/services/checkList/checkList.service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 const CheckList = ({ navigation }: Props) => {
 	const [isEdit, setIsEdit] = useState(false);
+
+	const { data, isLoading, isFetching } = useGetCheckListQuery('');
+	console.log(data);
+	if (isLoading || isFetching) {
+		return (
+			<View style={{ flex: 1 }}>
+				<Loading />
+			</View>
+		);
+	}
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
 			<Pressable
@@ -91,7 +103,7 @@ const CheckList = ({ navigation }: Props) => {
 									},
 								}}
 								onPress={() => {
-									navigation.navigate('Room', { name: '' });
+									navigation.navigate('Room', { id: '' });
 								}}
 							>
 								{isEdit && (

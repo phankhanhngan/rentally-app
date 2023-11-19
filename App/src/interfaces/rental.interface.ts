@@ -16,6 +16,10 @@ export interface IRentalInfo {
 	leaseTerm: number;
 	moveInDate: string;
 	numberOfTenants: number;
+	moveOutDate?: string;
+	electricPrice?: number;
+	leaseTerminationCost?: number;
+	additionalPrice?: number;
 }
 
 export interface IRentalResponse {
