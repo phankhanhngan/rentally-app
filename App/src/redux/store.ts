@@ -1,3 +1,4 @@
+import paramsSlice from './features/params/params.slice';
 import { checkListApi } from './services/checkList/checkList.service';
 import { findingRoomApi } from './services/findingRoom/findingRoom.service';
 import { helpApi } from './services/help/help.service';
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
 
 	[rentalApi.reducerPath]: rentalApi.reducer,
 	auth: authSlice.reducer,
+	params: paramsSlice.reducer,
 });
 
 const customizedMiddleware = getDefaultMiddleware({

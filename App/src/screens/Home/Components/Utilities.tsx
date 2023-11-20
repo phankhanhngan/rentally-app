@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-import { MultipleSelectList } from 'react-native-dropdown-select-list';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { MultiSelect } from 'react-native-element-dropdown';
 
-const Utilities = () => {
-	const [selected, setSelected] = useState([]);
+import { useGetUtilitiesQuery } from '@/redux/services/help/help.service';
 
-	const data = [
-		{ key: '2', value: 'Appliances' },
-		{ key: '3', value: 'Cameras' },
+interface UtilitiesProps {
+	selected: number[];
+	setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+}
 
-		{ key: '5', value: 'Vegetables' },
-		{ key: '6', value: 'Diary Products' },
-		{ key: '7', value: 'Drinks' },
-	];
+const Utilities: React.FC<UtilitiesProps> = ({ selected, setSelected }) => {
+	const { data } = useGetUtilitiesQuery('');
 
 	return (
 		<View>
@@ -24,25 +22,57 @@ const Utilities = () => {
 					marginBottom: 12,
 				}}
 			>
-				{' '}
 				Utilities
 			</Text>
-			<MultipleSelectList
-				setSelected={(val) => setSelected(val)}
-				data={data}
-				save="value"
-				labelStyles={{ display: 'none' }}
-				fontFamily="regular"
-				notFoundText="No data exits"
-				dropdownStyles={{ height: 160, width: '100%' }}
-				boxStyles={{
-					borderColor: '#5E5D5E',
-					borderWidth: 1,
-					borderRadius: 8,
+			<MultiSelect
+				style={styles.dropdown}
+				placeholderStyle={styles.placeholderStyle}
+				selectedTextStyle={styles.selectedTextStyle}
+				inputSearchStyle={styles.inputSearchStyle}
+				iconStyle={styles.iconStyle}
+				search
+				data={data!}
+				labelField="name"
+				valueField="id"
+				placeholder="Select item"
+				searchPlaceholder="Search..."
+				value={selected}
+				onChange={(item) => {
+					setSelected(item);
 				}}
+				selectedStyle={styles.selectedStyle}
 			/>
 		</View>
 	);
 };
 
 export default Utilities;
+
+const styles = StyleSheet.create({
+	dropdown: {
+		height: 50,
+		backgroundColor: 'transparent',
+		borderBottomColor: 'gray',
+		borderBottomWidth: 0.5,
+	},
+	placeholderStyle: {
+		fontSize: 16,
+	},
+	selectedTextStyle: {
+		fontSize: 14,
+	},
+	iconStyle: {
+		width: 20,
+		height: 20,
+	},
+	inputSearchStyle: {
+		height: 40,
+		fontSize: 16,
+	},
+	icon: {
+		marginRight: 5,
+	},
+	selectedStyle: {
+		borderRadius: 12,
+	},
+});

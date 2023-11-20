@@ -10,14 +10,20 @@ import Listing from '@/components/Listing';
 import Loading from '@/components/Loading';
 import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { useAppSelector } from '@/redux/hook';
 import { useGetFindingRoomsQuery } from '@/redux/services/findingRoom/findingRoom.service';
+import { useGetUtilitiesQuery } from '@/redux/services/help/help.service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 type Props = NativeStackScreenProps<RootStackParams>;
 const Home = ({ navigation }: Props) => {
-	const [searchParamsObject, setSearchParamsObject] = useState<
-		Record<string, string[]>
-	>({ page: ['1'] });
+	// const [searchParamsObject, setSearchParamsObject] = useState<
+	// 	Record<string, string[]>
+	// >({ page: ['1'] });
+	const { isLoading: isGetUltilitiesLoading } = useGetUtilitiesQuery('');
+	const searchParamsObject = useAppSelector(
+		(state) => state.params.searchParamsObject,
+	);
 	const [isOpenSearch, setOpenSearch] = useState(false);
 	const [isOpenFilter, setOpenFilter] = useState(false);
 	const { data, isLoading, isFetching } =
@@ -28,7 +34,8 @@ const Home = ({ navigation }: Props) => {
 	const toggleSheetFilter = () => {
 		setOpenFilter((prev) => !prev);
 	};
-	if (isLoading || isFetching) {
+
+	if (isLoading || isFetching || isGetUltilitiesLoading) {
 		return (
 			<View style={{ flex: 1 }}>
 				<ExploreHeader
@@ -42,13 +49,43 @@ const Home = ({ navigation }: Props) => {
 
 	if (data?.data?.rooms?.length === 0) {
 		return (
-			<View style={{ flex: 1 }}>
+			<GestureHandlerRootView style={styles.screenContainer}>
 				<ExploreHeader
 					onSearchPress={toggleSheetSearch}
 					onFilterPress={toggleSheetFilter}
 				/>
 				<Text>Hoong co gi ma oi</Text>
-			</View>
+				{isOpenSearch && (
+					<>
+						<AnimatedPressable
+							entering={FadeIn}
+							exiting={FadeOut}
+							style={{
+								...StyleSheet.absoluteFillObject,
+								backgroundColor: 'rgba(0, 0, 0, 0.3)',
+								zIndex: 1,
+							}}
+							onPress={toggleSheetSearch}
+						></AnimatedPressable>
+						<Search onSearchPress={toggleSheetSearch} />
+					</>
+				)}
+				{isOpenFilter && (
+					<>
+						<AnimatedPressable
+							entering={FadeIn}
+							exiting={FadeOut}
+							style={{
+								...StyleSheet.absoluteFillObject,
+								backgroundColor: 'rgba(0, 0, 0, 0.3)',
+								zIndex: 1,
+							}}
+							onPress={toggleSheetFilter}
+						></AnimatedPressable>
+						<Filter onFilterPress={toggleSheetFilter} />
+					</>
+				)}
+			</GestureHandlerRootView>
 		);
 	}
 	return (

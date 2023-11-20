@@ -5,17 +5,31 @@ import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
 import RangeSlider from './RangerSilder';
 import Utilities from './Utilities';
+import { addParam } from '@/redux/features/params/params.slice';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+
 interface FiltersProps {
-	onFilterPress?: () => void;
+	onFilterPress: () => void;
 }
 
-// const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const Filter = ({ onFilterPress }: FiltersProps) => {
+const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 	const MIN_DEFAULT = 10;
 	const MAX_DEFAULT = 500;
-	const [minValue, setMinValue] = useState(MIN_DEFAULT);
+	const dispatch = useAppDispatch();
+	const searchParamsObject = useAppSelector(
+		(state) => state.params.searchParamsObject,
+	);
+
+	const [minValue, setMinValue] = useState<number>(
+		+(
+			searchParamsObject['minPrice'] && searchParamsObject['minPrice'][0]
+		) || MIN_DEFAULT,
+	);
 	const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
+	const [selected, setSelected] = useState<number[]>(
+		searchParamsObject['utility'] || [],
+	);
+
 	return (
 		<Animated.View
 			entering={SlideInDown.springify().damping(15)}
@@ -23,7 +37,7 @@ const Filter = ({ onFilterPress }: FiltersProps) => {
 			style={{
 				backgroundColor: 'white',
 				padding: 24,
-				height: 400,
+				height: 500,
 				width: '100%',
 				position: 'absolute',
 				bottom: -20 * 1.1,
@@ -77,7 +91,27 @@ const Filter = ({ onFilterPress }: FiltersProps) => {
 					</TouchableOpacity>
 					<TouchableOpacity
 						activeOpacity={0.7}
-						onPress={onFilterPress}
+						onPress={() => {
+							dispatch(
+								addParam({
+									name: 'minPrice',
+									values: [minValue],
+								}),
+							);
+							dispatch(
+								addParam({
+									name: 'maxPrice',
+									values: [maxValue],
+								}),
+							);
+							dispatch(
+								addParam({
+									name: 'utility',
+									values: selected,
+								}),
+							);
+							onFilterPress();
+						}}
 						style={[
 							{
 								backgroundColor: '#E36414',
@@ -103,7 +137,7 @@ const Filter = ({ onFilterPress }: FiltersProps) => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Utilities />
+
 			<View style={{ flexDirection: 'column', flex: 1, gap: 2 }}>
 				<Text
 					style={{
@@ -139,12 +173,14 @@ const Filter = ({ onFilterPress }: FiltersProps) => {
 						</View>
 					</View>
 				</View>
+				<Utilities selected={selected} setSelected={setSelected} />
 			</View>
 		</Animated.View>
 	);
 };
 
 export default Filter;
+
 const styles = StyleSheet.create({
 	tableContainer: {
 		marginTop: 20,
