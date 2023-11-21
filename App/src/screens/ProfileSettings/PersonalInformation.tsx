@@ -7,17 +7,17 @@ import {
   View,
   TouchableOpacity,
   Alert,
-  Platform,
 } from "react-native";
 import type { RootStackParams } from "@/navigations/StackNavigator";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import BackButton from "@/components/BackButton";
 import { launchImageLibrary } from "react-native-image-picker";
 import * as Yup from "yup";
-import { IUpdateProfile } from "@/interfaces/user.interface";
+import { IUpdateProfile, IUpdateResponse } from "@/interfaces/user.interface";
 import { ErrorMessage, Formik } from "formik";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setCredentials } from "@/redux/features/auth/auth.slice";
+import { useUpdateProfileMutation } from "@/redux/services/user/user.service";
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const field = (
@@ -47,8 +47,8 @@ const field = (
 
 const PersonalInformation = ({ navigation }: Props) => {
   const userInfo = useAppSelector((state) => state.auth.userInfo);
-  const accessToken = useAppSelector((state) => state.auth.accessToken);
   const dispatch = useAppDispatch();
+  const [updateProfile, updateResponse] = useUpdateProfileMutation();
 
   const BackHandler = () => {
     navigation.pop();
@@ -56,6 +56,21 @@ const PersonalInformation = ({ navigation }: Props) => {
 
   const [imageUri, setImageUri] = useState(userInfo?.photo);
   const fileRef = useRef<any | null>(null);
+
+  useEffect(() => {
+    if (updateResponse.data?.status === "success") {
+      dispatch(
+        setCredentials({ accessToken: updateResponse.data?.token.token })
+      );
+      navigation.pop();
+    }
+    if (updateResponse.error && "data" in updateResponse.error) {
+      Alert.alert(
+        "Invalid data!",
+        (updateResponse.error?.data as IUpdateResponse)?.message
+      );
+    }
+  }, [updateResponse]);
 
   const openImagePicker = () => {
     launchImageLibrary(
@@ -99,7 +114,7 @@ const PersonalInformation = ({ navigation }: Props) => {
 
   const submitForm = async (values: IUpdateProfile) => {
     let formData = new FormData();
-    
+
     if (fileRef.current) {
       formData.append("photo", {
         type: fileRef.current.assets[0].type,
@@ -113,29 +128,7 @@ const PersonalInformation = ({ navigation }: Props) => {
     formData.append("lastName", values.lastName);
     formData.append("phoneNumber", values.phoneNumber);
 
-    let response = await fetch(
-      "https://rentally-api-production.up.railway.app/api/v1/users/me",
-      {
-        method: "PUT",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          accept: "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    let responseJson = await response.json();
-    console.log(responseJson);
-    if (responseJson.statusCode === 400) {
-      Alert.alert("Invalid data!", responseJson.message);
-    }
-    if(responseJson.status === 'success') {
-      dispatch(
-				setCredentials({ accessToken: responseJson.token.token }),
-			);
-      navigation.pop();
-    }
+    await updateProfile(formData).unwrap();
   };
 
   return (
@@ -294,5 +287,3 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 });
-
-
