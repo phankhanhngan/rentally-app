@@ -1,23 +1,140 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   Image,
   View,
   TouchableOpacity,
+  TextInput,
+  Alert,
 } from "react-native";
 import type { RootStackParams } from "@/navigations/StackNavigator";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import BackButton from "@/components/BackButton";
+import { useAppSelector } from "@/redux/hook";
+import { ErrorMessage, Formik } from "formik";
+import * as Yup from "yup";
+import { useUpdatePasswordMutation } from "@/redux/services/user/user.service";
+import { IUpdatePassword, IUpdateResponse } from "@/interfaces/user.interface";
 type Props = NativeStackScreenProps<RootStackParams>;
 
+interface Values {
+  currentPassword: string;
+  newPassword: string;
+}
+
 const LoginSecurity = ({ navigation }: Props) => {
+  const userInfo = useAppSelector((state) => state.auth.userInfo);
+  const [isShowChangePassword, setIsShowChangePassword] = useState(false);
+  const [updatePassword, updateResponse] = useUpdatePasswordMutation();
+
+  useEffect(() => {
+    if (updateResponse.data?.status === "success") {
+      setIsShowChangePassword(false);
+    }
+    if (updateResponse.error && "data" in updateResponse.error) {
+      Alert.alert(
+        "Invalid data!",
+        (updateResponse.error?.data as IUpdateResponse)?.message
+      );
+    }
+  }, [updateResponse]);
+
   const BackHandler = () => {
     navigation.pop();
   };
 
-  const goToResetPassword = () => {
-    navigation.navigate("ResetPassword", { email: "email" });
+  const goToChangePassword = () => {
+    setIsShowChangePassword(!isShowChangePassword);
+  };
+
+  const initialValues = {
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  };
+
+  const validate = Yup.object().shape<Record<string, any>>({
+    currentPassword: Yup.string().required("Current Password Required!"),
+    newPassword: Yup.string().required("New Password Required!"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("newPassword"), ""], "Passwords must match")
+      .required("Confirm Password Required"),
+  });
+
+  const submitForm = async (values: IUpdatePassword) => {
+    await updatePassword(values).unwrap();
+  };
+
+  const field = (
+    fieldName: string,
+    name: string,
+    value: string,
+    onChangeText?: (text: string) => void
+  ) => {
+    return (
+      <View>
+        <View style={styles.container_field}>
+          <Text style={styles.fieldName}>{fieldName}</Text>
+          <TextInput
+            style={styles.input}
+            value={value}
+            testID={name}
+            onChangeText={onChangeText}
+            secureTextEntry={true}
+          />
+          <ErrorMessage
+            name={name || ""}
+            render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const showChangePassword = () => {
+    return (
+      <View>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validate}
+          onSubmit={submitForm}
+        >
+          {(formik) => {
+            const { values, handleChange, handleSubmit } = formik;
+
+            return (
+              <View>
+                {field(
+                  "Current Password",
+                  "currentPassword",
+                  values.currentPassword,
+                  handleChange("currentPassword")
+                )}
+                {field(
+                  "New Password",
+                  "newPassword",
+                  values.newPassword,
+                  handleChange("newPassword")
+                )}
+                {field(
+                  "Confirm Password",
+                  "confirmPassword",
+                  values.confirmPassword,
+                  handleChange("confirmPassword")
+                )}
+                <TouchableOpacity
+                  onPress={() => handleSubmit()}
+                  style={styles.save_button}
+                >
+                  <Text style={styles.save_text}>Update</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </Formik>
+      </View>
+    );
   };
 
   return (
@@ -28,35 +145,26 @@ const LoginSecurity = ({ navigation }: Props) => {
         <Text style={styles.login_text}>Login</Text>
         <View style={styles.email_container}>
           <Text style={styles.email_text}>Email</Text>
-          <Text>hoang@gmail.com</Text>
+          <Text>{userInfo?.email}</Text>
         </View>
-        <View style={styles.password_container}>
-          <Text style={styles.password_text}>Password</Text>
-          <Text>***********</Text>
-          <TouchableOpacity onPress={goToResetPassword}>
-            <Text style={styles.update_text}>Update</Text>
-          </TouchableOpacity>
+        <View style={styles.update_container}>
+          <View style={styles.password_container}>
+            <Text style={styles.password_text}>Password</Text>
+            <Text>***********</Text>
+            <TouchableOpacity onPress={goToChangePassword}>
+              <Text style={styles.update_text}>Update</Text>
+            </TouchableOpacity>
+          </View>
+          {isShowChangePassword && showChangePassword()}
         </View>
       </View>
       <View style={styles.account_container}>
         <Text style={styles.account_text}>Account</Text>
         <View style={styles.disable_container}>
           <Text>Your account is disabled</Text>
-          <TouchableOpacity onPress={goToResetPassword}>
+          <TouchableOpacity onPress={goToChangePassword}>
             <Text style={styles.disable_text}>Disable</Text>
           </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.middle_container_outer}>
-        <View style={styles.middle_container}>
-          <View style={{ width: 200 }}>
-            <Text style={styles.header_middle}>Rentally</Text>
-            <Text>Thank you for using our service</Text>
-          </View>
-          <Image
-            style={styles.logo_user}
-            source={require("../../assets/images/rentallyLogo.png")}
-          ></Image>
         </View>
       </View>
     </View>
@@ -76,12 +184,16 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: "500",
-    marginBottom: 54,
+    marginBottom: 36,
   },
   login_text: {
     fontSize: 26,
     fontWeight: "500",
     color: "#45474B",
+  },
+  update_container: {
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#F1EFEF",
   },
   password_container: {
     display: "flex",
@@ -89,8 +201,6 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     paddingTop: 28,
     justifyContent: "space-between",
-    borderBottomWidth: 1.5,
-    borderBottomColor: "#F1EFEF",
   },
   email_container: {
     display: "flex",
@@ -112,7 +222,7 @@ const styles = StyleSheet.create({
     marginRight: 96,
   },
   account_container: {
-    marginTop: 50,
+    marginTop: 30,
   },
   account_text: {
     fontSize: 24,
@@ -163,5 +273,39 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
+  },
+  mesStyle: {
+    top: 60,
+    left: 10,
+    fontSize: 10,
+    color: "red",
+    position: "absolute",
+  },
+  fieldName: {
+    fontSize: 14,
+    color: "grey",
+  },
+  input: {
+    padding: 4,
+    color: "grey",
+    borderWidth: 1,
+    borderColor: "#F1EFEF",
+  },
+  container_field: {
+    paddingBottom: 12,
+    paddingTop: 4,
+  },
+  save_button: {
+    padding: 12,
+    backgroundColor: "#29ADB2",
+    alignSelf: "flex-start",
+    borderRadius: 8,
+    marginTop: 8,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  save_text: {
+    color: "white",
+    fontSize: 16,
   },
 });

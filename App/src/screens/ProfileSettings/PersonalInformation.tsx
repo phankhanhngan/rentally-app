@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -6,40 +6,77 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  Alert,
+  Platform,
 } from "react-native";
 import type { RootStackParams } from "@/navigations/StackNavigator";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import BackButton from "@/components/BackButton";
 import { launchImageLibrary } from "react-native-image-picker";
+import * as Yup from "yup";
+import { useUpdateProfileMutation } from "@/redux/services/user/user.service";
+import { IUpdateProfile, IUpdateResponse } from "@/interfaces/user.interface";
+import { ErrorMessage, Formik } from "formik";
+import { useAppSelector } from "@/redux/hook";
 type Props = NativeStackScreenProps<RootStackParams>;
 
-const field = (fieldName: string, content: string) => {
+const field = (
+  fieldName: string,
+  name: string,
+  value: string,
+  onChangeText?: (text: string) => void
+) => {
   return (
     <View>
       <View style={styles.container_field}>
         <Text style={styles.fieldName}>{fieldName}</Text>
-        <TextInput style={styles.input}>{content}</TextInput>
+        <TextInput
+          style={styles.input}
+          value={value}
+          testID={name}
+          onChangeText={onChangeText}
+        />
+        <ErrorMessage
+          name={name || ""}
+          render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
+        />
       </View>
     </View>
   );
 };
 
 const PersonalInformation = ({ navigation }: Props) => {
+  const userInfo = useAppSelector((state) => state.auth.userInfo);
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
+
   const BackHandler = () => {
     navigation.pop();
   };
 
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState(userInfo?.photo);
+  const fileRef = useRef<any | null>(null);
+  const [updateProfile, response] = useUpdateProfileMutation();
+
+  useEffect(() => {
+    if (response.data?.status === "success") {
+    }
+    if (response.error && "data" in response.error) {
+      Alert.alert(
+        "Invalid data!",
+        (response.error?.data as IUpdateResponse)?.message
+      );
+    }
+  }, [response]);
 
   const openImagePicker = () => {
     launchImageLibrary(
       {
         mediaType: "photo",
         includeBase64: false,
-        maxHeight: 2000,
-        maxWidth: 2000,
+        maxHeight: 1000,
+        maxWidth: 1000,
       },
-      (response: any) => {
+      async (response: any) => {
         if (response.didCancel) {
           console.log("User cancelled image picker");
           console.log(response);
@@ -47,32 +84,111 @@ const PersonalInformation = ({ navigation }: Props) => {
           console.log("Image picker error: ", response.error);
         } else {
           let imageUri = response.uri || response.assets?.[0]?.uri;
+          fileRef.current = response;
           setImageUri(imageUri);
         }
       }
     );
   };
 
+  const initialValues: IUpdateProfile = {
+    firstName: userInfo?.firstName || "",
+    lastName: userInfo?.lastName || "",
+    photo: userInfo?.photo || "",
+    phoneNumber: userInfo?.phoneNumber || "",
+  };
+
+  const validate = Yup.object().shape<Record<string, any>>({
+    firstName: Yup.string().required("Firstname Required!"),
+    lastName: Yup.string().required("Lastname Required!"),
+    phoneNumber: Yup.string()
+      .matches(
+        /^[\\+]?[(]?[0-9]{3}[)]?[-\s\\.]?[0-9]{3}[-\s\\.]?[0-9]{4,6}$/im,
+        "Invalid phone number"
+      )
+      .required("Number phone must be required!"),
+  });
+
+  const submitForm = async (values: IUpdateProfile) => {
+    let formData = new FormData();
+    
+    if (fileRef.current) {
+      formData.append("photo", {
+        type: fileRef.current.assets[0].type,
+        uri: fileRef.current.assets[0].uri,
+        name: fileRef.current.assets[0].fieldName,
+      } as any);
+    }
+    formData.append("firstName", values.firstName);
+    formData.append("lastName", values.lastName);
+    formData.append("phoneNumber", values.phoneNumber);
+    console.log(formData);
+
+    let response = await fetch(
+      "https://rentally-api-production.up.railway.app/api/v1/users/me",
+      {
+        method: "PUT",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    let responseJson = await response.json();
+    console.log(responseJson);
+    if (responseJson.statusCode === 400) {
+      Alert.alert("Invalid data!", responseJson.message);
+    }
+    // await updateProfile(values).unwrap();
+  };
+
   return (
     <View style={styles.container}>
       <BackButton onPress={BackHandler} />
       <Text style={styles.header}>Personal information</Text>
-      {/* Image */}
-      <TouchableOpacity onPress={openImagePicker}>
-        <Image style={styles.user_image}
-          source={
-            imageUri
-              ? { uri: imageUri }
-              : require("../../assets/images/user_logo.png")
-          }
-        />
-      </TouchableOpacity>
-      {field("First Name", "Vo")}
-      {field("Last Name", "Khang")}
-      {field("Phone Number", "038128521")}
-      <TouchableOpacity style={styles.save_button}>
-        <Text style={styles.save_text}>Save</Text>
-      </TouchableOpacity>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validate}
+        onSubmit={submitForm}
+      >
+        {(formik) => {
+          const { values, handleChange, handleSubmit } = formik;
+
+          return (
+            <View>
+              <TouchableOpacity onPress={openImagePicker}>
+                <Image style={styles.user_image} source={{ uri: imageUri }} />
+              </TouchableOpacity>
+              {field(
+                "First Name",
+                "firstName",
+                values.firstName,
+                handleChange("firstName")
+              )}
+              {field(
+                "Last Name",
+                "lastName",
+                values.lastName,
+                handleChange("lastName")
+              )}
+              {field(
+                "Phone Number",
+                "phoneNumber",
+                values.phoneNumber,
+                handleChange("phoneNumber")
+              )}
+              <TouchableOpacity
+                onPress={() => handleSubmit()}
+                style={styles.save_button}
+              >
+                <Text style={styles.save_text}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </Formik>
       <View style={styles.middle_container_outer}>
         <View style={styles.middle_container}>
           <View style={{ width: 200 }}>
@@ -113,9 +229,10 @@ const styles = StyleSheet.create({
   user_image: {
     height: 100,
     width: 100,
-    resizeMode: 'cover',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+    borderRadius: 50,
+    resizeMode: "cover",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   fieldName: {
     fontSize: 16,
@@ -174,5 +291,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
+  },
+  mesStyle: {
+    top: 65,
+    left: 0,
+    fontSize: 10,
+    color: "red",
+    position: "absolute",
   },
 });

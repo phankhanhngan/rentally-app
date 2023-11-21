@@ -1,5 +1,5 @@
 import { createApiWithAuth } from '../apiWithAuth.service';
-import type { IUser } from '@/interfaces/user.interface';
+import type { IUpdatePassword, IUpdateProfile, IUpdateResponse, IUser } from '@/interfaces/user.interface';
 
 const createApiUserWithAuth = createApiWithAuth('userApi', ['Users']);
 export const userApi = createApiUserWithAuth.injectEndpoints({
@@ -27,6 +27,22 @@ export const userApi = createApiUserWithAuth.injectEndpoints({
 				body: patch,
 			}),
 		}),
+		updateProfile: builder.mutation<IUpdateResponse, IUpdateProfile>({
+			query: ({...patch }) => ({
+				url: `/users/me`,
+				method: 'PUT',
+
+				body: patch,
+			}),
+		}),
+		updatePassword: builder.mutation<IUpdateResponse, IUpdatePassword>({
+			query: ({...patch }) => ({
+				url: `/users/me/password`,
+				method: 'PUT',
+
+				body: patch,
+			}),
+		}),
 		deleteUser: builder.mutation<void, number>({
 			query: (id) => ({
 				url: `/users/${id}`,
@@ -41,5 +57,7 @@ export const {
 	useGetUserByIdQuery,
 	useCreateUserMutation,
 	useUpdateUserMutation,
+	useUpdateProfileMutation,
+	useUpdatePasswordMutation,
 	useDeleteUserMutation,
 } = userApi;

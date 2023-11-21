@@ -1,19 +1,23 @@
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import IconMaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons";
-import IconEvil from "react-native-vector-icons/EvilIcons";
-import IconFeather from "react-native-vector-icons/Feather";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParams } from "@/navigations/StackNavigator";
 import OptionSettings from "./ProfileSettings/OptionSettings";
+import { logOut } from "@/redux/features/auth/auth.slice";
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const Profile = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.auth.accessToken);
-  const userInfo = useAppSelector((state) => state.auth.accessToken);
+  const userInfo = useAppSelector((state) => state.auth.userInfo);
 
   const goToPersonalInformation = () => {
     navigation.navigate("PersonalInformationUpdate");
@@ -28,54 +32,86 @@ const Profile = ({ navigation }: Props) => {
   };
 
   return (
-    <View style={styles.profile_container}>
-      <View style={styles.header_container}>
-        <Image
-          style={styles.logo_user}
-          source={require("../assets/images/user_logo.png")}
-        />
-        <View>
-          <Text style={styles.name}>Hoang</Text>
-          <Text style={{ color: "#A9A9A9" }}>Show profile</Text>
-        </View>
-      </View>
-      <View style={styles.middle_container_outer}>
-        <View style={styles.middle_container}>
-          <View style={{ width: 200 }}>
-            <Text style={styles.header_middle}>Rentally your place</Text>
-            <Text>It's simple to get set up and start earning.</Text>
+    <View style={styles.container}>
+      {accessToken ? (
+        <View style={styles.profile_container}>
+          <View style={styles.header_container}>
+            <Image style={styles.logo_user} source={{ uri: userInfo?.photo }} />
+            <View>
+              <Text style={styles.name}>
+                {userInfo?.firstName} {userInfo?.lastName}
+              </Text>
+              <Text style={{ color: "#A9A9A9" }}>Show profile</Text>
+            </View>
           </View>
-          <Image
-            style={styles.logo_user}
-            source={require("../assets/images/rentallyLogo.png")}
-          />
+          <View style={styles.middle_container_outer}>
+            <View style={styles.middle_container}>
+              <View style={{ width: 200 }}>
+                <Text style={styles.header_middle}>Rentally your place</Text>
+                <Text>It's simple to get set up and start earning.</Text>
+              </View>
+              <Image
+                style={styles.logo_user}
+                source={require("../assets/images/rentallyLogo.png")}
+              />
+            </View>
+          </View>
+          <View style={styles.settings_container}>
+            <Text style={styles.header_settings}>Settings</Text>
+            <OptionSettings
+              icon="user-o"
+              content="Personal information"
+              iconName="Icon"
+              event={goToPersonalInformation}
+            />
+            <OptionSettings
+              icon="lock"
+              content="Login & security"
+              iconName="Feather"
+              event={goToLoginSecurity}
+            />
+            <OptionSettings
+              icon="credit-card"
+              content="Payments and payouts"
+              iconName="Icon"
+            />
+          </View>
+          <View style={styles.logout_container}>
+            <Pressable
+              onPress={() => {
+                dispatch(logOut());
+                navigation.navigate("Login");
+              }}
+            >
+              <Text style={styles.logout_text}>Logout</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-      <View style={styles.settings_container}>
-        <Text style={styles.header_settings}>Settings</Text>
-        <OptionSettings
-          icon="user-o"
-          content="Personal information"
-          iconName="Icon"
-          event={goToPersonalInformation}
-        />
-        <OptionSettings
-          icon="lock"
-          content="Login & security"
-          iconName="Feather"
-          event={goToLoginSecurity}
-        />
-        <OptionSettings
-          icon="credit-card"
-          content="Payments and payouts"
-          iconName="Icon"
-        />
-      </View>
-      <View style={styles.logout_container}>
-        <TouchableOpacity onPress={goToLogout}>
-          <Text style={styles.logout_text}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={styles.not_login_container}>
+          <Text style={styles.notify}>
+            Please log in to experience the best service.
+          </Text>
+          <TouchableOpacity
+            style={styles.login_button}
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+          >
+            <Text style={styles.login_text}>Login</Text>
+          </TouchableOpacity>
+          <View style={styles.register_container}>
+            <Text style={styles.question}>Do not have an account?</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Register");
+              }}
+            >
+              <Text style={styles.register_text}>Register</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -104,6 +140,7 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     marginRight: 16,
+    borderRadius: 50,
   },
   name: {
     fontSize: 18,
@@ -187,7 +224,46 @@ const styles = StyleSheet.create({
   },
   logout_text: {
     fontSize: 16,
-    fontWeight: '500',
-    textDecorationLine: 'underline'
-  }
+    fontWeight: "500",
+    textDecorationLine: "underline",
+  },
+  not_login_container: {
+    backgroundColor: "white",
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+  },
+  notify: {
+    fontSize: 16,
+    color: "grey",
+  },
+  login_button: {
+    backgroundColor: "#E36414",
+    width: 300,
+    alignItems: "center",
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 32,
+  },
+  login_text: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  question: {
+    color: "grey",
+    fontSize: 16,
+    marginRight: 16,
+  },
+  register_container: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  register_text: {
+    color: "black",
+    textDecorationLine: "underline",
+    fontWeight: "bold",
+  },
 });

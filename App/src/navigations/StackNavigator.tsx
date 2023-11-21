@@ -27,6 +27,7 @@ import Profile from "@/screens/Profile";
 import PersonalInformationUpdate from "@/screens/ProfileSettings/PersonalInformation";
 import LoginSecurity from "@/screens/ProfileSettings/LoginSecurity";
 import Map from "@/screens/ProfileSettings/Map";
+import { IUser } from "@/interfaces/user.interface";
 export type RootStackParams = {
   Login: undefined;
   Register: undefined;
