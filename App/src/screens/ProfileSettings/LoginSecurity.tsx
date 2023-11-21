@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
   update_text: {
     color: "#29ADB2",
     fontWeight: "bold",
+    fontSize: 16
   },
   password_text: {
     fontWeight: "500",

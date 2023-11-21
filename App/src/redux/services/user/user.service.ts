@@ -27,14 +27,6 @@ export const userApi = createApiUserWithAuth.injectEndpoints({
 				body: patch,
 			}),
 		}),
-		updateProfile: builder.mutation<IUpdateResponse, IUpdateProfile>({
-			query: ({...patch }) => ({
-				url: `/users/me`,
-				method: 'PUT',
-
-				body: patch,
-			}),
-		}),
 		updatePassword: builder.mutation<IUpdateResponse, IUpdatePassword>({
 			query: ({...patch }) => ({
 				url: `/users/me/password`,
@@ -57,7 +49,6 @@ export const {
 	useGetUserByIdQuery,
 	useCreateUserMutation,
 	useUpdateUserMutation,
-	useUpdateProfileMutation,
 	useUpdatePasswordMutation,
 	useDeleteUserMutation,
 } = userApi;

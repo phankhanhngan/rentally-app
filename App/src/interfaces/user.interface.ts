@@ -54,6 +54,7 @@ export interface IDisableUserRequest {
 
 export interface IUpdateResponse {
 	data?: any;
+	token?: any;
 	message: string;
 	status: string;
 }

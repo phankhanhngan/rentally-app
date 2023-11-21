@@ -14,10 +14,10 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import BackButton from "@/components/BackButton";
 import { launchImageLibrary } from "react-native-image-picker";
 import * as Yup from "yup";
-import { useUpdateProfileMutation } from "@/redux/services/user/user.service";
-import { IUpdateProfile, IUpdateResponse } from "@/interfaces/user.interface";
+import { IUpdateProfile } from "@/interfaces/user.interface";
 import { ErrorMessage, Formik } from "formik";
-import { useAppSelector } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { setCredentials } from "@/redux/features/auth/auth.slice";
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const field = (
@@ -48,6 +48,7 @@ const field = (
 const PersonalInformation = ({ navigation }: Props) => {
   const userInfo = useAppSelector((state) => state.auth.userInfo);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
+  const dispatch = useAppDispatch();
 
   const BackHandler = () => {
     navigation.pop();
@@ -55,18 +56,6 @@ const PersonalInformation = ({ navigation }: Props) => {
 
   const [imageUri, setImageUri] = useState(userInfo?.photo);
   const fileRef = useRef<any | null>(null);
-  const [updateProfile, response] = useUpdateProfileMutation();
-
-  useEffect(() => {
-    if (response.data?.status === "success") {
-    }
-    if (response.error && "data" in response.error) {
-      Alert.alert(
-        "Invalid data!",
-        (response.error?.data as IUpdateResponse)?.message
-      );
-    }
-  }, [response]);
 
   const openImagePicker = () => {
     launchImageLibrary(
@@ -79,7 +68,6 @@ const PersonalInformation = ({ navigation }: Props) => {
       async (response: any) => {
         if (response.didCancel) {
           console.log("User cancelled image picker");
-          console.log(response);
         } else if (response.error) {
           console.log("Image picker error: ", response.error);
         } else {
@@ -116,13 +104,14 @@ const PersonalInformation = ({ navigation }: Props) => {
       formData.append("photo", {
         type: fileRef.current.assets[0].type,
         uri: fileRef.current.assets[0].uri,
-        name: fileRef.current.assets[0].fieldName,
+        name: fileRef.current.assets[0].fileName,
+        size: fileRef.current.assets[0].fileSize,
+        originalname: fileRef.current.assets[0].fileName,
       } as any);
     }
     formData.append("firstName", values.firstName);
     formData.append("lastName", values.lastName);
     formData.append("phoneNumber", values.phoneNumber);
-    console.log(formData);
 
     let response = await fetch(
       "https://rentally-api-production.up.railway.app/api/v1/users/me",
@@ -141,7 +130,12 @@ const PersonalInformation = ({ navigation }: Props) => {
     if (responseJson.statusCode === 400) {
       Alert.alert("Invalid data!", responseJson.message);
     }
-    // await updateProfile(values).unwrap();
+    if(responseJson.status === 'success') {
+      dispatch(
+				setCredentials({ accessToken: responseJson.token.token }),
+			);
+      navigation.pop();
+    }
   };
 
   return (
@@ -300,3 +294,5 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 });
+
+
