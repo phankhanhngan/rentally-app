@@ -25,7 +25,11 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 			searchParamsObject['minPrice'] && searchParamsObject['minPrice'][0]
 		) || MIN_DEFAULT,
 	);
-	const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
+	const [maxValue, setMaxValue] = useState(
+		+(
+			searchParamsObject['maxPrice'] && searchParamsObject['maxPrice'][0]
+		) || MAX_DEFAULT,
+	);
 	const [selected, setSelected] = useState<number[]>(
 		searchParamsObject['utility'] || [],
 	);
@@ -150,6 +154,8 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 					Price
 				</Text>
 				<RangeSlider
+					maxInit={maxValue}
+					minInit={minValue}
 					sliderWidth={300}
 					min={MIN_DEFAULT}
 					max={MAX_DEFAULT}

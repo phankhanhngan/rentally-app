@@ -12,6 +12,8 @@ import Animated, {
 interface RangeSliderProps {
 	sliderWidth: number;
 	min: number;
+	minInit: number;
+	maxInit: number;
 	max: number;
 	step: number;
 	onValueChange: (values: { min: number; max: number }) => void;
@@ -20,12 +22,18 @@ interface RangeSliderProps {
 const RangeSlider: React.FC<RangeSliderProps> = ({
 	sliderWidth,
 	min,
+	maxInit,
+	minInit,
 	max,
 	step,
 	onValueChange,
 }) => {
-	const position = useSharedValue(0);
-	const position2 = useSharedValue(sliderWidth);
+	const position = useSharedValue(
+		((minInit - min) / (max - min)) * sliderWidth,
+	);
+	const position2 = useSharedValue(
+		((maxInit - min) / (max - min)) * sliderWidth,
+	);
 	const opacity = useSharedValue(0);
 	const opacity2 = useSharedValue(0);
 	const zIndex = useSharedValue(0);
