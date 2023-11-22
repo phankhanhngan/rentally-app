@@ -59,4 +59,8 @@ export interface IUpdateResponse {
 	status: string;
 }
 
+export interface IDisableAccount {
+	password: string;
+}
+
 export type IDeleteUserRequest = Pick<IUser, 'id'>;

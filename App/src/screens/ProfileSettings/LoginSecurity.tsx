@@ -14,8 +14,15 @@ import BackButton from "@/components/BackButton";
 import { useAppSelector } from "@/redux/hook";
 import { ErrorMessage, Formik } from "formik";
 import * as Yup from "yup";
-import { useUpdatePasswordMutation } from "@/redux/services/user/user.service";
-import { IUpdatePassword, IUpdateResponse } from "@/interfaces/user.interface";
+import {
+  useDisableAccountMutation,
+  useUpdatePasswordMutation,
+} from "@/redux/services/user/user.service";
+import {
+  IDisableAccount,
+  IUpdatePassword,
+  IUpdateResponse,
+} from "@/interfaces/user.interface";
 type Props = NativeStackScreenProps<RootStackParams>;
 
 interface Values {
@@ -26,10 +33,16 @@ interface Values {
 const LoginSecurity = ({ navigation }: Props) => {
   const userInfo = useAppSelector((state) => state.auth.userInfo);
   const [isShowChangePassword, setIsShowChangePassword] = useState(false);
+  const [isShowDisableAccount, setIsShowDisableAccount] = useState(false);
   const [updatePassword, updateResponse] = useUpdatePasswordMutation();
+  const [disableAccount, disableResponse] = useDisableAccountMutation();
 
   useEffect(() => {
     if (updateResponse.data?.status === "success") {
+      Alert.alert(
+        "Notify",
+        'Updated password successfully!'
+      );
       setIsShowChangePassword(false);
     }
     if (updateResponse.error && "data" in updateResponse.error) {
@@ -40,12 +53,36 @@ const LoginSecurity = ({ navigation }: Props) => {
     }
   }, [updateResponse]);
 
+  useEffect(() => {
+    console.log(disableResponse);
+    
+    if (disableResponse.data?.status === "success") {
+      navigation.navigate("Login");
+    }
+    if (disableResponse.error && "data" in disableResponse.error) {
+      Alert.alert(
+        "Disable Account Failed!",
+        (disableResponse.error?.data as IUpdateResponse)?.message
+      );
+    }
+  }, [disableResponse]);
+
   const BackHandler = () => {
     navigation.pop();
   };
 
   const goToChangePassword = () => {
     setIsShowChangePassword(!isShowChangePassword);
+    if (!isShowChangePassword) {
+      setIsShowDisableAccount(false);
+    }
+  };
+
+  const goToChangeDisableAccount = () => {
+    setIsShowDisableAccount(!isShowDisableAccount);
+    if (!isShowDisableAccount) {
+      setIsShowChangePassword(false);
+    }
   };
 
   const initialValues = {
@@ -62,8 +99,30 @@ const LoginSecurity = ({ navigation }: Props) => {
       .required("Confirm Password Required"),
   });
 
+  const validatePassword = Yup.object().shape<Record<string, any>>({
+    password: Yup.string().required("Password Required!"),
+  });
+
   const submitForm = async (values: IUpdatePassword) => {
     await updatePassword(values).unwrap();
+  };
+
+  const submitFormDisable = async (values: IDisableAccount) => {
+    Alert.alert(
+      "Are your sure?",
+      "Are you sure you want to disable account? Your account will no longer be usable!!!",
+      [
+        {
+          text: "Yes",
+          onPress: async () => {
+            await disableAccount(values).unwrap();
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
   };
 
   const field = (
@@ -137,6 +196,39 @@ const LoginSecurity = ({ navigation }: Props) => {
     );
   };
 
+  const showDisableAccount = () => {
+    return (
+      <View>
+        <Formik
+          initialValues={{ password: "" } as any}
+          validationSchema={validatePassword}
+          onSubmit={submitFormDisable}
+        >
+          {(formik) => {
+            const { values, handleChange, handleSubmit } = formik;
+
+            return (
+              <View>
+                {field(
+                  "Password",
+                  "password",
+                  values.password,
+                  handleChange("password")
+                )}
+                <TouchableOpacity
+                  onPress={() => handleSubmit()}
+                  style={styles.save_button}
+                >
+                  <Text style={styles.save_text}>Disable</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </Formik>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <BackButton onPress={BackHandler} />
@@ -162,10 +254,11 @@ const LoginSecurity = ({ navigation }: Props) => {
         <Text style={styles.account_text}>Account</Text>
         <View style={styles.disable_container}>
           <Text>Your account is disabled</Text>
-          <TouchableOpacity onPress={goToChangePassword}>
+          <TouchableOpacity onPress={goToChangeDisableAccount}>
             <Text style={styles.disable_text}>Disable</Text>
           </TouchableOpacity>
         </View>
+        {isShowDisableAccount && showDisableAccount()}
       </View>
     </View>
   );
@@ -213,7 +306,7 @@ const styles = StyleSheet.create({
   update_text: {
     color: "#29ADB2",
     fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
   },
   password_text: {
     fontWeight: "500",
@@ -236,6 +329,7 @@ const styles = StyleSheet.create({
   },
   disable_text: {
     marginLeft: 24,
+    fontSize: 16,
     color: "#FF9130",
   },
   logo_user: {
