@@ -6,10 +6,11 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { type FormikErrors, ErrorMessage } from 'formik';
 
 interface BasicInputProps {
+	isValidate?: boolean;
 	label: string;
 	value: string;
 	name: string;
-	data: { label: string; value: string }[];
+	data: { name: string; code: string }[];
 	setFieldValue: (
 		field: string,
 		value: any,
@@ -18,6 +19,7 @@ interface BasicInputProps {
 }
 export default ({
 	label = 'Label',
+	isValidate = true,
 	name,
 	data,
 	setFieldValue,
@@ -35,22 +37,24 @@ export default ({
 			>
 				{label}
 			</Text>
-			<ErrorMessage
-				name={name || ''}
-				render={(msg) => (
-					<Text
-						style={{
-							top: 86,
-							left: 10,
-							fontSize: 10,
-							color: 'red',
-							position: 'absolute',
-						}}
-					>
-						{msg}
-					</Text>
-				)}
-			/>
+			{isValidate && (
+				<ErrorMessage
+					name={name || ''}
+					render={(msg) => (
+						<Text
+							style={{
+								top: 86,
+								left: 10,
+								fontSize: 10,
+								color: 'red',
+								position: 'absolute',
+							}}
+						>
+							{msg}
+						</Text>
+					)}
+				/>
+			)}
 			<Dropdown
 				style={[styles.dropdown, isFocus && { borderColor: '#E36414' }]}
 				placeholderStyle={styles.placeholderStyle}
@@ -60,8 +64,8 @@ export default ({
 				data={data}
 				search
 				maxHeight={300}
-				labelField="label"
-				valueField="value"
+				labelField="name"
+				valueField="code"
 				placeholder={!isFocus ? ' ' : '...'}
 				searchPlaceholder="Search..."
 				value={value}

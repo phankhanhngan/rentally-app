@@ -5,6 +5,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { type FormikErrors, ErrorMessage } from 'formik';
 
 interface BasicInputProps {
+	isValidate?: boolean;
 	name: string;
 	value: string;
 	label: string;
@@ -17,6 +18,7 @@ interface BasicInputProps {
 
 const TextInputWithLabel: FC<BasicInputProps> = ({
 	value,
+	isValidate = true,
 	setFieldValue,
 	label,
 	name,
@@ -47,10 +49,12 @@ const TextInputWithLabel: FC<BasicInputProps> = ({
 				]}
 			/>
 
-			<ErrorMessage
-				name={name || ''}
-				render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
-			/>
+			{isValidate && (
+				<ErrorMessage
+					name={name || ''}
+					render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
+				/>
+			)}
 		</View>
 	);
 };

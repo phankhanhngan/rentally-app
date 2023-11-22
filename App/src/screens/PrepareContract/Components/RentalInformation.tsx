@@ -8,17 +8,17 @@ import Dropdown from '@/components/Dropdown';
 import type { FormikErrors } from 'formik';
 
 const leaseTermData = [
-	{ label: '3 months', value: '3' },
-	{ label: '6 months', value: '6' },
-	{ label: '9 months', value: '9' },
-	{ label: '12 months', value: '12' },
+	{ name: '3 months', code: '3' },
+	{ name: '6 months', code: '6' },
+	{ name: '9 months', code: '9' },
+	{ name: '12 months', code: '12' },
 ];
 
 const tenantsData = [
-	{ label: '1 tenant', value: '1' },
-	{ label: '2 tenants', value: '2' },
-	{ label: '3 tenants', value: '3' },
-	{ label: '4 tenants', value: '4' },
+	{ name: '1 tenant', code: '1' },
+	{ name: '2 tenants', code: '2' },
+	{ name: '3 tenants', code: '3' },
+	{ name: '4 tenants', code: '4' },
 ];
 
 const RentalInformation = ({

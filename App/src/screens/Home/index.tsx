@@ -12,7 +12,10 @@ import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import { useGetFindingRoomsQuery } from '@/redux/services/findingRoom/findingRoom.service';
-import { useGetUtilitiesQuery } from '@/redux/services/help/help.service';
+import {
+	useGetProvincesQuery,
+	useGetUtilitiesQuery,
+} from '@/redux/services/help/help.service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 type Props = NativeStackScreenProps<RootStackParams>;
@@ -21,6 +24,8 @@ const Home = ({ navigation }: Props) => {
 	// 	Record<string, string[]>
 	// >({ page: ['1'] });
 	const { isLoading: isGetUltilitiesLoading } = useGetUtilitiesQuery('');
+	const { isLoading: isGetProvincesLoading } = useGetProvincesQuery('');
+
 	const searchParamsObject = useAppSelector(
 		(state) => state.params.searchParamsObject,
 	);
@@ -35,7 +40,12 @@ const Home = ({ navigation }: Props) => {
 		setOpenFilter((prev) => !prev);
 	};
 
-	if (isLoading || isFetching || isGetUltilitiesLoading) {
+	if (
+		isLoading ||
+		isFetching ||
+		isGetUltilitiesLoading ||
+		isGetProvincesLoading
+	) {
 		return (
 			<View style={{ flex: 1 }}>
 				<ExploreHeader
