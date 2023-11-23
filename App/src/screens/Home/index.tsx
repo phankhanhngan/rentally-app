@@ -8,6 +8,7 @@ import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
 import Loading from '@/components/Loading';
+import { Skeleton } from '@/components/Skeleton';
 import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
@@ -52,7 +53,17 @@ const Home = ({ navigation }: Props) => {
 					onSearchPress={toggleSheetSearch}
 					onFilterPress={toggleSheetFilter}
 				/>
-				<Loading />
+				<View style={{ marginTop: 30, marginHorizontal: 24, gap: 8 }}>
+					<Skeleton variant="box" height={300} width={'100%'} />
+					<Skeleton variant="box" height={30} width={'100%'} />
+					<Skeleton variant="box" height={30} width={80} />
+				</View>
+				<View style={{ marginTop: 30, marginHorizontal: 24, gap: 8 }}>
+					<Skeleton variant="box" height={300} width={'100%'} />
+					<Skeleton variant="box" height={30} width={'100%'} />
+					<Skeleton variant="box" height={30} width={80} />
+				</View>
+				{/* <Loading /> */}
 			</View>
 		);
 	}

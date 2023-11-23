@@ -33,7 +33,10 @@ export const helpApi = creatApiAuthWithAuth.injectEndpoints({
 				url: '/provinces',
 			}),
 		}),
-		getDistricts: builder.query<IDistrict[], { province_code: string }>({
+		getDistricts: builder.query<
+			IDistrict[],
+			{ province_code: string | number }
+		>({
 			query: ({ province_code }) => ({
 				url: `/provinces/${province_code}/districts`,
 			}),

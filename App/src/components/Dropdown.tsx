@@ -8,7 +8,7 @@ import { type FormikErrors, ErrorMessage } from 'formik';
 interface BasicInputProps {
 	isValidate?: boolean;
 	label: string;
-	value: string;
+	value: string | number;
 	name: string;
 	data: { name: string; code: string }[];
 	setFieldValue: (
@@ -26,6 +26,7 @@ export default ({
 	value,
 }: BasicInputProps) => {
 	const [isFocus, setIsFocus] = useState(false);
+
 	return (
 		<View style={{ width: '100%' }}>
 			<Text
@@ -73,7 +74,7 @@ export default ({
 				onBlur={() => setIsFocus(false)}
 				onChange={(item) => {
 					setIsFocus(false);
-					setFieldValue(name, item.value);
+					setFieldValue(name, item.code);
 				}}
 			/>
 		</View>
