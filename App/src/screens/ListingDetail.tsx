@@ -115,15 +115,20 @@ const ListingDetail = ({ navigation, route }: Props) => {
 						))}
 					</Swiper>
 					<TouchableOpacity
-						style={{ position: 'absolute', right: 16, top: 16 }}
+						style={{
+							position: 'absolute',
+							right: 16,
+							top: 16,
+							padding: 7,
+							borderRadius: 100,
+							backgroundColor: 'white',
+						}}
 					>
 						<Icon
-							name="heart"
-							size={20}
+							name="heart-o"
+							color={'black'}
+							size={16}
 							style={{
-								position: 'absolute',
-								right: 0,
-								top: 0,
 								opacity: 1,
 							}}
 						/>

@@ -74,15 +74,20 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 					))}
 				</Swiper>
 				<TouchableOpacity
-					style={{ position: 'absolute', right: 38, top: 12 }}
+					style={{
+						position: 'absolute',
+						right: 38,
+						top: 12,
+						padding: 7,
+						borderRadius: 100,
+						backgroundColor: 'white',
+					}}
 				>
 					<Icon
-						name="heart"
-						size={20}
+						name="heart-o"
+						color={'black'}
+						size={16}
 						style={{
-							position: 'absolute',
-							right: 0,
-							top: 0,
 							opacity: 1,
 						}}
 					/>
