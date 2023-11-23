@@ -115,7 +115,7 @@ const Search = ({ onSearchPress }: SearchProps) => {
 					Search
 				</Text>
 				<TouchableOpacity
-					onPress={handleSubmit}
+					onPress={() => handleSubmit}
 					activeOpacity={0.7}
 					style={[
 						{

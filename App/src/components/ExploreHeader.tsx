@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
 import {
-	Pressable,
+	Image,
 	SafeAreaView,
 	StyleSheet,
 	Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 
+import Logo from '../assets/images/Logo.svg';
 interface ExploreHeaderProps {
 	onSearchPress?: () => void;
 	onFilterPress?: () => void;
@@ -22,6 +23,33 @@ const ExploreHeader: FC<ExploreHeaderProps> = ({
 	return (
 		<SafeAreaView style={{ height: 80, backgroundColor: '#fff' }}>
 			<View style={styles.container}>
+				<View
+					style={{
+						paddingLeft: 22,
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent: 'center',
+						marginTop: -20,
+						gap: 0,
+						paddingRight: 16,
+					}}
+				>
+					<Image
+						source={require('../assets/images/rentallyLogo.png')}
+						style={{
+							width: 40,
+							height: 40,
+						}}
+					/>
+					<Logo
+						width={80}
+						height={40}
+						style={{
+							marginTop: 5,
+							marginLeft: -10,
+						}}
+					/>
+				</View>
 				<View style={styles.actionRow}>
 					<TouchableOpacity
 						style={{ flex: 1 }}
@@ -39,14 +67,6 @@ const ExploreHeader: FC<ExploreHeaderProps> = ({
 									}}
 								>
 									Where to?
-								</Text>
-								<Text
-									style={{
-										color: '#5E5D5E',
-										fontFamily: 'mon',
-									}}
-								>
-									Provinces · District
 								</Text>
 							</View>
 						</View>
@@ -76,12 +96,17 @@ const styles = StyleSheet.create({
 			width: 1,
 			height: 10,
 		},
-	},
-	actionRow: {
+		zIndex: 4,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingHorizontal: 24,
+	},
+	actionRow: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		paddingRight: 24,
 		paddingBottom: 16,
 		gap: 12,
 	},
@@ -90,10 +115,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		flexDirection: 'row',
 		gap: 10,
-		padding: 8,
-		paddingHorizontal: 20,
+		paddingVertical: 12,
 		alignItems: 'center',
-		width: '100%',
+		paddingLeft: 10,
+
 		borderWidth: StyleSheet.hairlineWidth,
 		borderColor: '#c2c2c2',
 		borderRadius: 30,

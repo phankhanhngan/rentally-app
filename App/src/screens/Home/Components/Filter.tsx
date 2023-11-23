@@ -7,18 +7,22 @@ import RangeSlider from './RangerSilder';
 import Utilities from './Utilities';
 import { addParam } from '@/redux/features/params/params.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { useGetPriceQuery } from '@/redux/services/help/help.service';
 
 interface FiltersProps {
 	onFilterPress: () => void;
 }
 
 const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
-	const MIN_DEFAULT = 10;
-	const MAX_DEFAULT = 500;
+	const { data } = useGetPriceQuery('');
+	const MIN_DEFAULT = +(data?.data.minPrice || 0);
+	const MAX_DEFAULT = +(data?.data.maxPrice || 1000);
 	const dispatch = useAppDispatch();
 	const searchParamsObject = useAppSelector(
 		(state) => state.params.searchParamsObject,
 	);
+
+	const [rerender, setRerender] = useState(0);
 
 	const [minValue, setMinValue] = useState<number>(
 		+(
@@ -31,8 +35,37 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 		) || MAX_DEFAULT,
 	);
 	const [selected, setSelected] = useState<number[]>(
-		searchParamsObject['utility'] || [],
+		(searchParamsObject['utility'] || []).map((value) => Number(value)),
 	);
+
+	const handleClear = () => {
+		setSelected([]);
+		setMinValue(MIN_DEFAULT);
+		setMaxValue(MAX_DEFAULT);
+		setRerender((prev) => ++prev);
+	};
+
+	const handleFilter = () => {
+		dispatch(
+			addParam({
+				name: 'minPrice',
+				values: [minValue],
+			}),
+		);
+		dispatch(
+			addParam({
+				name: 'maxPrice',
+				values: [maxValue],
+			}),
+		);
+		dispatch(
+			addParam({
+				name: 'utility',
+				values: selected,
+			}),
+		);
+		onFilterPress();
+	};
 
 	return (
 		<Animated.View
@@ -68,7 +101,7 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 				</Text>
 				<View style={{ flexDirection: 'row', gap: 4 }}>
 					<TouchableOpacity
-						onPress={() => {}}
+						onPress={handleClear}
 						style={[
 							{
 								paddingVertical: 12,
@@ -95,27 +128,7 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 					</TouchableOpacity>
 					<TouchableOpacity
 						activeOpacity={0.7}
-						onPress={() => {
-							dispatch(
-								addParam({
-									name: 'minPrice',
-									values: [minValue],
-								}),
-							);
-							dispatch(
-								addParam({
-									name: 'maxPrice',
-									values: [maxValue],
-								}),
-							);
-							dispatch(
-								addParam({
-									name: 'utility',
-									values: selected,
-								}),
-							);
-							onFilterPress();
-						}}
+						onPress={handleFilter}
 						style={[
 							{
 								backgroundColor: '#E36414',
@@ -154,6 +167,7 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 					Price
 				</Text>
 				<RangeSlider
+					key={rerender}
 					maxInit={maxValue}
 					minInit={minValue}
 					sliderWidth={300}

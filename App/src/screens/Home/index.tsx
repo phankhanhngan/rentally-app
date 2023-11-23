@@ -7,13 +7,13 @@ import Filter from './Components/Filter';
 import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
-import Loading from '@/components/Loading';
 import { Skeleton } from '@/components/Skeleton';
 import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import { useGetFindingRoomsQuery } from '@/redux/services/findingRoom/findingRoom.service';
 import {
+	useGetPriceQuery,
 	useGetProvincesQuery,
 	useGetUtilitiesQuery,
 } from '@/redux/services/help/help.service';
@@ -21,15 +21,14 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 type Props = NativeStackScreenProps<RootStackParams>;
 const Home = ({ navigation }: Props) => {
-	// const [searchParamsObject, setSearchParamsObject] = useState<
-	// 	Record<string, string[]>
-	// >({ page: ['1'] });
 	const { isLoading: isGetUltilitiesLoading } = useGetUtilitiesQuery('');
 	const { isLoading: isGetProvincesLoading } = useGetProvincesQuery('');
+	const { isLoading: isGetPriceLoading } = useGetPriceQuery('');
 
 	const searchParamsObject = useAppSelector(
 		(state) => state.params.searchParamsObject,
 	);
+
 	const [isOpenSearch, setOpenSearch] = useState(false);
 	const [isOpenFilter, setOpenFilter] = useState(false);
 	const { data, isLoading, isFetching } =
@@ -45,20 +44,21 @@ const Home = ({ navigation }: Props) => {
 		isLoading ||
 		isFetching ||
 		isGetUltilitiesLoading ||
-		isGetProvincesLoading
+		isGetProvincesLoading ||
+		isGetPriceLoading
 	) {
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={{ flex: 1, backgroundColor: 'white' }}>
 				<ExploreHeader
 					onSearchPress={toggleSheetSearch}
 					onFilterPress={toggleSheetFilter}
 				/>
-				<View style={{ marginTop: 30, marginHorizontal: 24, gap: 8 }}>
+				<View style={{ marginTop: 20, marginHorizontal: 24, gap: 8 }}>
 					<Skeleton variant="box" height={300} width={'100%'} />
 					<Skeleton variant="box" height={30} width={'100%'} />
 					<Skeleton variant="box" height={30} width={80} />
 				</View>
-				<View style={{ marginTop: 30, marginHorizontal: 24, gap: 8 }}>
+				<View style={{ marginTop: 20, marginHorizontal: 24, gap: 8 }}>
 					<Skeleton variant="box" height={300} width={'100%'} />
 					<Skeleton variant="box" height={30} width={'100%'} />
 					<Skeleton variant="box" height={30} width={80} />
@@ -115,27 +115,29 @@ const Home = ({ navigation }: Props) => {
 				onSearchPress={toggleSheetSearch}
 				onFilterPress={toggleSheetFilter}
 			/>
-			<ScrollView>
-				<View
-					style={{
-						flex: 1,
-						backgroundColor: '#FDFFFF',
-					}}
-				>
-					{data?.data?.rooms.map((dataRoom: IRoomFinding) => (
-						<Listing
-							key={dataRoom.id}
-							data={dataRoom}
-							name={dataRoom.id}
-							onPress={(id) => {
-								navigation.navigate('Room', {
-									id,
-								});
-							}}
-						/>
-					))}
-				</View>
-			</ScrollView>
+			<View style={{ marginTop: -2 }}>
+				<ScrollView>
+					<View
+						style={{
+							flex: 1,
+							backgroundColor: '#FFF',
+						}}
+					>
+						{data?.data?.rooms.map((dataRoom: IRoomFinding) => (
+							<Listing
+								key={dataRoom.id}
+								data={dataRoom}
+								name={dataRoom.id}
+								onPress={(id) => {
+									navigation.navigate('Room', {
+										id,
+									});
+								}}
+							/>
+						))}
+					</View>
+				</ScrollView>
+			</View>
 			{isOpenSearch && (
 				<>
 					<AnimatedPressable
@@ -173,6 +175,7 @@ const Home = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
 	screenContainer: {
 		flex: 1,
+		backgroundColor: 'white',
 	},
 	mapStyle: {
 		width: 400,

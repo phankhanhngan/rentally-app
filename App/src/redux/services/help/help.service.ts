@@ -33,6 +33,18 @@ export const helpApi = creatApiAuthWithAuth.injectEndpoints({
 				url: '/provinces',
 			}),
 		}),
+		getPrice: builder.query<
+			{
+				status: string;
+				message: string;
+				data: { maxPrice: string; minPrice: string };
+			},
+			string
+		>({
+			query: () => ({
+				url: '/finding/price',
+			}),
+		}),
 		getDistricts: builder.query<
 			IDistrict[],
 			{ province_code: string | number }
@@ -60,4 +72,5 @@ export const {
 	useUploadImagesMutation,
 	useGetDistrictsQuery,
 	useGetProvincesQuery,
+	useGetPriceQuery,
 } = helpApi;

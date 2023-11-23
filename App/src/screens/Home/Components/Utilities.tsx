@@ -5,8 +5,8 @@ import { MultiSelect } from 'react-native-element-dropdown';
 import { useGetUtilitiesQuery } from '@/redux/services/help/help.service';
 
 interface UtilitiesProps {
-	selected: number[];
-	setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+	selected: any[];
+	setSelected: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const Utilities: React.FC<UtilitiesProps> = ({ selected, setSelected }) => {
