@@ -28,6 +28,7 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 			color: STATUS_COLORS[rentalStatus] as string,
 			fontSize: 12,
 			fontWeight: '700',
+			textAlign: 'right',
 		}}
 	>
 		{rentalStatus}
@@ -146,7 +147,7 @@ const CheckList = ({ navigation }: Props) => {
 							key={myRental.rentalInfo.id}
 							style={{
 								width: '100%',
-								height: 160,
+								height: 168,
 								marginBottom: 24,
 								borderWidth: StyleSheet.hairlineWidth,
 								borderColor: '#c2c2c2',
@@ -188,22 +189,22 @@ const CheckList = ({ navigation }: Props) => {
 								<View
 									style={{
 										paddingHorizontal: 12,
-										flexDirection: 'row',
-										justifyContent: 'space-between',
+										// flexDirection: 'row',
+										// justifyContent: 'space-between',
 									}}
 								>
+									<StatusText
+										rentalStatus={myRental.status}
+									/>
 									<Text
 										style={{
 											color: '#000',
-											fontSize: 16,
-											fontWeight: '700',
+											fontSize: 13,
+											fontWeight: '900',
 										}}
 									>
 										{myRental.roomInfo.roomName}
 									</Text>
-									<StatusText
-										rentalStatus={myRental.status}
-									/>
 								</View>
 								<View
 									style={{
