@@ -258,17 +258,20 @@ const ListingDetail = ({ navigation, route }: Props) => {
 								style={styles.host}
 							/>
 
-							<View>
+							<View style={{ flex: 1 }}>
 								<Text
 									style={{
 										fontWeight: '500',
 										fontSize: 16,
 										color: '#5E5D5E',
+										width: '100%',
 									}}
 								>
 									Hosted by {landlord.name}
 								</Text>
-								<Text style={{ color: '#5E5D5E' }}>
+								<Text
+									style={{ color: '#5E5D5E', width: '100%' }}
+								>
 									{landlord.email} · {landlord.phoneNumber}
 								</Text>
 							</View>
