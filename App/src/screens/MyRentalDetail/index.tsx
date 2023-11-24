@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+	Alert,
 	Dimensions,
 	Image,
 	ScrollView,
@@ -16,11 +17,14 @@ import RentalInfo from './Components/RentalInfo';
 import BackButton from '@/components/BackButton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
+type Props = NativeStackScreenProps<RootStackParams, 'Rental'>;
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
+import Spinner from 'react-native-loading-spinner-overlay';
+
+import { useRetalRequestMutation } from '@/redux/services/rental/rental.service';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
@@ -36,32 +40,56 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	</Text>
 );
 
-const ActionButton = ({ rentalStatus }: { rentalStatus: STATUS }) => {
+const ActionButton = ({
+	rentalStatus,
+	id,
+}: {
+	rentalStatus: STATUS;
+	id: string;
+}) => {
+	const [retalRequest, { isLoading }] = useRetalRequestMutation();
+	const handleRequest = async () => {
+		try {
+			const type =
+				rentalStatus === STATUS.APPROVED ? 'confirm' : 'request-break';
+			const res = await retalRequest({ id, type }).unwrap();
+			console.log('res:', res);
+		} catch (error: any) {
+			console.log(error);
+			Alert.alert('error!', error.data.message);
+		}
+	};
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
-			<TouchableOpacity
-				style={[
-					{
-						backgroundColor: STATUS_COLORS[rentalStatus] as string,
+			<>
+				<Spinner visible={isLoading} />
+				<TouchableOpacity
+					onPress={handleRequest}
+					style={[
+						{
+							backgroundColor: STATUS_COLORS[
+								rentalStatus
+							] as string,
 
-						height: 50,
-						borderRadius: 8,
-						justifyContent: 'center',
-						alignItems: 'center',
-					},
-					{ paddingRight: 20, paddingLeft: 20 },
-				]}
-			>
-				<Text
-					style={{
-						color: '#fff',
-						fontSize: 16,
-						fontFamily: 'mon-b',
-					}}
+							height: 50,
+							borderRadius: 8,
+							justifyContent: 'center',
+							alignItems: 'center',
+						},
+						{ paddingRight: 20, paddingLeft: 20 },
+					]}
 				>
-					{STATUS_TEXT[rentalStatus]}
-				</Text>
-			</TouchableOpacity>
+					<Text
+						style={{
+							color: '#fff',
+							fontSize: 16,
+							fontFamily: 'mon-b',
+						}}
+					>
+						{STATUS_TEXT[rentalStatus]}
+					</Text>
+				</TouchableOpacity>
+			</>
 		);
 	return (
 		<View
@@ -83,7 +111,9 @@ const ActionButton = ({ rentalStatus }: { rentalStatus: STATUS }) => {
 	);
 };
 
-const MyRentalDetail = ({ navigation }: Props) => {
+const MyRentalDetail = ({ navigation, route }: Props) => {
+	console.log(route.params.myRental);
+	const myRental = route.params.myRental;
 	const BackHandler = () => {
 		navigation.pop();
 	};
@@ -101,21 +131,25 @@ const MyRentalDetail = ({ navigation }: Props) => {
 				>
 					<Image
 						source={{
-							uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+							uri:
+								myRental.roomInfo.images &&
+								(myRental.roomInfo.images[0] as string),
 						}}
 						style={[styles.image]}
 						resizeMode="cover"
 					/>
 
 					<View style={styles.infoContainer}>
-						<StatusText rentalStatus={STATUS.COMPLETED} />
+						<StatusText rentalStatus={myRental.status} />
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
 								navigation.navigate('Room', { id: '' });
 							}}
 						>
-							<Text style={styles.name}>467 Mraz Avenue</Text>
+							<Text style={styles.name}>
+								{myRental.roomInfo.roomName}
+							</Text>
 						</TouchableOpacity>
 						<View
 							style={{
@@ -132,14 +166,19 @@ const MyRentalDetail = ({ navigation }: Props) => {
 								color={'#E36414'}
 							/>
 							<Text style={styles.location}>
-								West Virginia, Port Ignacio
+								{myRental.roomBlockInfo.district},{' '}
+								{myRental.roomBlockInfo.city}
 							</Text>
 						</View>
 
 						<View style={styles.divider} />
-						<RentalInfo />
+						<RentalInfo
+							rentalInfo={myRental.rentalInfo}
+							price={myRental.roomInfo.price}
+							depositAmount={myRental.roomInfo.depositAmount}
+						/>
 						<View style={styles.divider} />
-						<HostInfo />
+						<HostInfo hostInfo={myRental.hostInfo} />
 					</View>
 				</ScrollView>
 			</View>
@@ -165,7 +204,10 @@ const MyRentalDetail = ({ navigation }: Props) => {
 						alignItems: 'center',
 					}}
 				>
-					<ActionButton rentalStatus={STATUS.COMPLETED} />
+					<ActionButton
+						rentalStatus={myRental.status}
+						id={myRental.rentalInfo.rentalDetailId || ''}
+					/>
 				</View>
 			</View>
 		</View>

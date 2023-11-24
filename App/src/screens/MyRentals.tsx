@@ -20,6 +20,7 @@ import {
 	useRetalRequestMutation,
 } from '@/redux/services/rental/rental.service';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+import { formatNumberWithCommas } from '@/utils/helpers';
 import moment from 'moment';
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	<Text
@@ -226,7 +227,10 @@ const CheckList = ({ navigation }: Props) => {
 											Monthly rent
 										</Text>
 										<Text style={styles.textInfo}>
-											{myRental.roomInfo.price} VND
+											{formatNumberWithCommas(
+												myRental.roomInfo.price,
+											)}{' '}
+											VND
 										</Text>
 									</View>
 									<View style={{ flex: 1 }}>
@@ -240,7 +244,9 @@ const CheckList = ({ navigation }: Props) => {
 											Deposit amount
 										</Text>
 										<Text style={styles.textInfo}>
-											{myRental.roomInfo.depositAmount}{' '}
+											{formatNumberWithCommas(
+												myRental.roomInfo.depositAmount,
+											)}{' '}
 											VND
 										</Text>
 									</View>

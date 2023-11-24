@@ -1,7 +1,9 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-const HostInfo = () => {
+import type { IUser } from '@/interfaces/user.interface';
+
+const HostInfo = ({ hostInfo }: { hostInfo: IUser }) => {
 	return (
 		<View
 			style={{
@@ -15,7 +17,7 @@ const HostInfo = () => {
 			</Text>
 			<Image
 				source={{
-					uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+					uri: hostInfo.photo,
 				}}
 				style={styles.host}
 			/>
@@ -28,27 +30,29 @@ const HostInfo = () => {
 				<View style={{ flex: 1, gap: 8 }}>
 					<View>
 						<Text style={styles.textTitle}>First name:</Text>
-						<Text style={styles.textInfo}>Nguyen Phan Nhat </Text>
+						<Text style={styles.textInfo}>
+							{hostInfo.firstName || ''}{' '}
+						</Text>
 					</View>
 					<View>
 						<Text style={styles.textTitle}>last name:</Text>
-						<Text style={styles.textInfo}>Hoang</Text>
+						<Text style={styles.textInfo}>{hostInfo.lastName}</Text>
 					</View>
 					<View>
 						<Text style={styles.textTitle}>Phone:</Text>
-						<Text style={styles.textInfo}>0852336242</Text>
+						<Text style={styles.textInfo}>
+							{hostInfo.phoneNumber || 'empty'}
+						</Text>
 					</View>
 				</View>
 				<View style={{ flex: 1, gap: 8 }}>
 					<View>
 						<Text style={styles.textTitle}>Identity number:</Text>
-						<Text style={styles.textInfo}>12002200xx</Text>
+						<Text style={styles.textInfo}>123123xxx</Text>
 					</View>
 					<View>
 						<Text style={styles.textTitle}>Email:</Text>
-						<Text style={styles.textInfo}>
-							hoangdeptrai@gmai.com
-						</Text>
+						<Text style={styles.textInfo}>{hostInfo.email}</Text>
 					</View>
 				</View>
 			</View>
