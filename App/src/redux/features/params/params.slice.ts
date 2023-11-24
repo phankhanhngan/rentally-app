@@ -6,7 +6,7 @@ export interface ParamsState {
 }
 
 const initialState: ParamsState = {
-	searchParamsObject: { page: ['1'] },
+	searchParamsObject: { page: [1] },
 };
 
 const paramsSlice = createSlice({

@@ -40,7 +40,12 @@ const Search = ({ onSearchPress }: SearchProps) => {
 	};
 
 	const onSubmit = async (values: any) => {
-		console.log(values);
+		dispatch(
+			addParam({
+				name: 'page',
+				values: [1],
+			}),
+		);
 		dispatch(
 			addParam({
 				name: 'keyword',
@@ -71,13 +76,12 @@ const Search = ({ onSearchPress }: SearchProps) => {
 	});
 	const { values, setFieldValue, handleSubmit } = formik;
 
-	console.log(searchParamsObject);
 	const { data: provincesData } = useGetProvincesQuery('');
 
 	const { data: districtsData } = useGetDistrictsQuery({
 		province_code: values.province,
 	});
-	console.log(values);
+
 	useEffect(() => {
 		values.district = '0';
 	}, [values.province]);
@@ -115,7 +119,7 @@ const Search = ({ onSearchPress }: SearchProps) => {
 					Search
 				</Text>
 				<TouchableOpacity
-					onPress={() => handleSubmit}
+					onPress={() => handleSubmit()}
 					activeOpacity={0.7}
 					style={[
 						{

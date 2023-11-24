@@ -48,6 +48,12 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 	const handleFilter = () => {
 		dispatch(
 			addParam({
+				name: 'page',
+				values: [1],
+			}),
+		);
+		dispatch(
+			addParam({
 				name: 'minPrice',
 				values: [minValue],
 			}),
