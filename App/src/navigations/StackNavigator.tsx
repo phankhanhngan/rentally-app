@@ -6,6 +6,7 @@ import Icon3 from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
+import type { IMyRental } from '@/interfaces/rental.interface';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import CheckList from '@/screens/CheckList';
@@ -36,7 +37,7 @@ export type RootStackParams = {
 		id: string;
 		overView: IOverView;
 	};
-	Rental: { name: string };
+	Rental: { myRental: IMyRental };
 	Room: {
 		id: string;
 	};

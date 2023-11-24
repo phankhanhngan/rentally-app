@@ -53,15 +53,15 @@ const RentalInformation = ({
 			<Dropdown
 				data={leaseTermData}
 				label="Lease term"
-				value={values.numberOfTenants}
-				name="numberOfTenants"
+				value={values.leaseTerm}
+				name="leaseTerm"
 				setFieldValue={setFieldValue}
 			/>
 			<Dropdown
 				data={tenantsData}
 				label="Number of tenants"
-				value={values.leaseTerm}
-				name="leaseTerm"
+				value={values.numberOfTenants}
+				name="numberOfTenants"
 				setFieldValue={setFieldValue}
 			/>
 		</Animated.View>

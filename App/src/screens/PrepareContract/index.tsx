@@ -81,7 +81,7 @@ const PrepareContract = ({ navigation, route }: Props) => {
 			}
 		} catch (error: any) {
 			console.log(error);
-			Alert.alert('error!', '!!');
+			Alert.alert('error!', error.data.message[0]);
 		}
 	};
 
@@ -150,7 +150,7 @@ const PrepareContract = ({ navigation, route }: Props) => {
 										setFieldValue={setFieldValue}
 									/>
 									<TouchableOpacity
-										onPress={handleSubmit}
+										onPress={() => handleSubmit()}
 										style={[
 											{
 												backgroundColor: '#E36414',

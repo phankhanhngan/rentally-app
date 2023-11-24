@@ -9,7 +9,7 @@ import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
 import { Skeleton } from '@/components/Skeleton';
-import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
+import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { addParam } from '@/redux/features/params/params.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';

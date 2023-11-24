@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
+	Alert,
 	Image,
 	ScrollView,
 	StyleSheet,
@@ -11,10 +12,15 @@ import {
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
-import Loading from '@/components/Loading';
-import { useGetMyRentalQuery } from '@/redux/services/myRental/myRental.service';
-import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+import Spinner from 'react-native-loading-spinner-overlay';
 
+import Loading from '@/components/Loading';
+import {
+	useGetMyRentalQuery,
+	useRetalRequestMutation,
+} from '@/redux/services/rental/rental.service';
+import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+import moment from 'moment';
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	<Text
 		style={{
@@ -27,34 +33,60 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	</Text>
 );
 
-const ActionButton = ({ rentalStatus }: { rentalStatus: STATUS }) => {
+const ActionButton = ({
+	rentalStatus,
+	id,
+}: {
+	rentalStatus: STATUS;
+	id: string;
+}) => {
+	console.log(id, rentalStatus);
+	const [retalRequest, { isLoading }] = useRetalRequestMutation();
+	const handleRequest = async () => {
+		try {
+			const type =
+				rentalStatus === STATUS.APPROVED ? 'confirm' : 'request-break';
+			const res = await retalRequest({ id, type }).unwrap();
+			console.log('res:', res);
+		} catch (error: any) {
+			console.log(error);
+			Alert.alert('error!', error.data.message);
+		}
+	};
+
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
-			<TouchableOpacity
-				style={[
-					{
-						backgroundColor: STATUS_COLORS[rentalStatus] as string,
-						height: 30,
-						marginRight: 12,
-						borderRadius: 8,
-						justifyContent: 'center',
-						alignItems: 'center',
-					},
-					{
-						paddingHorizontal: 10,
-					},
-				]}
-			>
-				<Text
-					style={{
-						color: '#fff',
-						fontSize: 12,
-						fontFamily: 'mon-b',
-					}}
+			<>
+				<Spinner visible={isLoading} />
+				<TouchableOpacity
+					onPress={handleRequest}
+					style={[
+						{
+							backgroundColor: STATUS_COLORS[
+								rentalStatus
+							] as string,
+							height: 30,
+							marginRight: 12,
+							borderRadius: 8,
+							justifyContent: 'center',
+							alignItems: 'center',
+						},
+						{
+							paddingHorizontal: 10,
+						},
+					]}
 				>
-					{STATUS_TEXT[rentalStatus]}
-				</Text>
-			</TouchableOpacity>
+					<Text
+						style={{
+							color: '#fff',
+							fontSize: 12,
+							fontFamily: 'mon-b',
+						}}
+					>
+						{STATUS_TEXT[rentalStatus]}
+					</Text>
+				</TouchableOpacity>
+			</>
 		);
 	return (
 		<Text style={{ color: '#5E5D5E', fontSize: 12, marginRight: 12 }}>
@@ -65,7 +97,6 @@ const ActionButton = ({ rentalStatus }: { rentalStatus: STATUS }) => {
 
 const CheckList = ({ navigation }: Props) => {
 	const { data, isLoading, isFetching } = useGetMyRentalQuery('');
-
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
@@ -109,7 +140,7 @@ const CheckList = ({ navigation }: Props) => {
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
-								navigation.navigate('Rental', { name: '' });
+								navigation.navigate('Rental', { myRental });
 							}}
 							key={myRental.rentalInfo.id}
 							style={{
@@ -167,7 +198,7 @@ const CheckList = ({ navigation }: Props) => {
 											fontWeight: '700',
 										}}
 									>
-										Room F103
+										{myRental.roomInfo.roomName}
 									</Text>
 									<StatusText
 										rentalStatus={myRental.status}
@@ -187,7 +218,9 @@ const CheckList = ({ navigation }: Props) => {
 											Movie in date
 										</Text>
 										<Text style={styles.textInfo}>
-											28/11/2023
+											{moment(
+												myRental.rentalInfo.moveInDate,
+											).format('ll')}
 										</Text>
 										<Text style={styles.textTitle}>
 											Monthly rent
@@ -201,7 +234,7 @@ const CheckList = ({ navigation }: Props) => {
 											Lease term
 										</Text>
 										<Text style={styles.textInfo}>
-											28/11/2023
+											{myRental.rentalInfo.leaseTerm}
 										</Text>
 										<Text style={styles.textTitle}>
 											Deposit amount
@@ -222,6 +255,10 @@ const CheckList = ({ navigation }: Props) => {
 								>
 									<ActionButton
 										rentalStatus={myRental.status}
+										id={
+											myRental.rentalInfo
+												.rentalDetailId || ''
+										}
 									/>
 								</View>
 							</View>

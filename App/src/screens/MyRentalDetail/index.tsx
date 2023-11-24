@@ -10,40 +10,16 @@ import {
 	View,
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/EvilIcons';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 import HostInfo from './Components/HostInfo';
 import RentalInfo from './Components/RentalInfo';
 import BackButton from '@/components/BackButton';
-import Utility from '@/components/Utility';
-import type { IUtiltity } from '@/interfaces/utility.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
-
-const utilities: IUtiltity[] = [
-	{
-		id: 1,
-		name: 'Electricity',
-		note: 'Power supply for the property',
-		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Electricity.png',
-	},
-	{
-		id: 2,
-		name: 'Water',
-		note: 'Hot and cold water supply',
-		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Water.png',
-	},
-	{
-		id: 4,
-		name: 'Gas',
-		note: 'Natural gas supply',
-		icon: 'https://image-user-public.s3.ap-southeast-2.amazonaws.com/utilities/Gas.png',
-	},
-];
 
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 
@@ -136,7 +112,7 @@ const MyRentalDetail = ({ navigation }: Props) => {
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
-								navigation.navigate('Room', { name: '' });
+								navigation.navigate('Room', { id: '' });
 							}}
 						>
 							<Text style={styles.name}>467 Mraz Avenue</Text>

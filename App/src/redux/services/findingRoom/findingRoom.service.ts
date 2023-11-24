@@ -1,5 +1,5 @@
 import { createApiWithAuth } from '../apiWithAuth.service';
-import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
+import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 
 const createApifindingRoomWithAuth = createApiWithAuth('findingRoomApi', [
 	'findingRoom',

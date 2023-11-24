@@ -1,6 +1,6 @@
 import { createApiWithAuth } from '../apiWithAuth.service';
 import type { ICheckList } from '@/interfaces/checkList.interface';
-import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
+import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 
 const createApiCheckListWithAuth = createApiWithAuth('checkListApi', [
 	'checkList',

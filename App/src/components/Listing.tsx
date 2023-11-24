@@ -11,7 +11,7 @@ import {
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
+import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 import { formatNumberWithCommas } from '@/utils/helpers';
 
 interface ListingProps {

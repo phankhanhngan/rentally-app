@@ -3,17 +3,26 @@ export const enum STATUS {
 	CREATED = 'CREATED',
 	APPROVED = 'APPROVED',
 	BROKEN = 'BROKEN',
+	ENDED = 'ENDED',
+	REQUEST_BREAK = 'REQUEST_BREAK',
+	CANCELED = 'CANCELED',
 }
 export const STATUS_COLORS = {
 	[STATUS.COMPLETED]: '#E36414',
 	[STATUS.APPROVED]: '#E36414',
 	[STATUS.CREATED]: '#1D5868',
-	[STATUS.BROKEN]: '#1D5868',
+	[STATUS.REQUEST_BREAK]: '#1D5868',
+	[STATUS.ENDED]: 'gray',
+	[STATUS.CANCELED]: 'gray',
+	[STATUS.BROKEN]: 'gray',
 };
 
 export const STATUS_TEXT = {
 	[STATUS.COMPLETED]: 'Request break',
 	[STATUS.APPROVED]: 'Confirm',
 	[STATUS.CREATED]: 'Waiting host for approval',
-	[STATUS.BROKEN]: 'Waiting host for accepting break',
+	[STATUS.REQUEST_BREAK]: 'Waiting host for accepting break',
+	[STATUS.ENDED]: '',
+	[STATUS.CANCELED]: '',
+	[STATUS.BROKEN]: '',
 };
