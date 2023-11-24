@@ -12,7 +12,7 @@ const HostInfo = ({ hostInfo }: { hostInfo: IUser }) => {
 				gap: 12,
 			}}
 		>
-			<Text style={{ fontWeight: '800', fontSize: 20, color: '#000' }}>
+			<Text style={{ fontWeight: '700', fontSize: 20, color: '#000' }}>
 				Host information
 			</Text>
 			<Image
@@ -65,12 +65,12 @@ export default HostInfo;
 const styles = StyleSheet.create({
 	textTitle: {
 		color: '#5E5D5E',
-		fontSize: 14,
+		fontSize: 13,
 		fontWeight: '500',
 	},
 	textInfo: {
 		color: '#000',
-		fontSize: 15,
+		fontSize: 14,
 		fontWeight: '500',
 	},
 	host: {

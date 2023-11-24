@@ -30,7 +30,7 @@ const RentalInfo = ({
 				gap: 12,
 			}}
 		>
-			<Text style={{ fontWeight: '800', fontSize: 20, color: '#000' }}>
+			<Text style={{ fontWeight: '700', fontSize: 20, color: '#000' }}>
 				Personal information
 			</Text>
 
@@ -115,12 +115,12 @@ export default RentalInfo;
 const styles = StyleSheet.create({
 	textTitle: {
 		color: '#5E5D5E',
-		fontSize: 14,
+		fontSize: 13,
 		fontWeight: '500',
 	},
 	textInfo: {
 		color: '#000',
-		fontSize: 15,
+		fontSize: 14,
 		fontWeight: '500',
 	},
 });

@@ -154,10 +154,10 @@ const MyRentalDetail = ({ navigation, route }: Props) => {
 						<View
 							style={{
 								flexDirection: 'row',
-								alignItems: 'center',
+								// alignItems: 'center',
 								marginTop: 8,
-								paddingBottom: 2,
 								paddingHorizontal: 8,
+								paddingBottom: 2,
 							}}
 						>
 							<Icon2
