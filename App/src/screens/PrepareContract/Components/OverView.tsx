@@ -2,7 +2,31 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const OverView = () => {
+import { formatNumberWithCommas } from '@/utils/helpers';
+
+export interface IOverView {
+	price: string;
+	image: string;
+	totalRating: number;
+	numberOfReviews: number;
+	district: string;
+	province: string;
+	address: string;
+}
+interface OverViewProps {
+	overView: IOverView;
+}
+
+const OverView = ({ overView }: OverViewProps) => {
+	const {
+		price,
+		image,
+		totalRating,
+		numberOfReviews,
+		address,
+		district,
+		province,
+	} = overView;
 	return (
 		<View
 			style={{
@@ -14,7 +38,7 @@ const OverView = () => {
 		>
 			<Image
 				source={{
-					uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+					uri: image,
 				}}
 				style={{
 					flex: 3,
@@ -31,42 +55,54 @@ const OverView = () => {
 				}}
 			>
 				<View>
-					<Text style={{ color: '#5E5D5E' }}>
-						144 Nguyễn Lương Bằng
-					</Text>
+					<Text style={{ color: '#5E5D5E' }}>{address}</Text>
 					<Text style={{ color: '#000', fontSize: 14 }}>
-						Liên Chiểu, Đà Nẵng
+						{district}, {province}
 					</Text>
 				</View>
 				<View>
-					<View
-						style={{
-							justifyContent: 'flex-start',
-							flexDirection: 'row',
-							alignItems: 'center',
-							gap: 4,
-						}}
-					>
-						<Icon name="star" size={16} color="#000" />
+					{numberOfReviews ? (
+						<View
+							style={{
+								justifyContent: 'flex-start',
+								flexDirection: 'row',
+								alignItems: 'center',
+								gap: 4,
+							}}
+						>
+							<Icon name="star" size={16} color="#000" />
+							<Text
+								style={{
+									color: '#000',
+									fontSize: 14,
+									fontFamily: 'mon-sb',
+								}}
+							>
+								{totalRating}
+							</Text>
+							<Text
+								style={{
+									color: '#5E5D5E',
+									fontSize: 12,
+									fontFamily: 'mon-sb',
+								}}
+							>
+								({numberOfReviews})
+							</Text>
+						</View>
+					) : (
 						<Text
 							style={{
-								color: '#000',
 								fontSize: 14,
-								fontFamily: 'mon-sb',
-							}}
-						>
-							4.8
-						</Text>
-						<Text
-							style={{
+								marginTop: 10,
+								fontFamily: 'mon',
+
 								color: '#5E5D5E',
-								fontSize: 12,
-								fontFamily: 'mon-sb',
 							}}
 						>
-							(60)
+							No reviews yet
 						</Text>
-					</View>
+					)}
 					<View
 						style={{
 							justifyContent: 'flex-start',
@@ -82,7 +118,7 @@ const OverView = () => {
 								fontFamily: 'mon-sb',
 							}}
 						>
-							€ 1000
+							VND {formatNumberWithCommas(price || '')}
 						</Text>
 						<Text>month</Text>
 					</View>

@@ -1,24 +1,27 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import type { KeyboardTypeOptions } from 'react-native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-interface TextInputWithLabelProps {
-	value: string | undefined;
-	name?: string;
-	id?: string;
-	type?: string;
-	keyboardType?: KeyboardTypeOptions;
-	placeHolder?: string;
-	isSecure?: boolean;
-	onChangeText?: (text: string) => void;
+import { type FormikErrors, ErrorMessage } from 'formik';
+
+interface BasicInputProps {
+	isValidate?: boolean;
+	name: string;
+	value: string;
+	label: string;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
 }
 
-const TextInputWithLabel: FC<TextInputWithLabelProps> = ({
+const TextInputWithLabel: FC<BasicInputProps> = ({
 	value,
+	isValidate = true,
+	setFieldValue,
+	label,
 	name,
-	onChangeText,
-	...props
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 
@@ -31,26 +34,27 @@ const TextInputWithLabel: FC<TextInputWithLabelProps> = ({
 	};
 
 	return (
-		<View style={{ flex: 1, width: '100%' }}>
+		<View style={{ width: '100%' }}>
 			<Text style={{ color: '#000', fontWeight: '500', fontSize: 16 }}>
-				Identity number
+				{label}
 			</Text>
 			<TextInput
-				// value={value}
-				onChangeText={onChangeText}
+				value={value}
+				onChangeText={(text) => setFieldValue(name, text)}
 				onFocus={handleFocus}
 				onBlur={handleBlur}
 				style={[
 					styles.inputStyle,
 					isFocused && { borderColor: '#E36414' },
 				]}
-				{...props}
 			/>
-			{/* Uncomment the following lines if you want to display an error message */}
-			{/* <ErrorMessage
-        name={name || ''}
-        render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
-      /> */}
+
+			{isValidate && (
+				<ErrorMessage
+					name={name || ''}
+					render={(msg) => <Text style={styles.mesStyle}>{msg}</Text>}
+				/>
+			)}
 		</View>
 	);
 };
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
 		color: 'gray',
 	},
 	mesStyle: {
-		top: 48,
+		top: 86,
 		left: 10,
 		fontSize: 10,
 		color: 'red',

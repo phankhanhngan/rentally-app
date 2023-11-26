@@ -3,27 +3,40 @@ import { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
+import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
-export default () => {
+import type { FormikErrors } from 'formik';
+import { ErrorMessage } from 'formik';
+
+export default ({
+	label = 'Move in date',
+	setFieldValue,
+	value,
+	name,
+}: {
+	name: string;
+	label: string;
+	value: string;
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
+}) => {
 	const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
 
 	const today = new Date();
 	today.setDate(today.getDate() + 1);
 	const startDate = getFormatedDate(today, 'YYYY/MM/DD');
-
-	const [selectedStartDate, setSelectedStartDate] = useState('');
-	const [startedDate, setStartedDate] = useState('12/12/2023');
-
-	function handleChangeStartDate(propDate: string) {
-		setStartedDate(propDate);
-	}
-
 	const handleOnPressStartDate = () => {
 		setOpenStartDatePicker(!openStartDatePicker);
 	};
-
 	return (
-		<View style={{ flex: 1, alignItems: 'center' }}>
+		<Animated.View
+			entering={SlideInDown.springify().damping(15)}
+			exiting={SlideOutDown}
+			style={{ flex: 1, alignItems: 'center' }}
+		>
 			<View
 				style={{
 					width: '100%',
@@ -36,18 +49,33 @@ export default () => {
 						fontSize: 16,
 					}}
 				>
-					Move in data
+					{label}
 				</Text>
 
 				<TouchableOpacity
 					style={styles.inputBtn}
 					onPress={handleOnPressStartDate}
 				>
-					<Text>{selectedStartDate}</Text>
+					<Text>{value}</Text>
 				</TouchableOpacity>
+				<ErrorMessage
+					name={name || ''}
+					render={(msg) => (
+						<Text
+							style={{
+								top: 86,
+								left: 10,
+								fontSize: 10,
+								color: 'red',
+								position: 'absolute',
+							}}
+						>
+							{msg}
+						</Text>
+					)}
+				/>
 			</View>
 
-			{/* Create modal for date picker */}
 			<Modal
 				animationType="slide"
 				transparent={true}
@@ -55,24 +83,41 @@ export default () => {
 			>
 				<View style={styles.centeredView}>
 					<View style={styles.modalView}>
-						<DatePicker
-							mode="calendar"
-							minimumDate={startDate}
-							selected={startedDate}
-							onDateChange={handleChangeStartDate}
-							onSelectedChange={(date: string) =>
-								setSelectedStartDate(date)
-							}
-							options={{
-								backgroundColor: '#fff',
-								textHeaderColor: '#E36414',
-								textDefaultColor: '#000',
-								selectedTextColor: '#000',
-								mainColor: '#E36414',
-								textSecondaryColor: '#000',
-								borderColor: 'rgba(122, 146, 165, 0.1)',
-							}}
-						/>
+						{name === 'moveInDate' ? (
+							<DatePicker
+								mode="calendar"
+								minimumDate={startDate}
+								onDateChange={(newDate) => {
+									setFieldValue(name, newDate);
+								}}
+								options={{
+									backgroundColor: '#fff',
+									textHeaderColor: '#E36414',
+									textDefaultColor: '#000',
+									selectedTextColor: '#000',
+									mainColor: '#E36414',
+									textSecondaryColor: '#000',
+									borderColor: 'rgba(122, 146, 165, 0.1)',
+								}}
+							/>
+						) : (
+							<DatePicker
+								mode="calendar"
+								maximumDate={startDate}
+								onDateChange={(newDate) => {
+									setFieldValue(name, newDate);
+								}}
+								options={{
+									backgroundColor: '#fff',
+									textHeaderColor: '#E36414',
+									textDefaultColor: '#000',
+									selectedTextColor: '#000',
+									mainColor: '#E36414',
+									textSecondaryColor: '#000',
+									borderColor: 'rgba(122, 146, 165, 0.1)',
+								}}
+							/>
+						)}
 
 						<TouchableOpacity onPress={handleOnPressStartDate}>
 							<Text style={{ color: 'black' }}>Close</Text>
@@ -80,7 +125,7 @@ export default () => {
 					</View>
 				</View>
 			</Modal>
-		</View>
+		</Animated.View>
 	);
 };
 

@@ -10,28 +10,29 @@ const OverView = () => {
 		<View style={{ flex: 1 }}>
 			<View
 				style={{
-					marginTop: 40,
+					paddingTop: 40,
 					justifyContent: 'center',
 					alignItems: 'center',
 					flexDirection: 'row',
-					marginBottom: 24,
-					gap: 4,
+					paddingBottom: 24,
+					gap: 12,
+					backgroundColor: '#F8F8F8',
 				}}
 			>
-				<Icon4 name="livestream" size={46} color={'#2F2828'} />
+				<Icon4 name="livestream" size={46} color={'#1D5868'} />
 				<Text
 					style={{
 						fontSize: 80,
-						fontWeight: '800',
+						fontWeight: '700',
 						marginBottom: 24,
-						color: '#2F2828',
+						color: '#E36414',
 					}}
 				>
 					4.94
 				</Text>
 				<Icon4
 					name="livestream"
-					color={'#2F2828'}
+					color={'#1D5868'}
 					size={46}
 					style={{ transform: [{ scaleX: -1 }] }}
 				/>
@@ -47,6 +48,7 @@ const OverView = () => {
 					paddingBottom: 32,
 					borderColor: '#5E5D5E',
 					borderBottomWidth: 0.5,
+					backgroundColor: '#F8F8F8',
 				}}
 			>
 				<View
@@ -76,7 +78,7 @@ const OverView = () => {
 					>
 						4.9
 					</Text>
-					<Icon name="spray-can" size={32} color={'#000'} />
+					<Icon name="spray-can" size={32} color={'#E36414'} />
 				</View>
 				<View
 					style={{
@@ -104,7 +106,7 @@ const OverView = () => {
 					>
 						4.9
 					</Text>
-					<Icon3 name="location" size={32} color={'#000'} />
+					<Icon3 name="location" size={32} color={'#E36414'} />
 				</View>
 				<View
 					style={{
@@ -132,7 +134,7 @@ const OverView = () => {
 					>
 						4.9
 					</Text>
-					<Icon2 name="security" size={32} color={'#000'} />
+					<Icon2 name="security" size={32} color={'#E36414'} />
 				</View>
 				<View
 					style={{
@@ -158,7 +160,7 @@ const OverView = () => {
 					>
 						4.9
 					</Text>
-					<Icon2 name="support-agent" size={32} color={'#000'} />
+					<Icon2 name="support-agent" size={32} color={'#E36414'} />
 				</View>
 			</ScrollView>
 		</View>

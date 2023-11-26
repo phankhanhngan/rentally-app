@@ -12,7 +12,6 @@ const initialState: IAuth = {
 export const initializeState = () => async (dispatch: any) => {
 	try {
 		const token = await getData('jwt');
-		console.log(token);
 		if (token) dispatch(setCredentials({ accessToken: token }));
 	} catch (error) {
 		console.error('Error initializing state:', error);
@@ -45,7 +44,7 @@ const authSlice = createSlice({
 
 export const { setCredentials, logOut } = authSlice.actions;
 
-export default authSlice.reducer;
+export default authSlice;
 
 export const selectCurrentToken = (state: { auth: IAuth }) =>
 	state.auth.accessToken;

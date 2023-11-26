@@ -47,7 +47,6 @@ const ForgotPassword: React.FC = () => {
 	};
 
 	const submitForm = async (values: IEmail) => {
-		console.log(values.email);
 		setEmail(values.email);
 		await forgotPassword({ email: values.email }).unwrap();
 	};

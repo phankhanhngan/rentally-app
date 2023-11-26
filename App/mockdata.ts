@@ -1,4 +1,4 @@
-import type { IRoomFinding } from './src/interfaces/roomfiding.interface';
+import type { IRoomFinding } from './src/interfaces/roomfinding.interface';
 
 export const dataRooms: IRoomFinding[] = [
 	{

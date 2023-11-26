@@ -6,7 +6,7 @@ import Icon3 from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
-import ExploreHeader from '@/components/ExploreHeader';
+import type { IMyRental } from '@/interfaces/rental.interface';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import CheckList from '@/screens/CheckList';
@@ -15,8 +15,10 @@ import ForgotPassword from '@/screens/ForgotPassword';
 import Home from '@/screens/Home';
 import ListingDetail from '@/screens/ListingDetail';
 import Login from '@/screens/Login';
-import MyRental from '@/screens/MyRental';
+import MyRentalDetail from '@/screens/MyRentalDetail';
+import MyRental from '@/screens/MyRentals';
 import PrepareContract from '@/screens/PrepareContract';
+import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
@@ -28,13 +30,16 @@ export type RootStackParams = {
 	Register: undefined;
 	ForgotPassword: undefined;
 	ResetPassword: { email: string };
-	Profile: undefined;
 	Rooms: undefined;
 	Main: undefined;
 	Comments: undefined;
-	PrepareContract: undefined;
+	PrepareContract: {
+		id: string;
+		overView: IOverView;
+	};
+	Rental: { myRental: IMyRental };
 	Room: {
-		name: string;
+		id: string;
 	};
 };
 const StackNavigator = () => {
@@ -60,8 +65,7 @@ const StackNavigator = () => {
 					name="Rooms"
 					component={Home}
 					options={{
-						headerShown: true,
-						header: () => <ExploreHeader />,
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<Icon3 name="home" size={24} color={color} />
 						),
@@ -71,6 +75,7 @@ const StackNavigator = () => {
 					name="CheckList"
 					component={CheckList}
 					options={{
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<Icon name="heart-o" size={24} color={color} />
 						),
@@ -80,6 +85,7 @@ const StackNavigator = () => {
 					name="MyRental"
 					component={MyRental}
 					options={{
+						headerShown: false,
 						tabBarIcon: ({ color }) => (
 							<Icon2 name="profile" size={24} color={color} />
 						),
@@ -146,6 +152,13 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="PrepareContract"
 					component={PrepareContract}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Rental"
+					component={MyRentalDetail}
 					options={{
 						animation: 'slide_from_right',
 					}}

@@ -11,7 +11,8 @@ import {
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import type { IRoomFinding } from '@/interfaces/roomfiding.interface';
+import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
+import { formatNumberWithCommas } from '@/utils/helpers';
 
 interface ListingProps {
 	data: IRoomFinding;
@@ -73,15 +74,20 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 					))}
 				</Swiper>
 				<TouchableOpacity
-					style={{ position: 'absolute', right: 38, top: 12 }}
+					style={{
+						position: 'absolute',
+						right: 38,
+						top: 12,
+						padding: 7,
+						borderRadius: 100,
+						backgroundColor: 'white',
+					}}
 				>
 					<Icon
-						name="heart"
-						size={20}
+						name="heart-o"
+						color={'black'}
+						size={16}
 						style={{
-							position: 'absolute',
-							right: 0,
-							top: 0,
 							opacity: 1,
 						}}
 					/>
@@ -104,18 +110,28 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 					>
 						{data.address}, {data.district}
 					</Text>
-					<View style={{ flexDirection: 'row', gap: 4 }}>
-						<Icon name="star" size={16} color="#000" />
+					{data.avgRate ? (
+						<View style={{ flexDirection: 'row', gap: 4 }}>
+							<Icon name="star" size={16} color="#000" />
+							<Text
+								style={{
+									fontFamily: 'mon-sb',
+									color: '#000',
+									fontWeight: '700',
+								}}
+							>
+								{data.avgRate}
+							</Text>
+						</View>
+					) : (
 						<Text
 							style={{
 								fontFamily: 'mon-sb',
 								color: '#000',
 								fontWeight: '700',
 							}}
-						>
-							4.8
-						</Text>
-					</View>
+						></Text>
+					)}
 				</View>
 				<View
 					style={{
@@ -154,7 +170,7 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 							fontSize: 16,
 						}}
 					>
-						€ 1000
+						VND {formatNumberWithCommas(data.price || '')}
 					</Text>
 					<Text style={{ fontFamily: 'mon', color: '#000' }}>
 						/month

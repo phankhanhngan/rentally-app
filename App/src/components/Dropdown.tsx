@@ -2,24 +2,33 @@ import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-const data = [
-	{ label: 'Item 1', value: '1' },
-	{ label: 'Item 2', value: '2' },
-	{ label: 'Item 3', value: '3' },
-	{ label: 'Item 4', value: '4' },
-	{ label: 'Item 5', value: '5' },
-	{ label: 'Item 6', value: '6' },
-	{ label: 'Item 7', value: '7' },
-	{ label: 'Item 8', value: '8' },
-];
+import { type FormikErrors, ErrorMessage } from 'formik';
 
-export default () => {
-	const [value, setValue] = useState('');
+interface BasicInputProps {
+	isValidate?: boolean;
+	label: string;
+	value: string | number;
+	name: string;
+	data: { name: string; code: string }[];
+	setFieldValue: (
+		field: string,
+		value: any,
+		shouldValidate?: boolean | undefined,
+	) => Promise<void | FormikErrors<any>>;
+}
+export default ({
+	label = 'Label',
+	isValidate = true,
+	name,
+	data,
+	setFieldValue,
+	value,
+}: BasicInputProps) => {
 	const [isFocus, setIsFocus] = useState(false);
+
 	return (
-		<View style={{ flex: 1, width: '100%' }}>
+		<View style={{ width: '100%' }}>
 			<Text
 				style={{
 					color: '#000',
@@ -27,8 +36,26 @@ export default () => {
 					fontSize: 16,
 				}}
 			>
-				Lease term
+				{label}
 			</Text>
+			{isValidate && (
+				<ErrorMessage
+					name={name || ''}
+					render={(msg) => (
+						<Text
+							style={{
+								top: 86,
+								left: 10,
+								fontSize: 10,
+								color: 'red',
+								position: 'absolute',
+							}}
+						>
+							{msg}
+						</Text>
+					)}
+				/>
+			)}
 			<Dropdown
 				style={[styles.dropdown, isFocus && { borderColor: '#E36414' }]}
 				placeholderStyle={styles.placeholderStyle}
@@ -38,8 +65,8 @@ export default () => {
 				data={data}
 				search
 				maxHeight={300}
-				labelField="label"
-				valueField="value"
+				labelField="name"
+				valueField="code"
 				placeholder={!isFocus ? ' ' : '...'}
 				searchPlaceholder="Search..."
 				value={value}
@@ -47,7 +74,7 @@ export default () => {
 				onBlur={() => setIsFocus(false)}
 				onChange={(item) => {
 					setIsFocus(false);
-					setValue(item.value);
+					setFieldValue(name, item.code);
 				}}
 			/>
 		</View>
