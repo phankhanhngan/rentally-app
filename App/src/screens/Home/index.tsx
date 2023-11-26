@@ -34,6 +34,7 @@ const Home = ({ navigation }: Props) => {
 
 	// const [currentPage, setCurrentPage] = useState(1);
 	const [isOpenSearch, setOpenSearch] = useState(false);
+	console.log(isOpenSearch);
 	const [isOpenFilter, setOpenFilter] = useState(false);
 	const { data, isLoading, isFetching } =
 		useGetFindingRoomsQuery(searchParamsObject);
@@ -77,7 +78,6 @@ const Home = ({ navigation }: Props) => {
 		);
 	};
 	const RenderLoader = () => {
-		console.log(isFetching);
 		return isFetching ? (
 			<View style={{ flex: 1, backgroundColor: 'white' }}>
 				<View style={{ marginTop: 20, marginHorizontal: 24, gap: 8 }}>

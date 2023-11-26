@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import React from 'react';
 import {
 	Image,
+	Pressable,
 	SafeAreaView,
 	StyleSheet,
 	Text,
@@ -51,9 +52,12 @@ const ExploreHeader: FC<ExploreHeaderProps> = ({
 					/>
 				</View>
 				<View style={styles.actionRow}>
-					<TouchableOpacity
-						style={{ flex: 1 }}
-						activeOpacity={0.7}
+					<Pressable
+						style={({ pressed }) => [
+							{ flex: 1 },
+							{ opacity: pressed ? 0.7 : 1 }, // Adjust opacity based on press state
+						]}
+						// activeOpacity={0.7}
 						onPress={onSearchPress}
 					>
 						<View style={styles.searchBtn}>
@@ -70,14 +74,17 @@ const ExploreHeader: FC<ExploreHeaderProps> = ({
 								</Text>
 							</View>
 						</View>
-					</TouchableOpacity>
+					</Pressable>
 
-					<TouchableOpacity
-						style={styles.filterBtn}
+					<Pressable
+						style={({ pressed }) => [
+							styles.filterBtn,
+							{ opacity: pressed ? 0.7 : 1 }, // Adjust opacity based on press state
+						]}
 						onPress={onFilterPress}
 					>
 						<Icon2 name="options" size={24} color={'#000'} />
-					</TouchableOpacity>
+					</Pressable>
 				</View>
 			</View>
 		</SafeAreaView>
