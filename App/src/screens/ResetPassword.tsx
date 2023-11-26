@@ -122,7 +122,6 @@ const ResetPassword = ({ navigation, route }: Props) => {
 
 	const handleResetPassword = async () => {
 		const res = await resendEmail({ email: email || '' }).unwrap();
-		console.log(res);
 	};
 
 	return (

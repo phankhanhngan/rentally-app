@@ -1,167 +1,269 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
+import React from "react";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParams } from "@/navigations/StackNavigator";
+import OptionSettings from "./ProfileSettings/OptionSettings";
+import { logOut } from "@/redux/features/auth/auth.slice";
+type Props = NativeStackScreenProps<RootStackParams>;
 
-const propertyData = [
-  {
-    id: '1',
-    image: 'https://source.unsplash.com/900x900/?house',
-    price: '$250,000',
-    address: '123 Main St',
-    squareMeters: '150',
-    beds: '3',
-    baths: '2',
-    parking: '1'
-  },
-  {
-    id: '2',
-    image: 'https://source.unsplash.com/900x900/?apartment',
-    price: '$400,000',
-    address: '456 Oak Ave',
-    squareMeters: '200',
-    beds: '4',
-    baths: '3',
-    parking: '2'
-  },
-  {
-    id: '3',
-    image: 'https://source.unsplash.com/900x900/?house+front',
-    price: '$150,000',
-    address: '789 Maple Rd',
-    squareMeters: '100',
-    beds: '2',
-    baths: '1',
-    parking: '0'
-  },
-  {
-    id: '4',
-    image: 'https://source.unsplash.com/900x900/?small+house',
-    price: '$150,000',
-    address: '789 Maple Rd',
-    squareMeters: '100',
-    beds: '2',
-    baths: '1',
-    parking: '0'
-  }
-];
+const Profile = ({ navigation }: Props) => {
+  const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
+  const userInfo = useAppSelector((state) => state.auth.userInfo);
 
-const Profile = () => {
-  const [searchText, setSearchText] = useState('');
+  const goToPersonalInformation = () => {
+    navigation.navigate("PersonalInformationUpdate");
+  };
 
-  const handleSearch = (text) => {
-    setSearchText(text);
-  }
+  const goToLoginSecurity = () => {
+    navigation.navigate("LoginSecurity");
+  };
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.card}>
-      <View style={styles.cardBody}>
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
-        </View>
-        <View style={styles.rightContainer}>
-          <View style={styles.topRight}>
-            <Text style={styles.price}>{item.price}</Text>
-            <Text style={styles.address}>{item.address}</Text>
-          </View>
-          <View style={styles.bottomRight}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Button</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
-  const filteredData = propertyData.filter((item) => {
-    return item.address.toLowerCase().includes(searchText.toLowerCase());
-  });
+  const goToLogout = () => {
+    navigation.navigate("Map");
+  };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        contentContainerStyle={styles.propertyListContainer}
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      {accessToken ? (
+        <View style={styles.profile_container}>
+          <View style={styles.header_container}>
+            <Image style={styles.logo_user} source={{ uri: userInfo?.photo }} />
+            <View>
+              <Text style={styles.name}>
+                {userInfo?.firstName} {userInfo?.lastName}
+              </Text>
+              <Text style={{ color: "#A9A9A9" }}>Show profile</Text>
+            </View>
+          </View>
+          <View style={styles.middle_container_outer}>
+            <View style={styles.middle_container}>
+              <View style={{ width: 200 }}>
+                <Text style={styles.header_middle}>Rentally your place</Text>
+                <Text>It's simple to get set up and start earning.</Text>
+              </View>
+              <Image
+                style={styles.logo_user}
+                source={require("../assets/images/rentallyLogo.png")}
+              />
+            </View>
+          </View>
+          <View style={styles.settings_container}>
+            <Text style={styles.header_settings}>Settings</Text>
+            <OptionSettings
+              icon="user-o"
+              content="Personal information"
+              iconName="Icon"
+              event={goToPersonalInformation}
+            />
+            <OptionSettings
+              icon="lock"
+              content="Login & security"
+              iconName="Feather"
+              event={goToLoginSecurity}
+            />
+            <OptionSettings
+              icon="credit-card"
+              content="Payments and payouts"
+              iconName="Icon"
+            />
+          </View>
+          <View style={styles.logout_container}>
+            <Pressable
+              onPress={() => {
+                dispatch(logOut());
+                navigation.navigate("Login");
+              }}
+            >
+              <Text style={styles.logout_text}>Logout</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.not_login_container}>
+          <Text style={styles.notify}>
+            Please log in to experience the best service.
+          </Text>
+          <TouchableOpacity
+            style={styles.login_button}
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+          >
+            <Text style={styles.login_text}>Login</Text>
+          </TouchableOpacity>
+          <View style={styles.register_container}>
+            <Text style={styles.question}>Do not have an account?</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Register");
+              }}
+            >
+              <Text style={styles.register_text}>Register</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
-}
+};
+
+export default Profile;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
   },
-  propertyListContainer: {
-    paddingHorizontal: 10,
+  profile_container: {
+    backgroundColor: "white",
+    padding: 16,
+    flex: 1,
   },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    marginTop: 10,
-    marginBottom: 10,
-    shadowColor: '#000',
+  header_container: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    backgroundColor: "white",
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#F1EFEF",
+  },
+  logo_user: {
+    width: 54,
+    height: 54,
+    marginRight: 16,
+    borderRadius: 50,
+  },
+  name: {
+    fontSize: 18,
+  },
+  middle_container_outer: {
+    marginTop: 24,
+    marginBottom: 32,
+    borderRadius: 18, // Độ cong ngoài cùng
+    overflow: "hidden", // Ẩn nội dung vượt ra ngoài
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 12,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+    elevation: 24,
   },
-  imageContainer: {
-    marginRight: 10,
+  middle_container: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 24,
+    paddingLeft: 16,
+    paddingRight: 16,
+    alignItems: "center",
+    backgroundColor: "white",
   },
-  image: {
-    height: 150,
-    width: 150,
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15,
-    resizeMode: 'cover',
+  header_middle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
   },
-  cardBody: {
-    flexDirection: 'row',
-    marginBottom: 0,
-    padding: 0,
+  settings_container: {},
+  header_settings: {
+    fontSize: 24,
+    fontWeight: "500",
+    marginBottom: 24,
   },
-  rightContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+  personal_left: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
-  topRight: {
-    padding: 10,
+  icon_user: {
+    marginRight: 16,
   },
-  bottomRight: {
-    alignItems: 'flex-end',
-    paddingBottom: 10,
-    paddingRight: 10,
+  name_personal: {
+    fontSize: 18,
+    color: "grey",
   },
-  price: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5
+  container_settings: {
+    backgroundColor: "white",
+    borderBottomColor: "#A9A9A9",
+    borderBottomWidth: 1,
+    padding: 2,
+    paddingBottom: 16,
+    paddingTop: 16,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  address: {
+  options: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    marginRight: 8,
+  },
+  content: {
+    fontSize: 18,
+    color: "grey",
+  },
+  logout_container: {
+    marginTop: 16,
+    paddingBottom: 16,
+    paddingTop: 16,
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#F1EFEF",
+  },
+  logout_text: {
     fontSize: 16,
-    marginBottom: 5
+    fontWeight: "500",
+    textDecorationLine: "underline",
   },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
+  not_login_container: {
+    backgroundColor: "white",
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  notify: {
+    fontSize: 16,
+    color: "grey",
   },
-  squareMeters: {
-    fontSize: 14,
-    marginBottom: 5,
-    color: '#666'
+  login_button: {
+    backgroundColor: "#E36414",
+    width: 300,
+    alignItems: "center",
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 32,
   },
-  // Các styles khác không thay đổi
+  login_text: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  question: {
+    color: "grey",
+    fontSize: 16,
+    marginRight: 16,
+  },
+  register_container: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  register_text: {
+    color: "black",
+    textDecorationLine: "underline",
+    fontWeight: "bold",
+  },
 });
-
-export default Profile;
