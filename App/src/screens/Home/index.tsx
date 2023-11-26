@@ -34,7 +34,6 @@ const Home = ({ navigation }: Props) => {
 
 	// const [currentPage, setCurrentPage] = useState(1);
 	const [isOpenSearch, setOpenSearch] = useState(false);
-	console.log(isOpenSearch);
 	const [isOpenFilter, setOpenFilter] = useState(false);
 	const { data, isLoading, isFetching } =
 		useGetFindingRoomsQuery(searchParamsObject);
