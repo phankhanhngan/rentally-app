@@ -21,6 +21,7 @@ import PrepareContract from '@/screens/PrepareContract';
 import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
 import LoginSecurity from '@/screens/ProfileSettings/LoginSecurity';
+import Map from '@/screens/ProfileSettings/Map';
 import PersonalInformationUpdate from '@/screens/ProfileSettings/PersonalInformation';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
