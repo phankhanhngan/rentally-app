@@ -6,7 +6,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // type BaseQueryWithReauthArgs = Parameters<BaseQueryFn>
 
 const baseQuery = fetchBaseQuery({
-	baseUrl: 'https://rentally-api-production.up.railway.app/api/v1',
+	baseUrl: BASE_URL,
 	// credentials: 'include',
 	mode: 'cors',
 

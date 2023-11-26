@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Rentally</string>
+    <string name="google_maps_api_key">AIzaSyDfr64WFFWIQi_8xZibTpsuKkTrBrU2SrE</string>
 </resources>
