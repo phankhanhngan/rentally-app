@@ -10,6 +10,18 @@ export interface IUser {
 	status?: string;
 }
 
+export interface IUpdateProfile {
+	firstName: string;
+	lastName: string;
+	photo: any;
+	phoneNumber: string;
+}
+
+export interface IUpdatePassword {
+	currentPassword: string;
+	newPassword: string;
+}
+
 export interface ILandlord {
 	id: number;
 	name: string;
@@ -38,6 +50,17 @@ export interface IUpdateUserRequest {
 export interface IDisableUserRequest {
 	id: number;
 	status: string;
+}
+
+export interface IUpdateResponse {
+	data?: any;
+	token?: any;
+	message: string;
+	status: string;
+}
+
+export interface IDisableAccount {
+	password: string;
 }
 
 export type IDeleteUserRequest = Pick<IUser, 'id'>;

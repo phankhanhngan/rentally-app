@@ -20,11 +20,14 @@ import MyRental from '@/screens/MyRentals';
 import PrepareContract from '@/screens/PrepareContract';
 import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
+import LoginSecurity from '@/screens/ProfileSettings/LoginSecurity';
+import PersonalInformationUpdate from '@/screens/ProfileSettings/PersonalInformation';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
@@ -41,6 +44,9 @@ export type RootStackParams = {
 	Room: {
 		id: string;
 	};
+	PersonalInformationUpdate: undefined;
+	LoginSecurity: undefined;
+	Map: undefined;
 };
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
@@ -159,6 +165,27 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Rental"
 					component={MyRentalDetail}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="PersonalInformationUpdate"
+					component={PersonalInformationUpdate}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="LoginSecurity"
+					component={LoginSecurity}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Map"
+					component={Map}
 					options={{
 						animation: 'slide_from_right',
 					}}
