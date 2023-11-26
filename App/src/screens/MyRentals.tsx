@@ -42,7 +42,6 @@ const ActionButton = ({
 	rentalStatus: STATUS;
 	id: string;
 }) => {
-	console.log(id, rentalStatus);
 	const [retalRequest, { isLoading }] = useRetalRequestMutation();
 	const handleRequest = async () => {
 		try {
