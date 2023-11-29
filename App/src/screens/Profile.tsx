@@ -12,6 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParams } from "@/navigations/StackNavigator";
 import OptionSettings from "./ProfileSettings/OptionSettings";
 import { logOut } from "@/redux/features/auth/auth.slice";
+import { useGetFindingRoomsQuery } from "@/redux/services/findingRoom/findingRoom.service";
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const Profile = ({ navigation }: Props) => {
@@ -25,10 +26,6 @@ const Profile = ({ navigation }: Props) => {
 
   const goToLoginSecurity = () => {
     navigation.navigate("LoginSecurity");
-  };
-
-  const goToLogout = () => {
-    navigation.navigate("Map");
   };
 
   return (
