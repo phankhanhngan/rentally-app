@@ -22,7 +22,7 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 					url: '/rental/my-rental',
 				};
 			},
-			providesTags: ['Rental'],
+			providesTags: [{ type: 'Rental', id: 'LIST' }],
 		}),
 		createRental: builder.mutation<IRentalResponse, { data: IRental }>({
 			query: ({ data }) => ({
@@ -40,7 +40,7 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 				url: `/rental/my-rental/${id}/${type}`,
 				method: 'PUT',
 			}),
-			invalidatesTags: ['Rental'],
+			invalidatesTags: [{ type: 'Rental', id: 'LIST' }],
 		}),
 	}),
 });

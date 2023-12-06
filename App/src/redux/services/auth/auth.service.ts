@@ -7,7 +7,7 @@ import type {
 	INewPassword,
 	IVerifyCode,
 } from '@/interfaces/auth.interface';
-const createApiAuthWithAuth = createApiWithAuth('AuthApi', ['Auth']);
+const createApiAuthWithAuth = createApiWithAuth('AuthApi', ['Auth', 'Rental']);
 
 export const authApi = createApiAuthWithAuth.injectEndpoints({
 	endpoints: (builder) => ({
@@ -17,6 +17,7 @@ export const authApi = createApiAuthWithAuth.injectEndpoints({
 				method: 'POST',
 				body,
 			}),
+			invalidatesTags: [{ type: 'Rental' }],
 		}),
 		register: builder.mutation<IAuthResponse, IAccounRegister>({
 			query: (body) => {

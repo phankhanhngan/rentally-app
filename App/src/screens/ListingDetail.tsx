@@ -92,6 +92,7 @@ const ListingDetail = ({ navigation, route }: Props) => {
 	} = roomDetail;
 	// const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
 
+	console.log(ratingDetail);
 	if (isLoading) return <Loading />;
 	return (
 		<View style={styles.container}>
@@ -180,42 +181,84 @@ const ListingDetail = ({ navigation, route }: Props) => {
 									}}
 								>
 									<Text style={styles.ratings}>
-										{ratingDetail.totalRating}
+										{ratingDetail.avgRate}
 									</Text>
-									<View
-										style={{ flexDirection: 'row', gap: 2 }}
-									>
-										<Icon
-											name="star"
-											size={18}
-											color="#E36414"
-										/>
-										<Icon
-											name="star"
-											size={18}
-											color="#E36414"
-										/>
-										<Icon
-											name="star"
-											size={18}
-											color="#E36414"
-										/>
-										<Icon
-											name="star"
-											size={18}
-											color="#E36414"
-										/>
-										<Icon
-											name="star"
-											size={18}
-											color="#E36414"
-										/>
+									<View>
+										<View
+											style={{
+												flexDirection: 'row',
+												gap: 2,
+											}}
+										>
+											{Array.from({
+												length: Math.floor(
+													ratingDetail.avgRate || 0,
+												),
+											}).map((_, index) => (
+												<Icon
+													key={index}
+													name="star"
+													size={18}
+													color="#E36414"
+												/>
+											))}
+
+											{(ratingDetail.avgRate || 0) -
+												Math.floor(
+													ratingDetail.avgRate || 0,
+												) >
+												0 && (
+												<Icon
+													name="star"
+													size={18}
+													style={{ width: 9 }}
+													color="#E36414"
+												/>
+											)}
+										</View>
+										<View
+											style={{
+												flexDirection: 'row',
+												gap: 2,
+												position: 'absolute',
+												left: 0,
+												zIndex: -1,
+											}}
+										>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+										</View>
 									</View>
 								</View>
 
 								<TouchableOpacity
 									onPress={() => {
-										navigation.navigate('Comments');
+										navigation.navigate('Comments', {
+											ratingDetail: ratingDetail,
+										});
 									}}
 								>
 									<View

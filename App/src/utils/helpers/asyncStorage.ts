@@ -20,7 +20,7 @@ export const getData = async (key: string) => {
 		return null;
 	}
 };
-export const removeDate = async (key: string) => {
+export const removeData = async (key: string) => {
 	try {
 		await AsyncStorage.removeItem(key);
 	} catch (e) {

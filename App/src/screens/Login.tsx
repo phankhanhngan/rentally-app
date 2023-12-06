@@ -13,6 +13,7 @@ import {
 	useContinueWithGGMutation,
 	useLoginMutation,
 } from '@/redux/services/auth/auth.service';
+import { useGetMyRentalQuery } from '@/redux/services/rental/rental.service';
 import { signInWithGoogle } from '@/utils/helpers/auth';
 // import {
 // 	GoogleSignin,
@@ -38,7 +39,7 @@ const Login = () => {
 	const [login, loginResult] = useLoginMutation();
 	const [continueWithGG, { isLoading: isContinueWithGGLoading }] =
 		useContinueWithGGMutation();
-
+	const { refetch } = useGetMyRentalQuery('');
 	const initialValues: Values = {
 		email: '',
 		password: '',
@@ -48,6 +49,7 @@ const Login = () => {
 			dispatch(
 				setCredentials({ accessToken: loginResult.data?.data?.token }),
 			);
+			refetch();
 			navigation.replace('Main');
 		}
 		if (loginResult.error && 'data' in loginResult.error) {
