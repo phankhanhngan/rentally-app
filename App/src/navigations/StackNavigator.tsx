@@ -18,6 +18,7 @@ import ListingDetail from '@/screens/ListingDetail';
 import Login from '@/screens/Login';
 import MyRentalDetail from '@/screens/MyRentalDetail';
 import MyRental from '@/screens/MyRentals';
+import PaymentList from '@/screens/Payment/PaymentList';
 import PrepareContract from '@/screens/PrepareContract';
 import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
@@ -49,6 +50,7 @@ export type RootStackParams = {
 	PersonalInformationUpdate: undefined;
 	LoginSecurity: undefined;
 	Map: undefined;
+	PaymentList: undefined;
 };
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
@@ -189,6 +191,13 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Comments"
 					component={Comments}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="PaymentList"
+					component={PaymentList}
 					options={{
 						animation: 'slide_from_right',
 					}}
