@@ -36,7 +36,7 @@ export interface IRating {
 	locationRate: number;
 	securityRate: number;
 	supportRate: number;
-	avgRate: string;
+	avgRate: number;
 	renterName: string;
 	renterPhoto: string;
 }

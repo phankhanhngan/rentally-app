@@ -81,7 +81,7 @@ const PrepareContract = ({ navigation, route }: Props) => {
 			}
 		} catch (error: any) {
 			console.log(error);
-			Alert.alert('error!', error.data.message[0]);
+			Alert.alert('error!', error.data.message);
 		}
 	};
 

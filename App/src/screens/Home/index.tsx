@@ -8,6 +8,7 @@ import Filter from './Components/Filter';
 import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
+import Review from '@/components/Review';
 import { Skeleton } from '@/components/Skeleton';
 import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
@@ -148,7 +149,7 @@ const Home = ({ navigation }: Props) => {
 						<Search onSearchPress={toggleSheetSearch} />
 					</>
 				)}
-				{isOpenFilter && (
+				{/* {isOpenFilter && (
 					<>
 						<AnimatedPressable
 							entering={FadeIn}
@@ -161,6 +162,21 @@ const Home = ({ navigation }: Props) => {
 							onPress={toggleSheetFilter}
 						></AnimatedPressable>
 						<Filter onFilterPress={toggleSheetFilter} />
+					</>
+				)} */}
+				{isOpenFilter && (
+					<>
+						<AnimatedPressable
+							entering={FadeIn}
+							exiting={FadeOut}
+							style={{
+								...StyleSheet.absoluteFillObject,
+								backgroundColor: 'rgba(0, 0, 0, 0.3)',
+								zIndex: 1,
+							}}
+							onPress={toggleSheetFilter}
+						></AnimatedPressable>
+						<Review />
 					</>
 				)}
 			</GestureHandlerRootView>
@@ -224,7 +240,8 @@ const Home = ({ navigation }: Props) => {
 						}}
 						onPress={toggleSheetFilter}
 					></AnimatedPressable>
-					<Filter onFilterPress={toggleSheetFilter} />
+					{/* <Filter onFilterPress={toggleSheetFilter} /> */}
+					<Review />
 				</>
 			)}
 		</GestureHandlerRootView>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { AirbnbRating, Rating } from 'react-native-ratings';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
 import RangeSlider from './RangerSilder';
@@ -8,7 +9,6 @@ import Utilities from './Utilities';
 import { addParam } from '@/redux/features/params/params.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useGetPriceQuery } from '@/redux/services/help/help.service';
-
 interface FiltersProps {
 	onFilterPress: () => void;
 }
@@ -105,6 +105,7 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 				>
 					Filters
 				</Text>
+
 				<View style={{ flexDirection: 'row', gap: 4 }}>
 					<TouchableOpacity
 						onPress={handleClear}

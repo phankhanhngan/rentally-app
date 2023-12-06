@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
 import type { IMyRental } from '@/interfaces/rental.interface';
+import type { IRatingDetail } from '@/interfaces/room-detail.interface';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import CheckList from '@/screens/CheckList';
@@ -36,7 +37,7 @@ export type RootStackParams = {
 	ResetPassword: { email: string };
 	Rooms: undefined;
 	Main: undefined;
-	Comments: undefined;
+	Comments: { ratingDetail: IRatingDetail };
 	PrepareContract: {
 		id: string;
 		overView: IOverView;
@@ -149,13 +150,7 @@ const StackNavigator = () => {
 						animation: 'slide_from_right',
 					}}
 				/>
-				<Stack.Screen
-					name="Comments"
-					component={Comments}
-					options={{
-						animation: 'slide_from_right',
-					}}
-				/>
+
 				<Stack.Screen
 					name="PrepareContract"
 					component={PrepareContract}
@@ -187,6 +182,13 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Map"
 					component={Map}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Comments"
+					component={Comments}
 					options={{
 						animation: 'slide_from_right',
 					}}
