@@ -4,33 +4,28 @@ import MapView, { Marker } from "react-native-maps";
 import BackButton from "@/components/BackButton";
 import type { RootStackParams } from "@/navigations/StackNavigator";
 import Listing from "@/components/Listing";
-import { IRoomFinding } from "@/interfaces/roomfinding.interface";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { View, Text, StyleSheet } from "react-native";
-import { useGetFindingRoomsQuery } from "@/redux/services/findingRoom/findingRoom.service";
-type Props = NativeStackScreenProps<RootStackParams>;
+type Props = NativeStackScreenProps<RootStackParams, "Map">;
 
 const Map = ({ navigation, route }: Props) => {
   const BackHandler = () => {
     navigation.pop();
   };
 
-  const { data, isLoading, isFetching } = useGetFindingRoomsQuery({});
-  const [markers, setMarkers] = useState<IRoomFinding[]>([]);
+  // const [markers, setMarkers] = useState<IRoomFinding[]>([]);
   const mapRef = useRef<MapView>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [indexRoom, setIndexRoom] = useState(-1);
 
   useEffect(() => {
-    setMarkers(data?.data?.rooms || []);
+    if (isMapReady && mapRef.current && route.params.markers.length > 0) {
+      let maxLat = route.params.markers[0].coordinate.latitude;
+      let minLat = route.params.markers[0].coordinate.latitude;
+      let maxLng = route.params.markers[0].coordinate.longitude;
+      let minLng = route.params.markers[0].coordinate.longitude;
 
-    if (isMapReady && mapRef.current && markers.length > 0) {
-      let maxLat = markers[0].coordinate.latitude;
-      let minLat = markers[0].coordinate.latitude;
-      let maxLng = markers[0].coordinate.longitude;
-      let minLng = markers[0].coordinate.longitude;
-
-      markers.forEach((marker) => {
+      route.params.markers.forEach((marker) => {
         maxLat = Math.max(maxLat, marker.coordinate.latitude);
         minLat = Math.min(minLat, marker.coordinate.latitude);
         maxLng = Math.max(maxLng, marker.coordinate.longitude);
@@ -59,7 +54,7 @@ const Map = ({ navigation, route }: Props) => {
         }
       );
     }
-  }, [data, isMapReady]);
+  }, [isMapReady]);
 
   const handlePressMarker = (index: number) => {
     if (index === -1 || index !== indexRoom) {
@@ -80,14 +75,14 @@ const Map = ({ navigation, route }: Props) => {
         onMapReady={() => setIsMapReady(true)}
         onRegionChange={() => setIndexRoom(-1)}
       >
-        {markers.map((marker, index) => (
+        {route.params.markers.map((marker, index) => (
           <Marker
             key={index}
             coordinate={marker.coordinate}
             onPress={() => handlePressMarker(index)}
           >
-            <Text style={styles.price_text}>
-              {Number(marker.price) / 1000000} m
+            <Text style={indexRoom===index ? styles.price_text_select : styles.price_text}>
+              {(Number(marker.price) / 1000000).toFixed(2)} m
             </Text>
           </Marker>
         ))}
@@ -95,9 +90,9 @@ const Map = ({ navigation, route }: Props) => {
       {indexRoom !== -1 && (
         <View style={styles.listing_container}>
           <Listing
-            key={markers[indexRoom].id}
-            data={markers[indexRoom]}
-            name={markers[indexRoom].id}
+            key={route.params.markers[indexRoom].id}
+            data={route.params.markers[indexRoom]}
+            name={route.params.markers[indexRoom].id}
             onPress={(id) => {
               navigation.navigate("Room", { id });
             }}
@@ -129,12 +124,19 @@ const styles = StyleSheet.create({
     padding: 6,
     borderRadius: 12,
   },
+  price_text_select: {
+    backgroundColor: "black",
+    color:"white",
+    padding: 6,
+    borderRadius: 12,
+  },
   listing_container: {
     backgroundColor: "white",
     flex: 1,
     position: "absolute",
     transform: [{ scale: 0.8 }],
     bottom: -15,
+    borderRadius: 16
   },
 });
 
