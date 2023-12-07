@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Alert,
 	Image,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -13,11 +14,14 @@ import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 import Spinner from 'react-native-loading-spinner-overlay';
+import WebView from 'react-native-webview';
 
+import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
 import {
+	useConfirmRentalMutation,
 	useGetMyRentalQuery,
-	useRetalRequestMutation,
+	useRequestBreakRentalMutation,
 } from '@/redux/services/rental/rental.service';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
@@ -42,13 +46,24 @@ const ActionButton = ({
 	rentalStatus: STATUS;
 	id: string;
 }) => {
-	const [retalRequest, { isLoading }] = useRetalRequestMutation();
+	const [confirmRental, { isLoading: isConfirmLoading }] =
+		useConfirmRentalMutation();
+	const [requestBreakRental, { isLoading }] = useRequestBreakRentalMutation();
+
+	const { refetch } = useGetMyRentalQuery('');
+
+	const [modalVisible, setModalVisible] = useState(false);
+	const [urlPayment, setUrlPayment] = useState('');
 	const handleRequest = async () => {
 		try {
-			const type =
-				rentalStatus === STATUS.APPROVED ? 'confirm' : 'request-break';
-			const res = await retalRequest({ id, type }).unwrap();
-			console.log('res:', res);
+			if (rentalStatus === STATUS.APPROVED) {
+				const res = await confirmRental({ id }).unwrap();
+				setModalVisible(true);
+				setUrlPayment(res.data);
+				console.log('res:', res);
+			} else {
+				await requestBreakRental({ id });
+			}
 		} catch (error: any) {
 			console.log(error);
 			Alert.alert('error!', error.data.message);
@@ -58,14 +73,12 @@ const ActionButton = ({
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
 			<>
-				<Spinner visible={isLoading} />
+				<Spinner visible={isLoading || isConfirmLoading} />
 				<TouchableOpacity
 					onPress={handleRequest}
 					style={[
 						{
-							backgroundColor: STATUS_COLORS[
-								rentalStatus
-							] as string,
+							backgroundColor: '#E36414',
 							height: 30,
 							marginRight: 12,
 							borderRadius: 8,
@@ -87,6 +100,33 @@ const ActionButton = ({
 						{STATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
+				<Modal
+					animationType="slide"
+					transparent={false}
+					visible={modalVisible}
+					// onRequestClose={() => setModalVisible(false)}
+				>
+					<WebView
+						source={{
+							uri: urlPayment,
+						}}
+					/>
+					<View
+						style={{
+							width: '100%',
+							justifyContent: 'center',
+							flexDirection: 'row',
+						}}
+					>
+						<ButtonWithLoader
+							onPress={() => {
+								setModalVisible(false);
+								refetch();
+							}}
+							text="Close"
+						/>
+					</View>
+				</Modal>
 			</>
 		);
 	return (
@@ -146,7 +186,7 @@ const CheckList = ({ navigation }: Props) => {
 							key={myRental.rentalInfo.id}
 							style={{
 								width: '100%',
-								height: 168,
+								height: 180,
 								marginBottom: 24,
 								borderWidth: StyleSheet.hairlineWidth,
 								borderColor: '#c2c2c2',
