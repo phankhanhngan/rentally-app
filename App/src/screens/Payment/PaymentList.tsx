@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Alert,
+	Button,
 	Image,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -13,20 +15,23 @@ import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 import Spinner from 'react-native-loading-spinner-overlay';
+import WebView from 'react-native-webview';
 
 import BackButton from '@/components/BackButton';
+import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
 import {
-	useGetMyRentalQuery,
-	useRetalRequestMutation,
-} from '@/redux/services/rental/rental.service';
-import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+	useCheckOutMutation,
+	useGetMyPaymentQuery,
+} from '@/redux/services/payment/payment.service';
+import { PAYMENTSTATUS } from '@/utils/constants';
+import { PAYMENTSTATUS_COLORS, PAYMENTSTATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import moment from 'moment';
-const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
+const StatusText = ({ rentalStatus }: { rentalStatus: PAYMENTSTATUS }) => (
 	<Text
 		style={{
-			color: STATUS_COLORS[rentalStatus] as string,
+			color: PAYMENTSTATUS_COLORS[rentalStatus] as string,
 			fontSize: 12,
 			fontWeight: '700',
 			textAlign: 'right',
@@ -40,23 +45,26 @@ const ActionButton = ({
 	rentalStatus,
 	id,
 }: {
-	rentalStatus: STATUS;
+	rentalStatus: PAYMENTSTATUS;
 	id: string;
 }) => {
-	const [retalRequest, { isLoading }] = useRetalRequestMutation();
+	const [checkOut, { isLoading }] = useCheckOutMutation();
+	const { refetch } = useGetMyPaymentQuery('');
+	const [modalVisible, setModalVisible] = useState(false);
+	const [urlPayment, setUrlPayment] = useState('');
 	const handleRequest = async () => {
 		try {
-			const type =
-				rentalStatus === STATUS.APPROVED ? 'confirm' : 'request-break';
-			const res = await retalRequest({ id, type }).unwrap();
-			console.log('res:', res);
+			const res = await checkOut({ id }).unwrap();
+			setModalVisible(true);
+			console.log(res.data);
+			setUrlPayment(res.data);
 		} catch (error: any) {
 			console.log(error);
 			Alert.alert('error!', error.data.message);
 		}
 	};
 
-	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
+	if (rentalStatus === PAYMENTSTATUS.UNPAID)
 		return (
 			<>
 				<Spinner visible={isLoading} />
@@ -64,7 +72,7 @@ const ActionButton = ({
 					onPress={handleRequest}
 					style={[
 						{
-							backgroundColor: STATUS_COLORS[
+							backgroundColor: PAYMENTSTATUS_COLORS[
 								rentalStatus
 							] as string,
 							height: 30,
@@ -85,20 +93,47 @@ const ActionButton = ({
 							fontFamily: 'mon-b',
 						}}
 					>
-						{STATUS_TEXT[rentalStatus]}
+						{PAYMENTSTATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
+				<Modal
+					animationType="slide"
+					transparent={false}
+					visible={modalVisible}
+					// onRequestClose={() => setModalVisible(false)}
+				>
+					<WebView
+						source={{
+							uri: urlPayment,
+						}}
+					/>
+					<View
+						style={{
+							width: '100%',
+							justifyContent: 'center',
+							flexDirection: 'row',
+						}}
+					>
+						<ButtonWithLoader
+							onPress={() => {
+								setModalVisible(false);
+								refetch();
+							}}
+							text="Close"
+						/>
+					</View>
+				</Modal>
 			</>
 		);
 	return (
 		<Text style={{ color: '#5E5D5E', fontSize: 12, marginRight: 12 }}>
-			{STATUS_TEXT[rentalStatus]}
+			{PAYMENTSTATUS_TEXT[rentalStatus]}
 		</Text>
 	);
 };
 
 const PaymentList = ({ navigation }: Props) => {
-	const { data, isLoading, isFetching } = useGetMyRentalQuery('');
+	const { data, isLoading, isFetching, refetch } = useGetMyPaymentQuery('');
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
@@ -143,16 +178,18 @@ const PaymentList = ({ navigation }: Props) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					{data?.data.map((myRental) => (
+					{data?.data.map((myPayment) => (
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
-								navigation.navigate('Rental', { myRental });
+								navigation.navigate('Rental', {
+									myRental: myPayment.rental,
+								});
 							}}
-							key={myRental.rentalInfo.id}
+							key={myPayment.id}
 							style={{
 								width: '100%',
-								height: 100,
+								height: 160,
 								marginBottom: 24,
 								borderWidth: StyleSheet.hairlineWidth,
 								borderColor: '#c2c2c2',
@@ -175,11 +212,12 @@ const PaymentList = ({ navigation }: Props) => {
 							<Image
 								source={{
 									uri:
-										myRental.roomInfo.images &&
-										(myRental.roomInfo.images[0] as string),
+										myPayment.rental.roomInfo.images &&
+										(myPayment.rental.roomInfo
+											.images[0] as string),
 								}}
 								style={{
-									width: '30%',
+									width: '35%',
 									height: '100%',
 									borderTopLeftRadius: 12,
 									borderBottomLeftRadius: 12,
@@ -194,61 +232,88 @@ const PaymentList = ({ navigation }: Props) => {
 								<View
 									style={{
 										paddingHorizontal: 12,
-										gap: 2,
 										// flexDirection: 'row',
 										// justifyContent: 'space-between',
 									}}
 								>
-									<StatusText
-										rentalStatus={myRental.status}
-									/>
 									<Text
 										style={{
 											color: '#000',
 											fontSize: 13,
 											fontWeight: '900',
-											marginBottom: 8,
 										}}
 									>
-										{myRental.roomInfo.roomName}
+										{myPayment.rental.roomInfo.roomName}
 									</Text>
-									<View
-										style={{
-											flexDirection: 'row',
-											justifyContent: 'space-between',
-										}}
-									>
+								</View>
+								<View
+									style={{
+										flexDirection: 'row',
+										borderBottomColor: '#5E5D5E',
+										borderBottomWidth: 0.5,
+										paddingHorizontal: 12,
+										paddingBottom: 18,
+									}}
+								>
+									<View style={{ flex: 1 }}>
 										<Text style={styles.textTitle}>
-											Expiration date
+											Electric
 										</Text>
 										<Text style={styles.textInfo}>
-											{moment(
-												myRental.rentalInfo.moveInDate,
-											).format('ll')}
-										</Text>
-									</View>
-									<View
-										style={{
-											flexDirection: 'row',
-											justifyContent: 'space-between',
-										}}
-									>
-										<Text style={styles.textTitle}>
-											Monthly rent
-										</Text>
-										<Text
-											style={{
-												color: '#000',
-												fontSize: 14,
-												fontWeight: '700',
-											}}
-										>
 											{formatNumberWithCommas(
-												myRental.roomInfo.price,
+												myPayment.totalElectricPrice,
+											)}{' '}
+											VND
+										</Text>
+										<Text style={styles.textTitle}>
+											Water
+										</Text>
+										<Text style={styles.textInfo}>
+											{formatNumberWithCommas(
+												myPayment.totalWaterPrice,
 											)}{' '}
 											VND
 										</Text>
 									</View>
+									<View style={{ flex: 1 }}>
+										<Text style={styles.textTitle}>
+											Addition
+										</Text>
+										<Text style={styles.textInfo}>
+											{formatNumberWithCommas(
+												myPayment.additionalPrice,
+											)}{' '}
+											VND
+										</Text>
+										<Text style={styles.textTitle}>
+											Total
+										</Text>
+										<Text
+											style={{
+												color: '#ce0c0c',
+												fontSize: 13,
+												fontWeight: '700',
+											}}
+										>
+											{formatNumberWithCommas(
+												myPayment.totalPrice,
+											)}{' '}
+											VND
+										</Text>
+									</View>
+								</View>
+								<View
+									style={{
+										marginTop: 8,
+										justifyContent: 'center',
+										width: '100%',
+										alignItems: 'flex-end',
+									}}
+								>
+									<ActionButton
+										rentalStatus={myPayment.status}
+										id={myPayment.id || ''}
+									/>
 								</View>
 							</View>
 						</TouchableOpacity>

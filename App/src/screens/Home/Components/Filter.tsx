@@ -66,7 +66,7 @@ const Filter: React.FC<FiltersProps> = ({ onFilterPress }) => {
 		);
 		dispatch(
 			addParam({
-				name: 'utility',
+				name: 'utilities',
 				values: selected,
 			}),
 		);

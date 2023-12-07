@@ -240,8 +240,8 @@ const Home = ({ navigation }: Props) => {
 						}}
 						onPress={toggleSheetFilter}
 					></AnimatedPressable>
-					{/* <Filter onFilterPress={toggleSheetFilter} /> */}
-					<Review />
+					<Filter onFilterPress={toggleSheetFilter} />
+					{/* <Review /> */}
 				</>
 			)}
 		</GestureHandlerRootView>
