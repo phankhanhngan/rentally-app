@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+	FlatList,
+	Pressable,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -61,6 +68,10 @@ const Home = ({ navigation }: Props) => {
 			});
 		}
 	}, [data]);
+
+	const handlePressMap = () => {
+		navigation.navigate('Map', { markers: currentRooms });
+	};
 
 	const toggleSheetSearch = () => {
 		setOpenSearch((prev) => !prev);
@@ -149,7 +160,7 @@ const Home = ({ navigation }: Props) => {
 						<Search onSearchPress={toggleSheetSearch} />
 					</>
 				)}
-				{/* {isOpenFilter && (
+				{isOpenFilter && (
 					<>
 						<AnimatedPressable
 							entering={FadeIn}
@@ -163,21 +174,6 @@ const Home = ({ navigation }: Props) => {
 						></AnimatedPressable>
 						<Filter onFilterPress={toggleSheetFilter} />
 					</>
-				)} */}
-				{isOpenFilter && (
-					<>
-						<AnimatedPressable
-							entering={FadeIn}
-							exiting={FadeOut}
-							style={{
-								...StyleSheet.absoluteFillObject,
-								backgroundColor: 'rgba(0, 0, 0, 0.3)',
-								zIndex: 1,
-							}}
-							onPress={toggleSheetFilter}
-						></AnimatedPressable>
-						<Review />
-					</>
 				)}
 			</GestureHandlerRootView>
 		);
@@ -189,6 +185,13 @@ const Home = ({ navigation }: Props) => {
 				onFilterPress={toggleSheetFilter}
 			/>
 			<View style={{ marginTop: -2 }}>
+				<TouchableOpacity
+					style={styles.button_map}
+					onPress={handlePressMap}
+				>
+					<Icon name="map-o" size={16} color={'white'} />
+					<Text style={styles.text_map}>Map</Text>
+				</TouchableOpacity>
 				<FlatList
 					data={currentRooms}
 					keyExtractor={(item: IRoomFinding) => item.id}
@@ -257,6 +260,25 @@ const styles = StyleSheet.create({
 	mapStyle: {
 		width: 400,
 		height: 100,
+	},
+	button_map: {
+		position: 'absolute',
+		top: 550,
+		left: 140,
+		zIndex: 100,
+		backgroundColor: 'black',
+		padding: 12,
+		borderRadius: 100,
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		paddingHorizontal: 20,
+		gap: 6,
+		alignItems: 'center',
+	},
+	text_map: {
+		color: 'white',
+		fontWeight: 'bold',
 	},
 });
 

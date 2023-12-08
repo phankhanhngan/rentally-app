@@ -75,7 +75,7 @@ const Listing = ({ data, onPress, name, navigation }: ListingProps) => {
 				roomId: data.id,
 			});
 		} else {
-			navigation.navigate('/login');
+			navigation.navigate('Login');
 		}
 	};
 

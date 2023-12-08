@@ -27,7 +27,7 @@ import { useCreateChecklistMutation } from '@/redux/services/checkList/checkList
 import { useGetRoomDetailQuery } from '@/redux/services/room-detail/room-detail.service';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams, 'Room'>;
+type Props = NativeStackScreenProps<RootStackParams>;
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
@@ -80,11 +80,15 @@ const ListingDetail = ({ navigation, route }: Props) => {
 				roomId: id,
 			});
 		} else {
-			navigation.navigate('/login');
+			navigation.navigate('Login');
 		}
 	};
 	const BackHandler = () => {
 		navigation.pop();
+	};
+
+	const handlePressMap = () => {
+		data && navigation.navigate('MapDetail', { marker: roomDetail });
 	};
 
 	const { data, isLoading } = useGetRoomDetailQuery({
@@ -112,6 +116,13 @@ const ListingDetail = ({ navigation, route }: Props) => {
 	if (isLoading) return <Loading />;
 	return (
 		<View style={styles.container}>
+			<TouchableOpacity
+				style={styles.button_map}
+				onPress={handlePressMap}
+			>
+				<Icon name="map-o" size={16} color={'white'} />
+				<Text style={styles.text_map}>Map</Text>
+			</TouchableOpacity>
 			<StatusBar backgroundColor={'#0C0F14'} />
 			<BackButton onPress={BackHandler} />
 
@@ -374,19 +385,23 @@ const ListingDetail = ({ navigation, route }: Props) => {
 
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate('PrepareContract', {
-								id: id,
-								overView: {
-									price: price,
-									image: images[0],
-									totalRating: ratingDetail.totalRating,
-									numberOfReviews:
-										ratingDetail.ratings.length,
-									district: roomblock.district,
-									province: roomblock.city,
-									address: roomblock.address,
-								},
-							});
+							if (userInfo) {
+								navigation.navigate('PrepareContract', {
+									id: id,
+									overView: {
+										price: price,
+										image: images[0],
+										totalRating: ratingDetail.totalRating,
+										numberOfReviews:
+											ratingDetail.ratings.length,
+										district: roomblock.district,
+										province: roomblock.city,
+										address: roomblock.address,
+									},
+								});
+							} else {
+								navigation.navigate('Login');
+							}
 						}}
 						style={[
 							{
@@ -527,6 +542,25 @@ const styles = StyleSheet.create({
 		fontFamily: 'mon',
 		paddingHorizontal: 12,
 		color: '#5E5D5E',
+	},
+	button_map: {
+		position: 'absolute',
+		top: 600,
+		left: 140,
+		zIndex: 100,
+		backgroundColor: 'black',
+		padding: 12,
+		borderRadius: 100,
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		paddingHorizontal: 20,
+		gap: 6,
+		alignItems: 'center',
+	},
+	text_map: {
+		color: 'white',
+		fontWeight: 'bold',
 	},
 });
 

@@ -65,40 +65,6 @@ const Register = () => {
 		code: '',
 	};
 
-	useEffect(() => {
-		if (registerResult.data?.status === 'SUCCESS') {
-			setIsPermitted(true);
-		}
-		if (registerResult.error && 'data' in registerResult.error) {
-			Alert.alert(
-				'Invalid data!',
-				(registerResult.error?.data as IAuthResponse)?.message,
-			);
-		}
-	}, [registerResult]);
-	useEffect(() => {
-		if (
-			registerVerificationResult.data?.status === 'SUCCESS' &&
-			registerVerificationResult.data?.data
-		) {
-			dispatch(
-				setCredentials({
-					accessToken: registerVerificationResult.data?.data?.token,
-				}),
-			);
-			navigation.replace('Main');
-		}
-		if (
-			registerVerificationResult.error &&
-			'data' in registerVerificationResult.error
-		) {
-			Alert.alert(
-				'Invalid data!',
-				(registerVerificationResult.error?.data as IAuthResponse)
-					?.message,
-			);
-		}
-	}, [registerVerificationResult]);
 	const RegisterSchema = Yup.object().shape<Record<string, any>>({
 		email: Yup.string()
 			.email('Email is invalid!')
@@ -131,15 +97,44 @@ const Register = () => {
 	const submitRegisterForm = async (values: RegisterValues) => {
 		const { confirmPassword, ...body } = values;
 
-		await register(body).unwrap();
-		setEmail(body.email);
+		try {
+			const res = await register(body).unwrap();
+			if (res.status === 'SUCCESS') {
+				setIsPermitted(true);
+				setEmail(body.email);
+			}
+		} catch (error: any) {
+			console.log(error.data.message);
+			if (error.data.message instanceof Array) {
+				console.log('2');
+				Alert.alert('Invalid data!', error.data.message[0]);
+			} else {
+				console.log('2s');
+				Alert.alert('Invalid data!', error.data.message);
+			}
+		}
 	};
 	const submitCodeForm = async (values: SendCodeValues) => {
 		const body = {
 			email: email,
 			code: 'R-' + values.code,
 		};
-		await registerVerification(body).unwrap();
+		try {
+			const res = await registerVerification(body).unwrap();
+			if (res.status === 'SUCCESS' && res.data) {
+				dispatch(setCredentials({ accessToken: res.data.token }));
+				navigation.replace('Main');
+			}
+		} catch (error: any) {
+			console.log(error.data.message);
+			if (error.data.message instanceof Array) {
+				console.log('2');
+				Alert.alert('Invalid data!', error.data.message[0]);
+			} else {
+				console.log('2s');
+				Alert.alert('Invalid data!', error.data.message);
+			}
+		}
 	};
 	const handleResetPassword = async () => {
 		const res = await resendEmail({ email: email }).unwrap();
@@ -304,7 +299,7 @@ const Register = () => {
 												/>
 
 												<ButtonWithLoader
-													text="Reset password"
+													text="Register"
 													onPress={handleSubmit}
 													isLoading={undefined}
 												/>
