@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
 		height: 100,
 	},
 	button_map: {
-		position: 'absolute',
+		position: 'relative',
 		top: 550,
 		left: 140,
 		zIndex: 100,
@@ -275,6 +275,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 		gap: 6,
 		alignItems: 'center',
+		width: 100,
 	},
 	text_map: {
 		color: 'white',
