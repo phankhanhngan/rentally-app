@@ -1,73 +1,73 @@
-import React from "react";
+import React from 'react';
 import {
-  Animated,
-  Dimensions,
-  Image,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Swiper from "react-native-swiper";
-import Icon2 from "react-native-vector-icons/EvilIcons";
-import Icon from "react-native-vector-icons/FontAwesome";
+	Animated,
+	Dimensions,
+	Image,
+	ScrollView,
+	StatusBar,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
+import Swiper from 'react-native-swiper';
+import Icon2 from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import BackButton from "@/components/BackButton";
+import BackButton from '@/components/BackButton';
 import HeartButton from '@/components/HeartButton';
-import Loading from "@/components/Loading";
-import Utility from "@/components/Utility";
-import type { IRoomBlock } from "@/interfaces/block.interface";
-import type { IRoomDetail } from "@/interfaces/room-detail.interface";
-import type { ILandlord, IUser } from "@/interfaces/user.interface";
-import type { RootStackParams } from "@/navigations/StackNavigator";
+import Loading from '@/components/Loading';
+import Utility from '@/components/Utility';
+import type { IRoomBlock } from '@/interfaces/block.interface';
+import type { IRoomDetail } from '@/interfaces/room-detail.interface';
+import type { ILandlord, IUser } from '@/interfaces/user.interface';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import { useCreateChecklistMutation } from '@/redux/services/checkList/checkList.service';
-import { useGetRoomDetailQuery } from "@/redux/services/room-detail/room-detail.service";
-import { formatNumberWithCommas } from "@/utils/helpers";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-type Props = NativeStackScreenProps<RootStackParams, "Room">;
+import { useGetRoomDetailQuery } from '@/redux/services/room-detail/room-detail.service';
+import { formatNumberWithCommas } from '@/utils/helpers';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type Props = NativeStackScreenProps<RootStackParams>;
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
 const RoomImage = ({ item }: { item: string }) => (
-  <Image source={{ uri: item }} style={styles.image} />
+	<Image source={{ uri: item }} style={styles.image} />
 );
 const CustomPagination = (index: number, total: number): React.ReactNode => {
-  const dotOpacity = new Animated.Value(0);
+	const dotOpacity = new Animated.Value(0);
 
-  Animated.timing(dotOpacity, {
-    toValue: 1,
-    duration: 30,
-    useNativeDriver: false,
-  }).start();
+	Animated.timing(dotOpacity, {
+		toValue: 1,
+		duration: 30,
+		useNativeDriver: false,
+	}).start();
 
-  return (
-    <Animated.View
-      style={[
-        styles.pagination,
-        {
-          opacity: dotOpacity,
-          position: "absolute",
-          bottom: 10,
-          width: "100%",
-          justifyContent: "center",
-        },
-      ]}
-    >
-      {Array.from({ length: total }).map((_, i) => (
-        <View
-          style={[
-            styles.paginationDot,
-            i === index ? styles.paginationDotActive : null,
-          ]}
-          key={i}
-        />
-      ))}
-    </Animated.View>
-  );
+	return (
+		<Animated.View
+			style={[
+				styles.pagination,
+				{
+					opacity: dotOpacity,
+					position: 'absolute',
+					bottom: 10,
+					width: '100%',
+					justifyContent: 'center',
+				},
+			]}
+		>
+			{Array.from({ length: total }).map((_, i) => (
+				<View
+					style={[
+						styles.paginationDot,
+						i === index ? styles.paginationDotActive : null,
+					]}
+					key={i}
+				/>
+			))}
+		</Animated.View>
+	);
 };
 
 const ListingDetail = ({ navigation, route }: Props) => {
@@ -80,48 +80,51 @@ const ListingDetail = ({ navigation, route }: Props) => {
 				roomId: id,
 			});
 		} else {
-			navigation.navigate('/login');
+			navigation.navigate('Login');
 		}
 	};
-  const BackHandler = () => {
-    navigation.pop();
-  };
+	const BackHandler = () => {
+		navigation.pop();
+	};
 
-  const handlePressMap = () => {
-    data && navigation.navigate("MapDetail", { marker: roomDetail });
-  };
+	const handlePressMap = () => {
+		data && navigation.navigate('MapDetail', { marker: roomDetail });
+	};
 
-  const { data, isLoading } = useGetRoomDetailQuery({
-    id: route?.params?.id,
-  });
+	const { data, isLoading } = useGetRoomDetailQuery({
+		id: route?.params?.id,
+	});
 
-  const roomDetail = data?.data || ({} as IRoomDetail);
+	const roomDetail = data?.data || ({} as IRoomDetail);
 
-  const {
-    id,
-    price,
+	const {
+		id,
+		price,
 		isInCheckList,
-    images = [],
-    utilities = [],
-    roomblock = {} as IRoomBlock,
-    landlord = {} as ILandlord,
-    ratingDetail = {
-      ratings: [],
-      totalRating: 0,
-    },
-  } = roomDetail;
-  // const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
+		images = [],
+		utilities = [],
+		roomblock = {} as IRoomBlock,
+		landlord = {} as ILandlord,
+		ratingDetail = {
+			ratings: [],
+			totalRating: 0,
+		},
+	} = roomDetail;
+	// const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
 
 	console.log(ratingDetail);
-  if (isLoading) return <Loading />;
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button_map} onPress={handlePressMap}>
-        <Icon name="map-o" size={16} color={"white"} />
-        <Text style={styles.text_map}>Map</Text>
-      </TouchableOpacity>
-      <StatusBar backgroundColor={"#0C0F14"} />
-      <BackButton onPress={BackHandler} />
+	if (isLoading) return <Loading />;
+	return (
+		<View style={styles.container}>
+			<TouchableOpacity
+				style={styles.button_map}
+				onPress={handlePressMap}
+			>
+				<Icon name="map-o" size={16} color={'white'} />
+				<Text style={styles.text_map}>Map</Text>
+			</TouchableOpacity>
+			<StatusBar backgroundColor={'#0C0F14'} />
+			<BackButton onPress={BackHandler} />
 
 			<View style={{ position: 'relative' }}>
 				<ScrollView
@@ -315,243 +318,250 @@ const ListingDetail = ({ navigation, route }: Props) => {
 						)}
 						<View style={styles.divider} />
 
-            <View style={styles.hostView}>
-              <Image
-                source={{
-                  uri: landlord.photo,
-                }}
-                style={styles.host}
-              />
+						<View style={styles.hostView}>
+							<Image
+								source={{
+									uri: landlord.photo,
+								}}
+								style={styles.host}
+							/>
 
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    fontWeight: "500",
-                    fontSize: 16,
-                    color: "#5E5D5E",
-                    width: "100%",
-                  }}
-                >
-                  Hosted by {landlord.name}
-                </Text>
-                <Text style={{ color: "#5E5D5E", width: "100%" }}>
-                  {landlord.email} · {landlord.phoneNumber}
-                </Text>
-              </View>
-            </View>
+							<View style={{ flex: 1 }}>
+								<Text
+									style={{
+										fontWeight: '500',
+										fontSize: 16,
+										color: '#5E5D5E',
+										width: '100%',
+									}}
+								>
+									Hosted by {landlord.name}
+								</Text>
+								<Text
+									style={{ color: '#5E5D5E', width: '100%' }}
+								>
+									{landlord.email} · {landlord.phoneNumber}
+								</Text>
+							</View>
+						</View>
 
-            <View style={styles.divider} />
-            <View style={{ gap: 12, flexDirection: "column" }}>
-              {utilities.map((ultility) => (
-                <Utility key={ultility.id} utility={ultility} />
-              ))}
-            </View>
-          </View>
-        </ScrollView>
-      </View>
+						<View style={styles.divider} />
+						<View style={{ gap: 12, flexDirection: 'column' }}>
+							{utilities.map((ultility) => (
+								<Utility key={ultility.id} utility={ultility} />
+							))}
+						</View>
+					</View>
+				</ScrollView>
+			</View>
 
-      <View
-        style={{
-          position: "absolute",
-          height: 70,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "#fff",
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          borderTopColor: "#5E5D5E",
-          borderTopWidth: StyleSheet.hairlineWidth,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity style={styles.footerText}>
-            <Text style={styles.footerPrice}>
-              VND {formatNumberWithCommas(price || "")}
-            </Text>
-            <Text style={{ color: "#5E5D5E" }}> month</Text>
-          </TouchableOpacity>
+			<View
+				style={{
+					position: 'absolute',
+					height: 70,
+					bottom: 0,
+					left: 0,
+					right: 0,
+					backgroundColor: '#fff',
+					paddingVertical: 10,
+					paddingHorizontal: 20,
+					borderTopColor: '#5E5D5E',
+					borderTopWidth: StyleSheet.hairlineWidth,
+				}}
+			>
+				<View
+					style={{
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+				>
+					<TouchableOpacity style={styles.footerText}>
+						<Text style={styles.footerPrice}>
+							VND {formatNumberWithCommas(price || '')}
+						</Text>
+						<Text style={{ color: '#5E5D5E' }}> month</Text>
+					</TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("PrepareContract", {
-                id: id,
-                overView: {
-                  price: price,
-                  image: images[0],
-                  totalRating: ratingDetail.totalRating,
-                  numberOfReviews: ratingDetail.ratings.length,
-                  district: roomblock.district,
-                  province: roomblock.city,
-                  address: roomblock.address,
-                },
-              });
-            }}
-            style={[
-              {
-                backgroundColor: "#E36414",
-                height: 50,
-                borderRadius: 8,
-                justifyContent: "center",
-                alignItems: "center",
-              },
-              { paddingRight: 20, paddingLeft: 20 },
-            ]}
-          >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                fontFamily: "mon-b",
-              }}
-            >
-              Prepare contract
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
+					<TouchableOpacity
+						onPress={() => {
+							if (userInfo) {
+								navigation.navigate('PrepareContract', {
+									id: id,
+									overView: {
+										price: price,
+										image: images[0],
+										totalRating: ratingDetail.totalRating,
+										numberOfReviews:
+											ratingDetail.ratings.length,
+										district: roomblock.district,
+										province: roomblock.city,
+										address: roomblock.address,
+									},
+								});
+							} else {
+								navigation.navigate('Login');
+							}
+						}}
+						style={[
+							{
+								backgroundColor: '#E36414',
+								height: 50,
+								borderRadius: 8,
+								justifyContent: 'center',
+								alignItems: 'center',
+							},
+							{ paddingRight: 20, paddingLeft: 20 },
+						]}
+					>
+						<Text
+							style={{
+								color: '#fff',
+								fontSize: 16,
+								fontFamily: 'mon-b',
+							}}
+						>
+							Prepare contract
+						</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  image: {
-    height: IMG_HEIGHT,
-    width: width,
-  },
-  infoContainer: {
-    padding: 12,
-    backgroundColor: "#fff",
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    fontFamily: "mon-sb",
-    color: "#000",
-    paddingHorizontal: 12,
-    paddingTop: 12,
-  },
-  location: {
-    fontSize: 20,
+	container: {
+		flex: 1,
+		backgroundColor: 'white',
+	},
+	image: {
+		height: IMG_HEIGHT,
+		width: width,
+	},
+	infoContainer: {
+		padding: 12,
+		backgroundColor: '#fff',
+	},
+	name: {
+		fontSize: 24,
+		fontWeight: 'bold',
+		fontFamily: 'mon-sb',
+		color: '#000',
+		paddingHorizontal: 12,
+		paddingTop: 12,
+	},
+	location: {
+		fontSize: 20,
 
-    fontFamily: "mon-sb",
+		fontFamily: 'mon-sb',
 
-    color: "#000",
-  },
-  rooms: {
-    fontSize: 16,
-    color: "#5E5D5E",
-    marginVertical: 4,
-    fontFamily: "mon",
-  },
-  ratings: {
-    fontSize: 18,
-    fontFamily: "mon-sb",
-    color: "#000",
-    fontWeight: "bold",
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "#5E5D5E",
-    marginVertical: 16,
-    marginHorizontal: 12,
-  },
-  host: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    backgroundColor: "#5E5D5E",
-    paddingHorizontal: 12,
-  },
-  hostView: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    paddingHorizontal: 12,
-  },
-  footerText: {
-    height: "100%",
-    justifyContent: "center",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  footerPrice: {
-    color: "#000",
-    fontSize: 18,
-    fontFamily: "mon-sb",
-  },
-  roundButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 50,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#E36414",
-  },
-  bar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-  },
-  swiperArrow: {
-    color: "#FFF",
-    fontSize: 60,
-    fontWeight: "300",
-  },
-  pagination: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "rgba(255,255,255,0.4)",
-    margin: 5,
-  },
-  paginationDotActive: {
-    backgroundColor: "#FFF",
-  },
-  description: {
-    fontSize: 14,
-    marginTop: 10,
-    fontFamily: "mon",
-    paddingHorizontal: 12,
-    color: "#5E5D5E",
-  },
-  button_map: {
-    position: "absolute",
-    top: 600,
-    left: 140,
-    zIndex: 100,
-    backgroundColor: "black",
-    padding: 12,
-    borderRadius: 100,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    gap: 6,
-    alignItems: "center",
-  },
-  text_map: {
-    color: "white",
-    fontWeight: "bold",
-  },
+		color: '#000',
+	},
+	rooms: {
+		fontSize: 16,
+		color: '#5E5D5E',
+		marginVertical: 4,
+		fontFamily: 'mon',
+	},
+	ratings: {
+		fontSize: 18,
+		fontFamily: 'mon-sb',
+		color: '#000',
+		fontWeight: 'bold',
+	},
+	divider: {
+		height: StyleSheet.hairlineWidth,
+		backgroundColor: '#5E5D5E',
+		marginVertical: 16,
+		marginHorizontal: 12,
+	},
+	host: {
+		width: 50,
+		height: 50,
+		borderRadius: 50,
+		backgroundColor: '#5E5D5E',
+		paddingHorizontal: 12,
+	},
+	hostView: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 12,
+		paddingHorizontal: 12,
+	},
+	footerText: {
+		height: '100%',
+		justifyContent: 'center',
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 4,
+	},
+	footerPrice: {
+		color: '#000',
+		fontSize: 18,
+		fontFamily: 'mon-sb',
+	},
+	roundButton: {
+		width: 40,
+		height: 40,
+		borderRadius: 50,
+		backgroundColor: 'white',
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: '#E36414',
+	},
+	bar: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		gap: 10,
+	},
+	swiperArrow: {
+		color: '#FFF',
+		fontSize: 60,
+		fontWeight: '300',
+	},
+	pagination: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	paginationDot: {
+		width: 8,
+		height: 8,
+		borderRadius: 4,
+		backgroundColor: 'rgba(255,255,255,0.4)',
+		margin: 5,
+	},
+	paginationDotActive: {
+		backgroundColor: '#FFF',
+	},
+	description: {
+		fontSize: 14,
+		marginTop: 10,
+		fontFamily: 'mon',
+		paddingHorizontal: 12,
+		color: '#5E5D5E',
+	},
+	button_map: {
+		position: 'absolute',
+		top: 600,
+		left: 140,
+		zIndex: 100,
+		backgroundColor: 'black',
+		padding: 12,
+		borderRadius: 100,
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		paddingHorizontal: 20,
+		gap: 6,
+		alignItems: 'center',
+	},
+	text_map: {
+		color: 'white',
+		fontWeight: 'bold',
+	},
 });
 
 export default ListingDetail;
