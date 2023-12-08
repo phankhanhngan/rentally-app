@@ -6,7 +6,7 @@ export interface IRoomFinding {
 	images: string[];
 	address: string;
 	district: string;
-	move_out_date?: string;
+	isInCheckList: boolean;
 	coordinate: {
 		latitude: number;
 		longitude: number;

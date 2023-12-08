@@ -15,12 +15,15 @@ import Icon2 from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import BackButton from '@/components/BackButton';
+import HeartButton from '@/components/HeartButton';
 import Loading from '@/components/Loading';
 import Utility from '@/components/Utility';
 import type { IRoomBlock } from '@/interfaces/block.interface';
 import type { IRoomDetail } from '@/interfaces/room-detail.interface';
-import type { ILandlord } from '@/interfaces/user.interface';
+import type { ILandlord, IUser } from '@/interfaces/user.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { useAppSelector } from '@/redux/hook';
+import { useCreateChecklistMutation } from '@/redux/services/checkList/checkList.service';
 import { useGetRoomDetailQuery } from '@/redux/services/room-detail/room-detail.service';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -68,6 +71,18 @@ const CustomPagination = (index: number, total: number): React.ReactNode => {
 };
 
 const ListingDetail = ({ navigation, route }: Props) => {
+	const [createChecklist] = useCreateChecklistMutation();
+	const userInfo = useAppSelector((state) => state.auth.userInfo) as IUser;
+
+	const handleClickHeartButton = async (id: string) => {
+		if (userInfo) {
+			await createChecklist({
+				roomId: id,
+			});
+		} else {
+			navigation.navigate('/login');
+		}
+	};
 	const BackHandler = () => {
 		navigation.pop();
 	};
@@ -81,6 +96,7 @@ const ListingDetail = ({ navigation, route }: Props) => {
 	const {
 		id,
 		price,
+		isInCheckList,
 		images = [],
 		utilities = [],
 		roomblock = {} as IRoomBlock,
@@ -125,13 +141,11 @@ const ListingDetail = ({ navigation, route }: Props) => {
 							backgroundColor: 'white',
 						}}
 					>
-						<Icon
-							name="heart-o"
-							color={'black'}
-							size={16}
-							style={{
-								opacity: 1,
-							}}
+						<HeartButton
+							isInCheckList={isInCheckList}
+							handleClickHeartButton={() =>
+								handleClickHeartButton(id)
+							}
 						/>
 					</TouchableOpacity>
 					<View style={styles.infoContainer}>
