@@ -1,5 +1,6 @@
 // import { logOut, setCredentials } from "../features/auth/auth.slice"
 import type { RootState } from '@/redux/store';
+import { getData } from '@/utils/helpers/asyncStorage';
 import { BASE_URL } from '@env';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -10,10 +11,10 @@ const baseQuery = fetchBaseQuery({
 	// credentials: 'include',
 	mode: 'cors',
 
-	prepareHeaders: (headers, { getState }) => {
+	prepareHeaders: async (headers, { getState }) => {
 		headers.set('Access-Control-Allow-Origin', '*');
 		headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-		const token = (getState() as RootState).auth.accessToken;
+		const token = await getData('jwt');
 		console.log('token:', token);
 		if (token) {
 			headers.set('authorization', `Bearer ${token}`);
