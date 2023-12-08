@@ -36,10 +36,13 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 			{ success: boolean; message: string; data: string },
 			{ id: string }
 		>({
-			query: ({ id }) => ({
-				url: `/rental/my-rental/${id}/confirm`,
-				method: 'PUT',
-			}),
+			query: ({ id }) => {
+				console.log(id);
+				return {
+					url: `/rental/my-rental/${id}/confirm`,
+					method: 'PUT',
+				};
+			},
 		}),
 		requestBreakRental: builder.mutation<
 			{ success: boolean; message: string },
