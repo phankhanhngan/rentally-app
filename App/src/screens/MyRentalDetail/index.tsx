@@ -251,7 +251,7 @@ const MyRentalDetail = ({ navigation, route }: Props) => {
 				>
 					<ActionButton
 						rentalStatus={myRental.status}
-						id={myRental.rentalInfo.rentalDetailId || ''}
+						id={myRental.rentalInfo.id || ''}
 					/>
 				</View>
 			</View>
