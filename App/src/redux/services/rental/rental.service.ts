@@ -22,7 +22,7 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 					url: '/rental/my-rental',
 				};
 			},
-			providesTags: ['Rental'],
+			providesTags: [{ type: 'Rental', id: 'LIST' }],
 		}),
 		createRental: builder.mutation<IRentalResponse, { data: IRental }>({
 			query: ({ data }) => ({
@@ -32,12 +32,21 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 			}),
 			invalidatesTags: ['Rental'],
 		}),
-		retalRequest: builder.mutation<
-			{ success: boolean; message: string },
-			{ id: string; type: string }
+		confirmRental: builder.mutation<
+			{ success: boolean; message: string; data: string },
+			{ id: string }
 		>({
-			query: ({ id, type }) => ({
-				url: `/rental/my-rental/${id}/${type}`,
+			query: ({ id }) => ({
+				url: `/rental/my-rental/${id}/confirm`,
+				method: 'PUT',
+			}),
+		}),
+		requestBreakRental: builder.mutation<
+			{ success: boolean; message: string },
+			{ id: string }
+		>({
+			query: ({ id }) => ({
+				url: `/rental/my-rental/${id}/request-break`,
 				method: 'PUT',
 			}),
 			invalidatesTags: ['Rental'],
@@ -47,6 +56,7 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 
 export const {
 	useCreateRentalMutation,
-	useRetalRequestMutation,
+	useConfirmRentalMutation,
+	useRequestBreakRentalMutation,
 	useGetMyRentalQuery,
 } = rentalApi;

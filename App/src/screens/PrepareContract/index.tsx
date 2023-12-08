@@ -72,7 +72,7 @@ const PrepareContract = ({ navigation, route }: Props) => {
 				numberOfTenants: parseInt(values.numberOfTenants, 10),
 			},
 		};
-		console.log(rentalInfo);
+
 		try {
 			const res = await createRental({ data: rentalInfo }).unwrap();
 			console.log('res:', res);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
 	Alert,
+	Button,
 	Image,
 	Modal,
 	ScrollView,
@@ -16,20 +17,21 @@ type Props = NativeStackScreenProps<RootStackParams>;
 import Spinner from 'react-native-loading-spinner-overlay';
 import WebView from 'react-native-webview';
 
+import BackButton from '@/components/BackButton';
 import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
 import {
-	useConfirmRentalMutation,
-	useGetMyRentalQuery,
-	useRequestBreakRentalMutation,
-} from '@/redux/services/rental/rental.service';
-import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+	useCheckOutMutation,
+	useGetMyPaymentQuery,
+} from '@/redux/services/payment/payment.service';
+import { PAYMENTSTATUS } from '@/utils/constants';
+import { PAYMENTSTATUS_COLORS, PAYMENTSTATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import moment from 'moment';
-const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
+const StatusText = ({ rentalStatus }: { rentalStatus: PAYMENTSTATUS }) => (
 	<Text
 		style={{
-			color: STATUS_COLORS[rentalStatus] as string,
+			color: PAYMENTSTATUS_COLORS[rentalStatus] as string,
 			fontSize: 12,
 			fontWeight: '700',
 			textAlign: 'right',
@@ -43,42 +45,36 @@ const ActionButton = ({
 	rentalStatus,
 	id,
 }: {
-	rentalStatus: STATUS;
+	rentalStatus: PAYMENTSTATUS;
 	id: string;
 }) => {
-	const [confirmRental, { isLoading: isConfirmLoading }] =
-		useConfirmRentalMutation();
-	const [requestBreakRental, { isLoading }] = useRequestBreakRentalMutation();
-
-	const { refetch } = useGetMyRentalQuery('');
-
+	const [checkOut, { isLoading }] = useCheckOutMutation();
+	const { refetch } = useGetMyPaymentQuery('');
 	const [modalVisible, setModalVisible] = useState(false);
 	const [urlPayment, setUrlPayment] = useState('');
 	const handleRequest = async () => {
 		try {
-			if (rentalStatus === STATUS.APPROVED) {
-				const res = await confirmRental({ id }).unwrap();
-				setModalVisible(true);
-				setUrlPayment(res.data);
-				console.log('res:', res);
-			} else {
-				await requestBreakRental({ id });
-			}
+			const res = await checkOut({ id }).unwrap();
+			setModalVisible(true);
+		
+			setUrlPayment(res.data);
 		} catch (error: any) {
 			console.log(error);
 			Alert.alert('error!', error.data.message);
 		}
 	};
 
-	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
+	if (rentalStatus === PAYMENTSTATUS.UNPAID)
 		return (
 			<>
-				<Spinner visible={isLoading || isConfirmLoading} />
+				<Spinner visible={isLoading} />
 				<TouchableOpacity
 					onPress={handleRequest}
 					style={[
 						{
-							backgroundColor: '#E36414',
+							backgroundColor: PAYMENTSTATUS_COLORS[
+								rentalStatus
+							] as string,
 							height: 30,
 							marginRight: 12,
 							borderRadius: 8,
@@ -97,7 +93,7 @@ const ActionButton = ({
 							fontFamily: 'mon-b',
 						}}
 					>
-						{STATUS_TEXT[rentalStatus]}
+						{PAYMENTSTATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
 				<Modal
@@ -131,13 +127,13 @@ const ActionButton = ({
 		);
 	return (
 		<Text style={{ color: '#5E5D5E', fontSize: 12, marginRight: 12 }}>
-			{STATUS_TEXT[rentalStatus]}
+			{PAYMENTSTATUS_TEXT[rentalStatus]}
 		</Text>
 	);
 };
 
-const CheckList = ({ navigation }: Props) => {
-	const { data, isLoading, isFetching } = useGetMyRentalQuery('');
+const PaymentList = ({ navigation }: Props) => {
+	const { data, isLoading, isFetching, refetch } = useGetMyPaymentQuery('');
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
@@ -150,8 +146,13 @@ const CheckList = ({ navigation }: Props) => {
 			<Text>Hoong co gi ma oi</Text>
 		</View>;
 	}
+	const BackHandler = () => {
+		navigation.pop();
+	};
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
+			<BackButton onPress={BackHandler} />
+
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 24 }}
@@ -162,11 +163,11 @@ const CheckList = ({ navigation }: Props) => {
 						fontWeight: '500',
 						fontSize: 26,
 						color: '#000',
-						marginTop: 12,
-						marginLeft: 20,
+						marginTop: 18,
+						marginLeft: 80,
 					}}
 				>
-					My Rentals
+					My Payments
 				</Text>
 				<View
 					style={{
@@ -177,16 +178,18 @@ const CheckList = ({ navigation }: Props) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					{data?.data.map((myRental) => (
+					{data?.data.map((myPayment) => (
 						<TouchableOpacity
 							activeOpacity={0.7}
 							onPress={() => {
-								navigation.navigate('Rental', { myRental });
+								navigation.navigate('Rental', {
+									myRental: myPayment.rental,
+								});
 							}}
-							key={myRental.rentalInfo.id}
+							key={myPayment.id}
 							style={{
 								width: '100%',
-								height: 180,
+								height: 160,
 								marginBottom: 24,
 								borderWidth: StyleSheet.hairlineWidth,
 								borderColor: '#c2c2c2',
@@ -209,8 +212,9 @@ const CheckList = ({ navigation }: Props) => {
 							<Image
 								source={{
 									uri:
-										myRental.roomInfo.images &&
-										(myRental.roomInfo.images[0] as string),
+										myPayment.rental.roomInfo.images &&
+										(myPayment.rental.roomInfo
+											.images[0] as string),
 								}}
 								style={{
 									width: '35%',
@@ -232,9 +236,6 @@ const CheckList = ({ navigation }: Props) => {
 										// justifyContent: 'space-between',
 									}}
 								>
-									<StatusText
-										rentalStatus={myRental.status}
-									/>
 									<Text
 										style={{
 											color: '#000',
@@ -242,7 +243,7 @@ const CheckList = ({ navigation }: Props) => {
 											fontWeight: '900',
 										}}
 									>
-										{myRental.roomInfo.roomName}
+										{myPayment.rental.roomInfo.roomName}
 									</Text>
 								</View>
 								<View
@@ -256,36 +257,46 @@ const CheckList = ({ navigation }: Props) => {
 								>
 									<View style={{ flex: 1 }}>
 										<Text style={styles.textTitle}>
-											Movie in date
-										</Text>
-										<Text style={styles.textInfo}>
-											{moment(
-												myRental.rentalInfo.moveInDate,
-											).format('ll')}
-										</Text>
-										<Text style={styles.textTitle}>
-											Monthly rent
+											Electric
 										</Text>
 										<Text style={styles.textInfo}>
 											{formatNumberWithCommas(
-												myRental.roomInfo.price,
+												myPayment.totalElectricPrice,
+											)}{' '}
+											VND
+										</Text>
+										<Text style={styles.textTitle}>
+											Water
+										</Text>
+										<Text style={styles.textInfo}>
+											{formatNumberWithCommas(
+												myPayment.totalWaterPrice,
 											)}{' '}
 											VND
 										</Text>
 									</View>
 									<View style={{ flex: 1 }}>
 										<Text style={styles.textTitle}>
-											Lease term
-										</Text>
-										<Text style={styles.textInfo}>
-											{myRental.rentalInfo.leaseTerm}
-										</Text>
-										<Text style={styles.textTitle}>
-											Deposit amount
+											Addition
 										</Text>
 										<Text style={styles.textInfo}>
 											{formatNumberWithCommas(
-												myRental.roomInfo.depositAmount,
+												myPayment.additionalPrice,
+											)}{' '}
+											VND
+										</Text>
+										<Text style={styles.textTitle}>
+											Total
+										</Text>
+										<Text
+											style={{
+												color: '#ce0c0c',
+												fontSize: 13,
+												fontWeight: '700',
+											}}
+										>
+											{formatNumberWithCommas(
+												myPayment.totalPrice,
 											)}{' '}
 											VND
 										</Text>
@@ -300,11 +311,8 @@ const CheckList = ({ navigation }: Props) => {
 									}}
 								>
 									<ActionButton
-										rentalStatus={myRental.status}
-										id={
-											myRental.rentalInfo
-												.rentalDetailId || ''
-										}
+										rentalStatus={myPayment.status}
+										id={myPayment.id || ''}
 									/>
 								</View>
 							</View>
@@ -316,7 +324,7 @@ const CheckList = ({ navigation }: Props) => {
 	);
 };
 
-export default CheckList;
+export default PaymentList;
 
 const styles = StyleSheet.create({
 	textTitle: {

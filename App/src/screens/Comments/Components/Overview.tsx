@@ -1,41 +1,37 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Icon3 from 'react-native-vector-icons/Entypo';
+import Icon4 from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icon4 from 'react-native-vector-icons/Fontisto';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
-const OverView = () => {
+import type { IRatingDetail } from '@/interfaces/room-detail.interface';
+
+const OverView = ({ ratingDetail }: { ratingDetail: IRatingDetail }) => {
 	return (
 		<View style={{ flex: 1 }}>
 			<View
 				style={{
-					paddingTop: 40,
-					justifyContent: 'center',
+					paddingTop: 90,
+					justifyContent: 'flex-start',
 					alignItems: 'center',
 					flexDirection: 'row',
 					paddingBottom: 24,
+					paddingHorizontal: 24,
 					gap: 12,
-					backgroundColor: '#F8F8F8',
+					// backgroundColor: '#F8F8F8',
 				}}
 			>
-				<Icon4 name="livestream" size={46} color={'#1D5868'} />
+				<Icon4 name="star" size={30} color="#000" />
 				<Text
 					style={{
-						fontSize: 80,
+						fontSize: 32,
 						fontWeight: '700',
-						marginBottom: 24,
-						color: '#E36414',
+						color: '#000',
 					}}
 				>
-					4.94
+					{ratingDetail.avgRate}
 				</Text>
-				<Icon4
-					name="livestream"
-					color={'#1D5868'}
-					size={46}
-					style={{ transform: [{ scaleX: -1 }] }}
-				/>
 			</View>
 			<ScrollView
 				horizontal={true}
@@ -44,25 +40,24 @@ const OverView = () => {
 				scrollEventThrottle={16}
 				style={{
 					padding: 12,
-					borderTopWidth: 0.5,
 					paddingBottom: 32,
-					borderColor: '#5E5D5E',
+					borderColor: '#ccc',
 					borderBottomWidth: 0.5,
-					backgroundColor: '#F8F8F8',
+					// backgroundColor: '#F8F8F8',
 				}}
 			>
 				<View
 					style={{
 						borderRightWidth: 0.5,
-						borderColor: '#5E5D5E',
+						borderColor: '#ccc',
 						paddingHorizontal: 16,
 					}}
 				>
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 						}}
 					>
 						Clean rate
@@ -71,27 +66,27 @@ const OverView = () => {
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 							marginBottom: 24,
 						}}
 					>
-						4.9
+						{ratingDetail.avgClean}
 					</Text>
-					<Icon name="spray-can" size={32} color={'#E36414'} />
+					<Icon name="spray-can" size={32} color={'#000'} />
 				</View>
 				<View
 					style={{
 						borderRightWidth: 0.5,
-						borderColor: '#5E5D5E',
+						borderColor: '#ccc',
 						paddingHorizontal: 12,
 					}}
 				>
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 						}}
 					>
 						Location rate
@@ -99,27 +94,27 @@ const OverView = () => {
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 							marginBottom: 24,
 						}}
 					>
-						4.9
+						{ratingDetail.avgLocation}
 					</Text>
-					<Icon3 name="location" size={32} color={'#E36414'} />
+					<Icon3 name="location" size={32} color={'#000'} />
 				</View>
 				<View
 					style={{
 						borderRightWidth: 0.5,
-						borderColor: '#5E5D5E',
+						borderColor: '#ccc',
 						paddingHorizontal: 12,
 					}}
 				>
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 						}}
 					>
 						Security rate
@@ -127,14 +122,14 @@ const OverView = () => {
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 							marginBottom: 24,
 						}}
 					>
-						4.9
+						{ratingDetail.avgSecurity}
 					</Text>
-					<Icon2 name="security" size={32} color={'#E36414'} />
+					<Icon2 name="security" size={32} color={'#000'} />
 				</View>
 				<View
 					style={{
@@ -144,8 +139,8 @@ const OverView = () => {
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 						}}
 					>
 						Support rate
@@ -153,14 +148,14 @@ const OverView = () => {
 					<Text
 						style={{
 							color: '#000',
-							fontWeight: '500',
-							fontSize: 16,
+							fontWeight: '700',
+							fontSize: 12,
 							marginBottom: 24,
 						}}
 					>
-						4.9
+						{ratingDetail.avgSupport}
 					</Text>
-					<Icon2 name="support-agent" size={32} color={'#E36414'} />
+					<Icon2 name="support-agent" size={32} color={'#000'} />
 				</View>
 			</ScrollView>
 		</View>

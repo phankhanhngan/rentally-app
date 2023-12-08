@@ -15,12 +15,15 @@ import Icon2 from "react-native-vector-icons/EvilIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import BackButton from "@/components/BackButton";
+import HeartButton from '@/components/HeartButton';
 import Loading from "@/components/Loading";
 import Utility from "@/components/Utility";
 import type { IRoomBlock } from "@/interfaces/block.interface";
 import type { IRoomDetail } from "@/interfaces/room-detail.interface";
-import type { ILandlord } from "@/interfaces/user.interface";
+import type { ILandlord, IUser } from "@/interfaces/user.interface";
 import type { RootStackParams } from "@/navigations/StackNavigator";
+import { useAppSelector } from '@/redux/hook';
+import { useCreateChecklistMutation } from '@/redux/services/checkList/checkList.service';
 import { useGetRoomDetailQuery } from "@/redux/services/room-detail/room-detail.service";
 import { formatNumberWithCommas } from "@/utils/helpers";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -68,6 +71,18 @@ const CustomPagination = (index: number, total: number): React.ReactNode => {
 };
 
 const ListingDetail = ({ navigation, route }: Props) => {
+	const [createChecklist] = useCreateChecklistMutation();
+	const userInfo = useAppSelector((state) => state.auth.userInfo) as IUser;
+
+	const handleClickHeartButton = async (id: string) => {
+		if (userInfo) {
+			await createChecklist({
+				roomId: id,
+			});
+		} else {
+			navigation.navigate('/login');
+		}
+	};
   const BackHandler = () => {
     navigation.pop();
   };
@@ -85,6 +100,7 @@ const ListingDetail = ({ navigation, route }: Props) => {
   const {
     id,
     price,
+		isInCheckList,
     images = [],
     utilities = [],
     roomblock = {} as IRoomBlock,
@@ -96,6 +112,7 @@ const ListingDetail = ({ navigation, route }: Props) => {
   } = roomDetail;
   // const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
 
+	console.log(ratingDetail);
   if (isLoading) return <Loading />;
   return (
     <View style={styles.container}>
@@ -106,125 +123,197 @@ const ListingDetail = ({ navigation, route }: Props) => {
       <StatusBar backgroundColor={"#0C0F14"} />
       <BackButton onPress={BackHandler} />
 
-      <View style={{ position: "relative" }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
-          scrollEventThrottle={16}
-        >
-          <Swiper
-            style={{ height: 300 }}
-            autoplay={false}
-            renderPagination={CustomPagination}
-            loop={false}
-          >
-            {images?.map((image, index) => (
-              <RoomImage item={image} key={index} />
-            ))}
-          </Swiper>
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              right: 16,
-              top: 16,
-              padding: 7,
-              borderRadius: 100,
-              backgroundColor: "white",
-            }}
-          >
-            <Icon
-              name="heart-o"
-              color={"black"}
-              size={16}
-              style={{
-                opacity: 1,
-              }}
-            />
-          </TouchableOpacity>
-          <View style={styles.infoContainer}>
-            <Text style={styles.name}>{roomblock.address}</Text>
-            <View
-              style={{
-                flexDirection: "row",
-                // alignItems: 'center',
-                marginTop: 8,
-                paddingHorizontal: 8,
-                paddingBottom: 2,
-              }}
-            >
-              <Icon2 name="location" size={26} color={"#E36414"} />
-              <Text style={styles.location}>
-                {roomblock.district}, {roomblock.city}
-              </Text>
-            </View>
-            <Text style={styles.description}>{roomblock.description}</Text>
+			<View style={{ position: 'relative' }}>
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingBottom: 100 }}
+					scrollEventThrottle={16}
+				>
+					<Swiper
+						style={{ height: 300 }}
+						autoplay={false}
+						renderPagination={CustomPagination}
+						loop={false}
+					>
+						{images?.map((image, index) => (
+							<RoomImage item={image} key={index} />
+						))}
+					</Swiper>
+					<TouchableOpacity
+						style={{
+							position: 'absolute',
+							right: 16,
+							top: 16,
+							padding: 7,
+							borderRadius: 100,
+							backgroundColor: 'white',
+						}}
+					>
+						<HeartButton
+							isInCheckList={isInCheckList}
+							handleClickHeartButton={() =>
+								handleClickHeartButton(id)
+							}
+						/>
+					</TouchableOpacity>
+					<View style={styles.infoContainer}>
+						<Text style={styles.name}>{roomblock.address}</Text>
+						<View
+							style={{
+								flexDirection: 'row',
+								// alignItems: 'center',
+								marginTop: 8,
+								paddingHorizontal: 8,
+								paddingBottom: 2,
+							}}
+						>
+							<Icon2
+								name="location"
+								size={26}
+								color={'#E36414'}
+							/>
+							<Text style={styles.location}>
+								{roomblock.district}, {roomblock.city}
+							</Text>
+						</View>
+						<Text style={styles.description}>
+							{roomblock.description}
+						</Text>
 
-            {ratingDetail.totalRating ? (
-              <View
-                style={{
-                  flexDirection: "row",
-                  gap: 4,
-                  marginTop: 16,
-                  borderRadius: 10,
-                  width: "100%",
-                  padding: 16,
-                  borderColor: "#ccc",
-                  borderWidth: 1,
-                  justifyContent: "space-between",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6,
-                  }}
-                >
-                  <Text style={styles.ratings}>{ratingDetail.totalRating}</Text>
-                  <View style={{ flexDirection: "row", gap: 2 }}>
-                    <Icon name="star" size={18} color="#E36414" />
-                    <Icon name="star" size={18} color="#E36414" />
-                    <Icon name="star" size={18} color="#E36414" />
-                    <Icon name="star" size={18} color="#E36414" />
-                    <Icon name="star" size={18} color="#E36414" />
-                  </View>
-                </View>
+						{ratingDetail.totalRating ? (
+							<View
+								style={{
+									flexDirection: 'row',
+									gap: 4,
+									marginTop: 16,
+									borderRadius: 10,
+									width: '100%',
+									padding: 16,
+									borderColor: '#ccc',
+									borderWidth: 1,
+									justifyContent: 'space-between',
+								}}
+							>
+								<View
+									style={{
+										flexDirection: 'row',
+										alignItems: 'center',
+										justifyContent: 'center',
+										gap: 6,
+									}}
+								>
+									<Text style={styles.ratings}>
+										{ratingDetail.avgRate}
+									</Text>
+									<View>
+										<View
+											style={{
+												flexDirection: 'row',
+												gap: 2,
+											}}
+										>
+											{Array.from({
+												length: Math.floor(
+													ratingDetail.avgRate || 0,
+												),
+											}).map((_, index) => (
+												<Icon
+													key={index}
+													name="star"
+													size={18}
+													color="#E36414"
+												/>
+											))}
 
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Comments");
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                    }}
-                  >
-                    <Text style={styles.ratings}>
-                      {ratingDetail.ratings.length}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontFamily: "mon-sb",
-                        color: "#000",
-                        fontWeight: "bold",
-                        textDecorationLine: "underline",
-                      }}
-                    >
-                      Reviews
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <Text style={styles.description}>No reviews yet</Text>
-            )}
-            <View style={styles.divider} />
+											{(ratingDetail.avgRate || 0) -
+												Math.floor(
+													ratingDetail.avgRate || 0,
+												) >
+												0 && (
+												<Icon
+													name="star"
+													size={18}
+													style={{ width: 9 }}
+													color="#E36414"
+												/>
+											)}
+										</View>
+										<View
+											style={{
+												flexDirection: 'row',
+												gap: 2,
+												position: 'absolute',
+												left: 0,
+												zIndex: -1,
+											}}
+										>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+											<Icon
+												name="star"
+												size={18}
+												color="#ccc"
+											/>
+										</View>
+									</View>
+								</View>
+
+								<TouchableOpacity
+									onPress={() => {
+										navigation.navigate('Comments', {
+											ratingDetail: ratingDetail,
+										});
+									}}
+								>
+									<View
+										style={{
+											flexDirection: 'row',
+											alignItems: 'center',
+											justifyContent: 'center',
+											gap: 6,
+										}}
+									>
+										<Text style={styles.ratings}>
+											{ratingDetail.ratings.length}
+										</Text>
+										<Text
+											style={{
+												fontSize: 16,
+												fontFamily: 'mon-sb',
+												color: '#000',
+												fontWeight: 'bold',
+												textDecorationLine: 'underline',
+											}}
+										>
+											Reviews
+										</Text>
+									</View>
+								</TouchableOpacity>
+							</View>
+						) : (
+							<Text style={styles.description}>
+								No reviews yet
+							</Text>
+						)}
+						<View style={styles.divider} />
 
             <View style={styles.hostView}>
               <Image

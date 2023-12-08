@@ -6,9 +6,10 @@ import OverView from './Components/Overview';
 import BackButton from '@/components/BackButton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
+type Props = NativeStackScreenProps<RootStackParams, 'Comments'>;
 
-const Comments = ({ navigation }: Props) => {
+const Comments = ({ navigation, route }: Props) => {
+	const ratingDetail = route.params.ratingDetail;
 	const BackHandler = () => {
 		navigation.pop();
 	};
@@ -24,7 +25,7 @@ const Comments = ({ navigation }: Props) => {
 					contentContainerStyle={{ paddingBottom: 100 }}
 					scrollEventThrottle={16}
 				>
-					<OverView />
+					<OverView ratingDetail={ratingDetail} />
 					<Text
 						style={{
 							margin: 24,
@@ -33,7 +34,7 @@ const Comments = ({ navigation }: Props) => {
 							fontSize: 24,
 						}}
 					>
-						80 reviews
+						{ratingDetail.totalRating} reviews
 					</Text>
 					<View
 						style={{
@@ -41,10 +42,9 @@ const Comments = ({ navigation }: Props) => {
 							gap: 28,
 						}}
 					>
-						<Comment />
-						<Comment />
-						<Comment />
-						<Comment />
+						{ratingDetail.ratings.map((rating, index) => (
+							<Comment rating={rating} key={index} />
+						))}
 					</View>
 				</ScrollView>
 			</View>

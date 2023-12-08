@@ -9,6 +9,7 @@ export interface IRoomDetail {
 	roomblock: IRoomBlock;
 	landlord: ILandlord;
 	ratingDetail: IRatingDetail;
+	isInCheckList: boolean;
 }
 
 export interface IRatingDetail {
@@ -36,7 +37,7 @@ export interface IRating {
 	locationRate: number;
 	securityRate: number;
 	supportRate: number;
-	avgRate: string;
+	avgRate: number;
 	renterName: string;
 	renterPhoto: string;
 }

@@ -16,4 +16,5 @@ export interface ICheckList {
 	};
 	utilities: IUtiltity[];
 	avgRate?: number;
+	isInCheckList: boolean;
 }

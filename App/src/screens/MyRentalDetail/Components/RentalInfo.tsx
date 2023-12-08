@@ -50,7 +50,7 @@ const RentalInfo = ({
 					<View>
 						<Text style={styles.textTitle}>Monthly rent:</Text>
 						<Text style={styles.textInfo}>
-							{formatNumberWithCommas(price)} VND
+							{price && formatNumberWithCommas(price)} VND
 						</Text>
 					</View>
 					<View>
@@ -62,14 +62,20 @@ const RentalInfo = ({
 					<View>
 						<Text style={styles.textTitle}>Electric price:</Text>
 						<Text style={styles.textInfo}>
-							{formatNumberWithCommas(rentalInfo.electricPrice)}{' '}
+							{rentalInfo.electricPrice &&
+								formatNumberWithCommas(
+									rentalInfo.electricPrice,
+								)}{' '}
 							VND / letter
 						</Text>
 					</View>
 					<View>
 						<Text style={styles.textTitle}>Additional price:</Text>
 						<Text style={styles.textInfo}>
-							{formatNumberWithCommas(rentalInfo.additionalPrice)}{' '}
+							{rentalInfo.additionalPrice &&
+								formatNumberWithCommas(
+									rentalInfo.additionalPrice,
+								)}{' '}
 							VND
 						</Text>
 					</View>
@@ -84,7 +90,9 @@ const RentalInfo = ({
 					<View>
 						<Text style={styles.textTitle}>Deposit amount</Text>
 						<Text style={styles.textInfo}>
-							{formatNumberWithCommas(depositAmount)} VND
+							{depositAmount &&
+								formatNumberWithCommas(depositAmount)}{' '}
+							VND
 						</Text>
 					</View>
 					<View>
@@ -92,17 +100,21 @@ const RentalInfo = ({
 							Lease termination cost:
 						</Text>
 						<Text style={styles.textInfo}>
-							{formatNumberWithCommas(
-								rentalInfo.leaseTerminationCost,
-							)}{' '}
+							{rentalInfo.leaseTerminationCost &&
+								formatNumberWithCommas(
+									rentalInfo.leaseTerminationCost,
+								)}{' '}
 							VND
 						</Text>
 					</View>
 					<View>
 						<Text style={styles.textTitle}>Water price:</Text>
 						<Text style={styles.textInfo}>
-							{formatNumberWithCommas(rentalInfo.waterPrice)} VND
-							/ cube
+							{rentalInfo.waterPrice &&
+								formatNumberWithCommas(
+									rentalInfo.waterPrice,
+								)}{' '}
+							VND / cube
 						</Text>
 					</View>
 				</View>

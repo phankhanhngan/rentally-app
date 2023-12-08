@@ -8,18 +8,29 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/Feather';
 
 import Loading from '@/components/Loading';
 import type { RootStackParams } from '@/navigations/StackNavigator';
-import { useGetCheckListQuery } from '@/redux/services/checkList/checkList.service';
+import {
+	useCreateChecklistMutation,
+	useGetCheckListQuery,
+} from '@/redux/services/checkList/checkList.service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 const CheckList = ({ navigation }: Props) => {
 	const [isEdit, setIsEdit] = useState(false);
 
 	const { data, isLoading, isFetching } = useGetCheckListQuery('');
+	const [createChecklist, { isLoading: isCreateCheckListLoading }] =
+		useCreateChecklistMutation();
 
+	const handleClickHeartButton = async (id: string) => {
+		await createChecklist({
+			roomId: id,
+		});
+	};
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
@@ -34,6 +45,7 @@ const CheckList = ({ navigation }: Props) => {
 	}
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
+			<Spinner visible={isCreateCheckListLoading} />
 			<Pressable
 				onPress={() => {
 					setIsEdit((prev) => !prev);
@@ -123,6 +135,9 @@ const CheckList = ({ navigation }: Props) => {
 										}}
 									>
 										<TouchableOpacity
+											onPress={() =>
+												handleClickHeartButton(room.id)
+											}
 											style={{
 												justifyContent: 'center',
 												alignItems: 'center',

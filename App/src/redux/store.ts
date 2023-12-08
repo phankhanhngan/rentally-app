@@ -2,6 +2,7 @@ import paramsSlice from './features/params/params.slice';
 import { checkListApi } from './services/checkList/checkList.service';
 import { findingRoomApi } from './services/findingRoom/findingRoom.service';
 import { helpApi } from './services/help/help.service';
+import { paymentApi } from './services/payment/payment.service';
 import { rentalApi } from './services/rental/rental.service';
 import { roomDetailApi } from './services/room-detail/room-detail.service';
 import authSlice from '@/redux/features/auth/auth.slice';
@@ -22,6 +23,8 @@ const rootReducer = combineReducers({
 	[checkListApi.reducerPath]: checkListApi.reducer,
 
 	[rentalApi.reducerPath]: rentalApi.reducer,
+	[paymentApi.reducerPath]: paymentApi.reducer,
+
 	auth: authSlice.reducer,
 	params: paramsSlice.reducer,
 });
@@ -39,7 +42,7 @@ export const store = configureStore({
 		findingRoomApi.middleware,
 		roomDetailApi.middleware,
 		rentalApi.middleware,
-
+		paymentApi.middleware,
 		checkListApi.middleware,
 	),
 });

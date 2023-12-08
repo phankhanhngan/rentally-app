@@ -11,16 +11,14 @@ export const storeData = async (key: string, value: string) => {
 export const getData = async (key: string) => {
 	try {
 		const value = await AsyncStorage.getItem(key);
-		if (value !== null) {
-			console.log(value);
-		}
+		
 		return value;
 	} catch (e) {
 		console.log(e);
 		return null;
 	}
 };
-export const removeDate = async (key: string) => {
+export const removeData = async (key: string) => {
 	try {
 		await AsyncStorage.removeItem(key);
 	} catch (e) {

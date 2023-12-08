@@ -2,7 +2,10 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Comment = () => {
+import type { IRating } from '@/interfaces/room-detail.interface';
+import moment from 'moment';
+
+const Comment = ({ rating }: { rating: IRating }) => {
 	return (
 		<View>
 			<View
@@ -14,7 +17,9 @@ const Comment = () => {
 			>
 				<Image
 					source={{
-						uri: 'https://a0.muscache.com/im/pictures/miso/Hosting-721540609203378406/original/9dfaf7d6-40f2-4673-b468-7c5ab3147f86.jpeg?im_w=720',
+						uri:
+							rating.renterPhoto &&
+							(rating.renterPhoto as string),
 					}}
 					style={{
 						width: 50,
@@ -33,10 +38,7 @@ const Comment = () => {
 							color: '#000',
 						}}
 					>
-						HoangDeptrai
-					</Text>
-					<Text style={{ color: '#5E5D5E' }}>
-						hoangdepreai@gmail.com{' '}
+						{rating.renterName}
 					</Text>
 				</View>
 			</View>
@@ -46,9 +48,38 @@ const Comment = () => {
 					flexDirection: 'row',
 					gap: 6,
 					justifyContent: 'flex-start',
-					alignContent: 'center',
 				}}
 			>
+				<View
+					style={{
+						flexDirection: 'row',
+						gap: 2,
+						position: 'absolute',
+						left: 0,
+						zIndex: 1,
+						bottom: 0,
+						top: 0,
+						alignItems: 'center',
+
+						// backgroundColor: '#ccc',
+					}}
+				>
+					{Array.from({
+						length: Math.floor(rating.avgRate),
+					}).map((_, index) => (
+						<Icon key={index} name="star" size={12} color="#000" />
+					))}
+
+					{(rating.avgRate || 0) - Math.floor(rating.avgRate || 0) >
+						0 && (
+						<Icon
+							name="star"
+							size={12}
+							style={{ width: 9 }}
+							color="#000"
+						/>
+					)}
+				</View>
 				<View
 					style={{
 						flexDirection: 'row',
@@ -56,10 +87,10 @@ const Comment = () => {
 						alignItems: 'center',
 					}}
 				>
-					<Icon name="star" size={12} color="#000" />
-					<Icon name="star" size={12} color="#000" />
-					<Icon name="star" size={12} color="#000" />
-					<Icon name="star" size={12} color="#000" />
+					<Icon name="star" size={12} color="#ccc" />
+					<Icon name="star" size={12} color="#ccc" />
+					<Icon name="star" size={12} color="#ccc" />
+					<Icon name="star" size={12} color="#ccc" />
 					<Icon name="star" size={12} color="#ccc" />
 				</View>
 				<Text
@@ -69,7 +100,7 @@ const Comment = () => {
 						color: '#000',
 					}}
 				>
-					· 10/02/2022
+					·{moment(rating.createdAt).format('ll')}
 				</Text>
 			</View>
 			<Text
@@ -79,10 +110,7 @@ const Comment = () => {
 					color: '#000',
 				}}
 			>
-				90-91 pace would be perfect also shooting should be 85-87 it
-				would be a beast in ultimate team 90-91 pace would be perfect
-				also shooting should be 85-87 it would be a beast in ultimate
-				team.
+				{rating.comment}
 			</Text>
 		</View>
 	);

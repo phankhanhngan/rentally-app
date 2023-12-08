@@ -1,6 +1,5 @@
 import { createApiWithAuth } from '../apiWithAuth.service';
 import type { ICheckList } from '@/interfaces/checkList.interface';
-import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 
 const createApiCheckListWithAuth = createApiWithAuth('checkListApi', [
 	'checkList',
@@ -21,8 +20,24 @@ export const checkListApi = createApiCheckListWithAuth.injectEndpoints({
 					url: '/checklist',
 				};
 			},
+			providesTags: ['checkList'],
+		}),
+		createChecklist: builder.mutation<
+			{
+				success: string;
+				message: string;
+			},
+			{ roomId: string }
+		>({
+			query: ({ roomId }) => ({
+				url: `/checklist`,
+				method: 'POST',
+				body: { roomId },
+			}),
+			invalidatesTags: ['checkList'],
 		}),
 	}),
 });
 
-export const { useGetCheckListQuery } = checkListApi;
+export const { useGetCheckListQuery, useCreateChecklistMutation } =
+	checkListApi;

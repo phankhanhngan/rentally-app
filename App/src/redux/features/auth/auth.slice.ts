@@ -1,6 +1,6 @@
 import type { IAuth } from '@/interfaces/auth.interface';
 import type { IUser } from '@/interfaces/user.interface';
-import { getData, removeDate, storeData } from '@/utils/helpers/asyncStorage';
+import { getData, removeData, storeData } from '@/utils/helpers/asyncStorage';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import jwt from 'jwt-decode';
@@ -37,7 +37,7 @@ const authSlice = createSlice({
 		logOut: (state) => {
 			state.accessToken = null;
 			state.userInfo = null;
-			removeDate('jwt');
+			removeData('jwt');
 		},
 	},
 });
