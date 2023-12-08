@@ -28,7 +28,6 @@ import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
 import LoginSecurity from '@/screens/ProfileSettings/LoginSecurity';
 import Map from '@/screens/ProfileSettings/Map';
-import MapDetail from '@/screens/ProfileSettings/MapDetail';
 import PersonalInformationUpdate from '@/screens/ProfileSettings/PersonalInformation';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
@@ -55,7 +54,6 @@ export type RootStackParams = {
 	PersonalInformationUpdate: undefined;
 	LoginSecurity: undefined;
 	Map: { markers: IRoomFinding[] };
-	MapDetail: { marker: IRoomDetail };
 	PaymentList: undefined;
 };
 const StackNavigator = () => {
@@ -190,13 +188,6 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Map"
 					component={Map}
-					options={{
-						animation: 'slide_from_right',
-					}}
-				/>
-				<Stack.Screen
-					name="MapDetail"
-					component={MapDetail}
 					options={{
 						animation: 'slide_from_right',
 					}}
