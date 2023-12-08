@@ -184,14 +184,14 @@ const Home = ({ navigation }: Props) => {
 				onSearchPress={toggleSheetSearch}
 				onFilterPress={toggleSheetFilter}
 			/>
-			<View style={{ marginTop: -45 }}>
-				<TouchableOpacity
-					style={styles.button_map}
-					onPress={handlePressMap}
-				>
-					<Icon name="map-o" size={16} color={'white'} />
-					<Text style={styles.text_map}>Map</Text>
-				</TouchableOpacity>
+			<TouchableOpacity
+				style={styles.button_map}
+				onPress={handlePressMap}
+			>
+				<Icon name="map-o" size={16} color={'white'} />
+				<Text style={styles.text_map}>Map</Text>
+			</TouchableOpacity>
+			<View style={{ marginTop: -2, zIndex: -1, position: 'relative' }}>
 				<FlatList
 					data={currentRooms}
 					keyExtractor={(item: IRoomFinding) => item.id}
@@ -262,10 +262,10 @@ const styles = StyleSheet.create({
 		height: 100,
 	},
 	button_map: {
-		position: 'relative',
-		top: 600,
+		position: 'absolute',
+		bottom: 20,
 		left: 140,
-		zIndex: 100,
+		zIndex: 10,
 		backgroundColor: 'black',
 		padding: 12,
 		borderRadius: 100,
