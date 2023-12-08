@@ -184,7 +184,7 @@ const Home = ({ navigation }: Props) => {
 				onSearchPress={toggleSheetSearch}
 				onFilterPress={toggleSheetFilter}
 			/>
-			<View style={{ marginTop: -2 }}>
+			<View style={{ marginTop: -45 }}>
 				<TouchableOpacity
 					style={styles.button_map}
 					onPress={handlePressMap}
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
 	},
 	button_map: {
 		position: 'relative',
-		top: 550,
+		top: 600,
 		left: 140,
 		zIndex: 100,
 		backgroundColor: 'black',
