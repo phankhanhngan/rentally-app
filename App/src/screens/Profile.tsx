@@ -1,7 +1,6 @@
 import React from 'react';
 import {
 	Image,
-	Linking,
 	Pressable,
 	StyleSheet,
 	Text,
@@ -10,7 +9,6 @@ import {
 } from 'react-native';
 
 import OptionSettings from './ProfileSettings/OptionSettings';
-import YourComponent from './ProfileSettings/test';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { logOut } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
@@ -30,7 +28,7 @@ const Profile = ({ navigation }: Props) => {
 	const goToLoginSecurity = () => {
 		navigation.navigate('LoginSecurity');
 	};
-	const goToWeb = () => {
+	const goToPayment = () => {
 		navigation.navigate('PaymentList');
 	};
 	const goToLogout = () => {
@@ -55,7 +53,7 @@ const Profile = ({ navigation }: Props) => {
 							</Text>
 						</View>
 					</View>
-					<YourComponent />
+
 					<View style={styles.middle_container_outer}>
 						<View style={styles.middle_container}>
 							<View style={{ width: 200 }}>
@@ -90,7 +88,7 @@ const Profile = ({ navigation }: Props) => {
 							icon="credit-card"
 							content="Payments and payouts"
 							iconName="Icon"
-							event={goToWeb}
+							event={goToPayment}
 						/>
 					</View>
 					<View style={styles.logout_container}>

@@ -15,7 +15,7 @@ const baseQuery = fetchBaseQuery({
 		headers.set('Access-Control-Allow-Origin', '*');
 		headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
 		const token = await getData('jwt');
-		console.log('token:', token);
+
 		if (token) {
 			headers.set('authorization', `Bearer ${token}`);
 		}
