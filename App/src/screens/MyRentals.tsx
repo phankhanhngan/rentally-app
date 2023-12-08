@@ -57,7 +57,7 @@ const ActionButton = ({
 	const handleRequest = async () => {
 		try {
 			if (rentalStatus === STATUS.APPROVED) {
-				const res = await confirmRental({ id }).unwrap();
+				const res = await confirmRental({ id: id.toString() }).unwrap();
 				setModalVisible(true);
 				setUrlPayment(res.data);
 				console.log('res:', res);
@@ -301,10 +301,7 @@ const CheckList = ({ navigation }: Props) => {
 								>
 									<ActionButton
 										rentalStatus={myRental.status}
-										id={
-											myRental.rentalInfo
-												.rentalDetailId || ''
-										}
+										id={myRental.rentalInfo.id || ''}
 									/>
 								</View>
 							</View>
