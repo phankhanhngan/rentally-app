@@ -11,12 +11,18 @@ import {
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import HeartButton from './HeartButton';
 import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
+import type { IUser } from '@/interfaces/user.interface';
+import { useAppSelector } from '@/redux/hook';
+import { useCreateChecklistMutation } from '@/redux/services/checkList/checkList.service';
 import { formatNumberWithCommas } from '@/utils/helpers';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface ListingProps {
 	data: IRoomFinding;
 	name: string;
+	navigation: NativeStackNavigationProp<any>;
 	onPress: (name: string) => void;
 }
 
@@ -59,7 +65,20 @@ const CustomPagination = (index: number, total: number): React.ReactNode => {
 	);
 };
 
-const Listing = ({ data, onPress, name }: ListingProps) => {
+const Listing = ({ data, onPress, name, navigation }: ListingProps) => {
+	const [createChecklist] = useCreateChecklistMutation();
+	const userInfo = useAppSelector((state) => state.auth.userInfo) as IUser;
+	console.log(data.isInCheckList);
+	const handleClickHeartButton = async () => {
+		if (userInfo) {
+			await createChecklist({
+				roomId: data.id,
+			});
+		} else {
+			navigation.navigate('/login');
+		}
+	};
+
 	return (
 		<Pressable onPress={() => onPress(name)} style={{ flex: 1 }}>
 			<View style={styles.listing}>
@@ -83,13 +102,9 @@ const Listing = ({ data, onPress, name }: ListingProps) => {
 						backgroundColor: 'white',
 					}}
 				>
-					<Icon
-						name="heart-o"
-						color={'black'}
-						size={16}
-						style={{
-							opacity: 1,
-						}}
+					<HeartButton
+						isInCheckList={data.isInCheckList}
+						handleClickHeartButton={handleClickHeartButton}
 					/>
 				</TouchableOpacity>
 				<View

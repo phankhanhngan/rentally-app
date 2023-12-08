@@ -198,6 +198,7 @@ const Home = ({ navigation }: Props) => {
 						item: IRoomFinding;
 					}) => (
 						<Listing
+							navigation={navigation}
 							key={dataRoom.id}
 							data={dataRoom}
 							name={dataRoom.id}
