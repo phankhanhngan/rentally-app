@@ -112,7 +112,7 @@ const ActionButton = ({
 };
 
 const MyRentalDetail = ({ navigation, route }: Props) => {
-	console.log(route.params.myRental);
+
 	const myRental = route.params.myRental;
 	const BackHandler = () => {
 		navigation.pop();

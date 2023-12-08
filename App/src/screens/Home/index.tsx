@@ -49,7 +49,7 @@ const Home = ({ navigation }: Props) => {
 	const [currentRooms, setCurrentRooms] = useState<IRoomFinding[]>(
 		data?.data?.rooms || [],
 	);
-
+	// console.log(currentRooms[0]?.isInCheckList);
 	useEffect(() => {
 		const newRooms = data?.data?.rooms || [];
 

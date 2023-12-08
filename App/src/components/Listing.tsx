@@ -68,7 +68,7 @@ const CustomPagination = (index: number, total: number): React.ReactNode => {
 const Listing = ({ data, onPress, name, navigation }: ListingProps) => {
 	const [createChecklist] = useCreateChecklistMutation();
 	const userInfo = useAppSelector((state) => state.auth.userInfo) as IUser;
-	console.log(data.isInCheckList);
+
 	const handleClickHeartButton = async () => {
 		if (userInfo) {
 			await createChecklist({
