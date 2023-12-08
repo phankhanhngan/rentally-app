@@ -7,7 +7,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
 import type { IMyRental } from '@/interfaces/rental.interface';
-import type { IRatingDetail } from '@/interfaces/room-detail.interface';
+import type {
+	IRatingDetail,
+	IRoomDetail,
+} from '@/interfaces/room-detail.interface';
+import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
 import CheckList from '@/screens/CheckList';
@@ -24,6 +28,7 @@ import type { IOverView } from '@/screens/PrepareContract/Components/OverView';
 import Profile from '@/screens/Profile';
 import LoginSecurity from '@/screens/ProfileSettings/LoginSecurity';
 import Map from '@/screens/ProfileSettings/Map';
+import MapDetail from '@/screens/ProfileSettings/MapDetail';
 import PersonalInformationUpdate from '@/screens/ProfileSettings/PersonalInformation';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
@@ -49,7 +54,8 @@ export type RootStackParams = {
 	};
 	PersonalInformationUpdate: undefined;
 	LoginSecurity: undefined;
-	Map: undefined;
+	Map: { markers: IRoomFinding[] };
+	MapDetail: { marker: IRoomDetail };
 	PaymentList: undefined;
 };
 const StackNavigator = () => {
@@ -184,6 +190,13 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Map"
 					component={Map}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="MapDetail"
+					component={MapDetail}
 					options={{
 						animation: 'slide_from_right',
 					}}

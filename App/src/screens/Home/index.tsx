@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+	FlatList,
+	Pressable,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -178,6 +185,13 @@ const Home = ({ navigation }: Props) => {
 				onFilterPress={toggleSheetFilter}
 			/>
 			<View style={{ marginTop: -2 }}>
+				<TouchableOpacity
+					style={styles.button_map}
+					onPress={handlePressMap}
+				>
+					<Icon name="map-o" size={16} color={'white'} />
+					<Text style={styles.text_map}>Map</Text>
+				</TouchableOpacity>
 				<FlatList
 					data={currentRooms}
 					keyExtractor={(item: IRoomFinding) => item.id}

@@ -31,9 +31,6 @@ const Profile = ({ navigation }: Props) => {
 	const goToPayment = () => {
 		navigation.navigate('PaymentList');
 	};
-	const goToLogout = () => {
-		navigation.navigate('Map');
-	};
 
 	return (
 		<View style={styles.container}>

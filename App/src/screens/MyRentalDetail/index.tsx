@@ -24,7 +24,7 @@ const IMG_HEIGHT = 300;
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import { useRetalRequestMutation } from '@/redux/services/rental/rental.service';
+// import { useRetalRequestMutation } from '@/redux/services/rental/rental.service';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
@@ -47,13 +47,13 @@ const ActionButton = ({
 	rentalStatus: STATUS;
 	id: string;
 }) => {
-	const [retalRequest, { isLoading }] = useRetalRequestMutation();
+	// const [retalRequest, { isLoading }] = useRetalRequestMutation();
 	const handleRequest = async () => {
 		try {
 			const type =
 				rentalStatus === STATUS.APPROVED ? 'confirm' : 'request-break';
-			const res = await retalRequest({ id, type }).unwrap();
-			console.log('res:', res);
+			// const res = await retalRequest({ id, type }).unwrap();
+			// console.log('res:', res);
 		} catch (error: any) {
 			console.log(error);
 			Alert.alert('error!', error.data.message);
@@ -62,7 +62,7 @@ const ActionButton = ({
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
 			<>
-				<Spinner visible={isLoading} />
+				{/* <Spinner visible={isLoading} /> */}
 				<TouchableOpacity
 					onPress={handleRequest}
 					style={[
@@ -112,7 +112,6 @@ const ActionButton = ({
 };
 
 const MyRentalDetail = ({ navigation, route }: Props) => {
-
 	const myRental = route.params.myRental;
 	const BackHandler = () => {
 		navigation.pop();
