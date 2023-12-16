@@ -16,8 +16,10 @@ type Props = NativeStackScreenProps<RootStackParams>;
 import Spinner from 'react-native-loading-spinner-overlay';
 import WebView from 'react-native-webview';
 
+import { AuthRequirement } from '@/components/AuthRequirement';
 import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
+import { useAppSelector } from '@/redux/hook';
 import {
 	useConfirmRentalMutation,
 	useGetMyRentalQuery,
@@ -137,7 +139,12 @@ const ActionButton = ({
 };
 
 const CheckList = ({ navigation }: Props) => {
-	const { data, isLoading, isFetching } = useGetMyRentalQuery('');
+	const { data, isLoading, isFetching, isError } = useGetMyRentalQuery('');
+	console.log('isError:======', isError);
+	const accessToken = useAppSelector((state) => state.auth.accessToken);
+	if (!accessToken) {
+		return AuthRequirement({ navigation });
+	}
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
@@ -145,10 +152,13 @@ const CheckList = ({ navigation }: Props) => {
 			</View>
 		);
 	}
-	if (data?.data.length) {
-		<View style={{ flex: 1 }}>
-			<Text>Hoong co gi ma oi</Text>
-		</View>;
+
+	if (!data?.data.length) {
+		return (
+			<View style={{ flex: 1 }}>
+				<Text>Hoong co gi ma oi</Text>
+			</View>
+		);
 	}
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>

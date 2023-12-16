@@ -15,7 +15,6 @@ import Filter from './Components/Filter';
 import Search from './Components/Search';
 import ExploreHeader from '@/components/ExploreHeader';
 import Listing from '@/components/Listing';
-import Review from '@/components/Review';
 import { Skeleton } from '@/components/Skeleton';
 import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 import type { RootStackParams } from '@/navigations/StackNavigator';
@@ -43,21 +42,21 @@ const Home = ({ navigation }: Props) => {
 	// const [currentPage, setCurrentPage] = useState(1);
 	const [isOpenSearch, setOpenSearch] = useState(false);
 	const [isOpenFilter, setOpenFilter] = useState(false);
+
 	const { data, isLoading, isFetching } =
 		useGetFindingRoomsQuery(searchParamsObject);
 
-	let currentPage = 0,
-		numberOfPage = 0;
+	let currentPage = 1,
+		numberOfPage = 1;
 
 	if (data?.data) {
 		({ currentPage, numberOfPage } = data.data);
 	}
 
-	const [currentRooms, setCurrentRooms] = useState<IRoomFinding[]>(
-		data?.data?.rooms || [],
-	);
-	// console.log(currentRooms[0]?.isInCheckList);
+	const [currentRooms, setCurrentRooms] = useState<IRoomFinding[]>([]);
+
 	useEffect(() => {
+		// console.log('data doi');
 		const newRooms = data?.data?.rooms || [];
 
 		if (searchParamsObject['page'] && searchParamsObject['page'][0] === 1) {
@@ -193,7 +192,7 @@ const Home = ({ navigation }: Props) => {
 			</TouchableOpacity>
 			<View style={{ marginTop: -2, zIndex: -1, position: 'relative' }}>
 				<FlatList
-					data={currentRooms}
+					data={currentPage === 1 ? data?.data?.rooms : currentRooms}
 					keyExtractor={(item: IRoomFinding) => item.id}
 					renderItem={({
 						item: dataRoom,

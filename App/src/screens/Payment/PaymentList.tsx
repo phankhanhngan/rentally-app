@@ -56,7 +56,7 @@ const ActionButton = ({
 		try {
 			const res = await checkOut({ id }).unwrap();
 			setModalVisible(true);
-		
+
 			setUrlPayment(res.data);
 		} catch (error: any) {
 			console.log(error);

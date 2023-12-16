@@ -31,7 +31,7 @@ const paramsSlice = createSlice({
 			delete state.searchParamsObject[paramNameToRemove];
 		},
 		resetParams: (state) => {
-			state.searchParamsObject = {};
+			state.searchParamsObject = { page: [1] };
 		},
 	},
 });

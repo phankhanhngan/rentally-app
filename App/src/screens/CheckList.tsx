@@ -11,8 +11,10 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/Feather';
 
+import { AuthRequirement } from '@/components/AuthRequirement';
 import Loading from '@/components/Loading';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { useAppSelector } from '@/redux/hook';
 import {
 	useCreateChecklistMutation,
 	useGetCheckListQuery,
@@ -31,6 +33,11 @@ const CheckList = ({ navigation }: Props) => {
 			roomId: id,
 		});
 	};
+	const accessToken = useAppSelector((state) => state.auth.accessToken);
+	if (!accessToken) {
+		return AuthRequirement({ navigation });
+	}
+
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>

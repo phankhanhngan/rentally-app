@@ -5,14 +5,18 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
 import { useAppDispatch } from '../hooks/redux.hook';
+import useRefetch from '@/hooks/useRefetch';
 import type { IAuthResponse } from '@/interfaces/auth.interface';
 import LayoutAuth from '@/Layout/LayoutAuth';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
+import { addParam } from '@/redux/features/params/params.slice';
 import {
 	useContinueWithGGMutation,
 	useLoginMutation,
 } from '@/redux/services/auth/auth.service';
+import { useGetCheckListQuery } from '@/redux/services/checkList/checkList.service';
+import { useGetMyPaymentQuery } from '@/redux/services/payment/payment.service';
 import { useGetMyRentalQuery } from '@/redux/services/rental/rental.service';
 import { signInWithGoogle } from '@/utils/helpers/auth';
 // import {
@@ -37,9 +41,9 @@ const Login = () => {
 		useNavigation<NativeStackNavigationProp<RootStackParams>>();
 	const dispatch = useAppDispatch();
 	const [login, loginResult] = useLoginMutation();
+	const refetch = useRefetch();
 	const [continueWithGG, { isLoading: isContinueWithGGLoading }] =
 		useContinueWithGGMutation();
-	const { refetch } = useGetMyRentalQuery('');
 	const initialValues: Values = {
 		email: '',
 		password: '',

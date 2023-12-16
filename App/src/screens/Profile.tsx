@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 
 import OptionSettings from './ProfileSettings/OptionSettings';
+import useRefetch from '@/hooks/useRefetch';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { logOut } from '@/redux/features/auth/auth.slice';
+import { addParam } from '@/redux/features/params/params.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { useGetMyRentalQuery } from '@/redux/services/rental/rental.service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams>;
 
@@ -20,7 +21,7 @@ const Profile = ({ navigation }: Props) => {
 	const dispatch = useAppDispatch();
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	const userInfo = useAppSelector((state) => state.auth.userInfo);
-	const { refetch } = useGetMyRentalQuery('');
+
 	const goToPersonalInformation = () => {
 		navigation.navigate('PersonalInformationUpdate');
 	};
@@ -31,6 +32,7 @@ const Profile = ({ navigation }: Props) => {
 	const goToPayment = () => {
 		navigation.navigate('PaymentList');
 	};
+	const refetch = useRefetch();
 
 	return (
 		<View style={styles.container}>
@@ -90,9 +92,19 @@ const Profile = ({ navigation }: Props) => {
 					</View>
 					<View style={styles.logout_container}>
 						<Pressable
-							onPress={() => {
-								refetch();
-								dispatch(logOut());
+							onPress={async () => {
+								dispatch(logOut(''))
+									.unwrap()
+									.then(() => {
+										dispatch(
+											addParam({
+												name: 'page',
+												values: [1],
+											}),
+										);
+										refetch();
+									});
+
 								navigation.navigate('Login');
 							}}
 						>

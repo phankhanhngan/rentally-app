@@ -14,6 +14,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Mail from '../assets/images/mailsvg.svg';
 import ButtonWithLoader from '../components/ButtonWithLoader';
 import TextInputWithLable from '../components/TextInputWithLabel';
+import useRefetch from '@/hooks/useRefetch';
 import type {
 	IAccounRegister,
 	IAuthResponse,
@@ -21,6 +22,7 @@ import type {
 import LayoutAuth from '@/Layout/LayoutAuth';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { setCredentials } from '@/redux/features/auth/auth.slice';
+import { addParam } from '@/redux/features/params/params.slice';
 import { useAppDispatch } from '@/redux/hook';
 import {
 	useRegisterMutation,
@@ -47,7 +49,9 @@ const Register = () => {
 
 	const [isPermitted, setIsPermitted] = useState<boolean>(false);
 	const [email, setEmail] = useState<string>('');
+
 	const [register, registerResult] = useRegisterMutation();
+	const refetch = useRefetch();
 	const [registerVerification, registerVerificationResult] =
 		useRegisterVerificationMutation();
 	const [resendEmail, { isLoading: isResendEmailLoading }] =
@@ -106,10 +110,8 @@ const Register = () => {
 		} catch (error: any) {
 			console.log(error.data.message);
 			if (error.data.message instanceof Array) {
-				console.log('2');
 				Alert.alert('Invalid data!', error.data.message[0]);
 			} else {
-				console.log('2s');
 				Alert.alert('Invalid data!', error.data.message);
 			}
 		}
@@ -124,14 +126,13 @@ const Register = () => {
 			if (res.status === 'SUCCESS' && res.data) {
 				dispatch(setCredentials({ accessToken: res.data.token }));
 				navigation.replace('Main');
+				refetch();
 			}
 		} catch (error: any) {
 			console.log(error.data.message);
 			if (error.data.message instanceof Array) {
-				console.log('2');
 				Alert.alert('Invalid data!', error.data.message[0]);
 			} else {
-				console.log('2s');
 				Alert.alert('Invalid data!', error.data.message);
 			}
 		}

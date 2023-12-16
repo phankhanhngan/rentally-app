@@ -7,10 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
 import type { IMyRental } from '@/interfaces/rental.interface';
-import type {
-	IRatingDetail,
-	IRoomDetail,
-} from '@/interfaces/room-detail.interface';
+import type { IRatingDetail } from '@/interfaces/room-detail.interface';
 import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
 import { initializeState } from '@/redux/features/auth/auth.slice';
 import { useAppDispatch } from '@/redux/hook';
@@ -34,7 +31,6 @@ import ResetPassword from '@/screens/ResetPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
