@@ -59,7 +59,8 @@ const ActionButton = ({
 		useConfirmRentalMutation();
 	const [requestBreakRental, { isLoading }] = useRequestBreakRentalMutation();
 
-	const { refetch } = useGetMyRentalQuery('');
+	const { refetch } = useGetMyRentalQuery(STATUS.APPROVED);
+	const { refetch: refetch2 } = useGetMyRentalQuery(STATUS.COMPLETED);
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [urlPayment, setUrlPayment] = useState('');
@@ -128,6 +129,7 @@ const ActionButton = ({
 							onPress={() => {
 								setModalVisible(false);
 								refetch();
+								refetch2();
 							}}
 							text="Close"
 						/>

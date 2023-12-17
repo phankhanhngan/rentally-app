@@ -184,7 +184,7 @@ const Home = ({ navigation }: Props) => {
 			/>
 			<View style={{ marginTop: -2, zIndex: -1, position: 'relative' }}>
 				<FlatList
-					data={currentPage ? data?.data?.rooms : currentRooms}
+					data={currentPage == 1 ? data?.data?.rooms : currentRooms}
 					keyExtractor={(item: IRoomFinding) => item.id}
 					renderItem={({
 						item: dataRoom,

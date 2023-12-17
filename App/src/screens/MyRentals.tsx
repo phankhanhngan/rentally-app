@@ -9,16 +9,13 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-
-import type { RootStackParams } from '@/navigations/StackNavigator';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
 import Spinner from 'react-native-loading-spinner-overlay';
 import WebView from 'react-native-webview';
 
 import { AuthRequirement } from '@/components/AuthRequirement';
 import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import {
 	useConfirmRentalMutation,
@@ -27,7 +24,9 @@ import {
 } from '@/redux/services/rental/rental.service';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import moment from 'moment';
+type Props = NativeStackScreenProps<RootStackParams> & { status: STATUS };
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	<Text
 		style={{
@@ -52,7 +51,8 @@ const ActionButton = ({
 		useConfirmRentalMutation();
 	const [requestBreakRental, { isLoading }] = useRequestBreakRentalMutation();
 
-	const { refetch } = useGetMyRentalQuery('');
+	const { refetch } = useGetMyRentalQuery(STATUS.APPROVED);
+	const { refetch: refetch2 } = useGetMyRentalQuery(STATUS.COMPLETED);
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [urlPayment, setUrlPayment] = useState('');
@@ -124,6 +124,7 @@ const ActionButton = ({
 							onPress={() => {
 								setModalVisible(false);
 								refetch();
+								refetch2();
 							}}
 							text="Close"
 						/>
@@ -138,8 +139,9 @@ const ActionButton = ({
 	);
 };
 
-const CheckList = ({ navigation }: Props) => {
-	const { data, isLoading, isFetching, isError } = useGetMyRentalQuery('');
+const MyRentals = ({ navigation, status }: Props) => {
+	const { data, isLoading, isFetching, isError } =
+		useGetMyRentalQuery(status);
 	console.log('isError:======', isError);
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	if (!accessToken) {
@@ -167,17 +169,6 @@ const CheckList = ({ navigation }: Props) => {
 				contentContainerStyle={{ paddingBottom: 24 }}
 				scrollEventThrottle={16}
 			>
-				<Text
-					style={{
-						fontWeight: '500',
-						fontSize: 26,
-						color: '#000',
-						marginTop: 12,
-						marginLeft: 20,
-					}}
-				>
-					My Rentals
-				</Text>
 				<View
 					style={{
 						width: '100%',
@@ -323,7 +314,7 @@ const CheckList = ({ navigation }: Props) => {
 	);
 };
 
-export default CheckList;
+export default MyRentals;
 
 const styles = StyleSheet.create({
 	textTitle: {
