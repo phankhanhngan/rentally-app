@@ -7,6 +7,34 @@ export const enum STATUS {
 	REQUEST_BREAK = 'REQUEST_BREAK',
 	CANCELED = 'CANCELED',
 }
+export const MONTH = [
+	'Jan',
+	'Feb',
+	'Mar',
+	'Apr',
+	'May',
+	'Jun',
+	'Jul',
+	'Aug',
+	'Sep',
+	'Oct',
+	'Nov',
+	'Dec',
+];
+export const MONTH_FULL = [
+	'January',
+	'Febuary',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'Octrober',
+	'November',
+	'December',
+];
 
 export const enum RATING_STATUS {
 	NONE = 'NONE',

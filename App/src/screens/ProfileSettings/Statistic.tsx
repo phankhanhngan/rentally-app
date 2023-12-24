@@ -3,6 +3,7 @@ import { BarChart } from 'react-native-gifted-charts';
 
 import BackButton from '@/components/BackButton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
+import { MONTH } from '@/utils/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams, 'Statistic'>;
@@ -69,7 +70,65 @@ const renderTitle = () => {
 		</View>
 	);
 };
-const BarChatCustom = ({ stackData }: { stackData: any }) => {
+const BarChatCustom = () => {
+	const stackData = [
+		{
+			stacks: [
+				{ value: 40, color: '#E36414' },
+				{ value: 4, color: '#F7B787' },
+				{ value: 6, color: '#F9E8D9' },
+				{ value: 1, color: '#527853' },
+			],
+			label: 'Jan',
+		},
+		{
+			stacks: [
+				{ value: 30, color: '#E36414' },
+				{ value: 11, color: '#F7B787' },
+				{ value: 15, color: '#F9E8D9' },
+				{ value: 10, color: '#527853' },
+			],
+			label: 'Mar',
+		},
+		{
+			stacks: [
+				{ value: 20, color: '#E36414' },
+				{ value: 1, color: '#F7B787' },
+				{ value: 5, color: '#F9E8D9' },
+				{ value: 10, color: '#527853' },
+			],
+			label: 'Feb',
+		},
+		{
+			stacks: [
+				{ value: 25, color: '#E36414' },
+				{ value: 11, color: '#F7B787' },
+				{ value: 15, color: '#F9E8D9' },
+				{ value: 6, color: '#527853' },
+			],
+			label: 'Mar',
+		},
+		{
+			stacks: [{ value: 30, color: 'gray' }],
+
+			label: 'May',
+		},
+		{
+			stacks: [{ value: 30, color: 'gray' }],
+
+			label: 'June',
+		},
+		{
+			stacks: [{ value: 30, color: 'gray' }],
+
+			label: 'July',
+		},
+		{
+			stacks: [{ value: 30, color: 'gray' }],
+			label: 'Aug',
+		},
+	];
+
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
 			<BarChart
@@ -233,63 +292,7 @@ const App = ({ navigation, route }: Props) => {
 	const BackHandler = () => {
 		navigation.pop();
 	};
-	const stackData = [
-		{
-			stacks: [
-				{ value: 40, color: '#E36414' },
-				{ value: 4, color: '#F7B787' },
-				{ value: 6, color: '#F9E8D9' },
-				{ value: 1, color: '#527853' },
-			],
-			label: 'Jan',
-		},
-		{
-			stacks: [
-				{ value: 30, color: '#E36414' },
-				{ value: 11, color: '#F7B787' },
-				{ value: 15, color: '#F9E8D9' },
-				{ value: 10, color: '#527853' },
-			],
-			label: 'Mar',
-		},
-		{
-			stacks: [
-				{ value: 20, color: '#E36414' },
-				{ value: 1, color: '#F7B787' },
-				{ value: 5, color: '#F9E8D9' },
-				{ value: 10, color: '#527853' },
-			],
-			label: 'Feb',
-		},
-		{
-			stacks: [
-				{ value: 25, color: '#E36414' },
-				{ value: 11, color: '#F7B787' },
-				{ value: 15, color: '#F9E8D9' },
-				{ value: 6, color: '#527853' },
-			],
-			label: 'Mar',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
 
-			label: 'May',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
-
-			label: 'June',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
-
-			label: 'July',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
-			label: 'Aug',
-		},
-	];
 	const Tab = createMaterialTopTabNavigator();
 	function StatisticTabs() {
 		return (
@@ -305,15 +308,11 @@ const App = ({ navigation, route }: Props) => {
 			>
 				<Tab.Screen
 					name={'2023'}
-					children={(props) => (
-						<BarChatCustom stackData={stackData} />
-					)}
+					children={(props) => <BarChatCustom />}
 				/>
 				<Tab.Screen
 					name={'2024'}
-					children={(props) => (
-						<BarChatCustom stackData={stackData} />
-					)}
+					children={(props) => <BarChatCustom />}
 				/>
 			</Tab.Navigator>
 		);
