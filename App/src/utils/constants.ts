@@ -7,6 +7,12 @@ export const enum STATUS {
 	REQUEST_BREAK = 'REQUEST_BREAK',
 	CANCELED = 'CANCELED',
 }
+
+export enum RATING_STATUS {
+	NONE = 'NONE',
+	RATED = 'RATED',
+}
+
 export const STATUS_COLORS = {
 	[STATUS.COMPLETED]: '#f39c12',
 	[STATUS.APPROVED]: '#27ae60',

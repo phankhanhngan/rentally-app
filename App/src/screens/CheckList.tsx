@@ -45,9 +45,19 @@ const CheckList = ({ navigation }: Props) => {
 			</View>
 		);
 	}
-	if (data?.data?.length) {
-		<View style={{ flex: 1 }}>
-			<Text>Hoong co gi ma oi</Text>
+	if (data?.data?.length === 0) {
+		<View
+			style={{
+				marginBottom: 0,
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				gap: 10,
+				backgroundColor: 'white',
+			}}
+		>
+			<Icon name="dropbox" size={100} />
+			<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
 		</View>;
 	}
 	return (

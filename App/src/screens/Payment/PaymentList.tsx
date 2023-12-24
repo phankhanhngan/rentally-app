@@ -13,7 +13,9 @@ import {
 
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
+type Props = NativeStackScreenProps<RootStackParams> & {
+	status: PAYMENTSTATUS;
+};
 import Spinner from 'react-native-loading-spinner-overlay';
 import WebView from 'react-native-webview';
 
@@ -28,18 +30,6 @@ import { PAYMENTSTATUS } from '@/utils/constants';
 import { PAYMENTSTATUS_COLORS, PAYMENTSTATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import moment from 'moment';
-const StatusText = ({ rentalStatus }: { rentalStatus: PAYMENTSTATUS }) => (
-	<Text
-		style={{
-			color: PAYMENTSTATUS_COLORS[rentalStatus] as string,
-			fontSize: 12,
-			fontWeight: '700',
-			textAlign: 'right',
-		}}
-	>
-		{rentalStatus}
-	</Text>
-);
 
 const ActionButton = ({
 	rentalStatus,
@@ -49,7 +39,9 @@ const ActionButton = ({
 	id: string;
 }) => {
 	const [checkOut, { isLoading }] = useCheckOutMutation();
-	const { refetch } = useGetMyPaymentQuery('');
+	const { refetch } = useGetMyPaymentQuery(PAYMENTSTATUS.PAID);
+	const { refetch: refetch2 } = useGetMyPaymentQuery(PAYMENTSTATUS.UNPAID);
+
 	const [modalVisible, setModalVisible] = useState(false);
 	const [urlPayment, setUrlPayment] = useState('');
 	const handleRequest = async () => {
@@ -96,6 +88,7 @@ const ActionButton = ({
 						{PAYMENTSTATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
+
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -118,6 +111,7 @@ const ActionButton = ({
 							onPress={() => {
 								setModalVisible(false);
 								refetch();
+								refetch2();
 							}}
 							text="Close"
 						/>
@@ -132,8 +126,8 @@ const ActionButton = ({
 	);
 };
 
-const PaymentList = ({ navigation }: Props) => {
-	const { data, isLoading, isFetching, refetch } = useGetMyPaymentQuery('');
+const PaymentList = ({ navigation, status }: Props) => {
+	const { data, isLoading, isFetching } = useGetMyPaymentQuery(status);
 	if (isLoading || isFetching) {
 		return (
 			<View style={{ flex: 1 }}>
@@ -146,29 +140,14 @@ const PaymentList = ({ navigation }: Props) => {
 			<Text>Hoong co gi ma oi</Text>
 		</View>;
 	}
-	const BackHandler = () => {
-		navigation.pop();
-	};
+
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			<BackButton onPress={BackHandler} />
-
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 24 }}
 				scrollEventThrottle={16}
 			>
-				<Text
-					style={{
-						fontWeight: '500',
-						fontSize: 26,
-						color: '#000',
-						marginTop: 18,
-						marginLeft: 80,
-					}}
-				>
-					My Payments
-				</Text>
 				<View
 					style={{
 						width: '100%',
@@ -304,12 +283,25 @@ const PaymentList = ({ navigation }: Props) => {
 								</View>
 								<View
 									style={{
-										marginTop: 8,
-										justifyContent: 'center',
+										marginTop: 4,
+										justifyContent: 'space-between',
 										width: '100%',
-										alignItems: 'flex-end',
+										alignItems: 'center',
+										flexDirection: 'row',
 									}}
 								>
+									<Text
+										style={{
+											color: 'black',
+											fontSize: 12,
+											fontFamily: 'mon-b',
+											paddingLeft: 12,
+										}}
+									>
+										{moment(
+											myPayment.expirationDate,
+										).format('ll')}
+									</Text>
 									<ActionButton
 										rentalStatus={myPayment.status}
 										id={myPayment.id || ''}

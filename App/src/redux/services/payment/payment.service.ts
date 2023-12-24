@@ -3,6 +3,7 @@ import type {
 	IMyPayment,
 	IMyPaymentResponse,
 } from '@/interfaces/payment.interface';
+import type { PAYMENTSTATUS } from '@/utils/constants';
 
 const createApiRentalWithAuth = createApiWithAuth('paymentApi', ['Payment']);
 
@@ -14,11 +15,11 @@ export const paymentApi = createApiRentalWithAuth.injectEndpoints({
 				status: string;
 				data: IMyPayment[];
 			},
-			string
+			PAYMENTSTATUS
 		>({
-			query: () => {
+			query: (status) => {
 				return {
-					url: 'payments/my-payment',
+					url: `payments/my-payment?status=${status}`,
 				};
 			},
 			providesTags: [{ type: 'Payment', id: 'LIST' }],

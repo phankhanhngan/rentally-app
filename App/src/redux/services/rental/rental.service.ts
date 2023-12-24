@@ -4,6 +4,7 @@ import type {
 	IRental,
 	IRentalResponse,
 } from '@/interfaces/rental.interface';
+import type { STATUS } from '@/utils/constants';
 
 const createApiRentalWithAuth = createApiWithAuth('rentalApi', ['Rental']);
 
@@ -15,11 +16,11 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 				success: boolean;
 				data: IMyRental[];
 			},
-			string
+			STATUS
 		>({
-			query: () => {
+			query: (status) => {
 				return {
-					url: '/rental/my-rental',
+					url: `/rental/my-rental?status=${status}`,
 				};
 			},
 			providesTags: [{ type: 'Rental', id: 'LIST' }],

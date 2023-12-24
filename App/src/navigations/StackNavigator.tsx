@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Text } from 'react-native';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/EvilIcons';
 import Icon3 from 'react-native-vector-icons/Feather';
@@ -6,6 +7,7 @@ import Icon3 from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
+import BackButton from '@/components/BackButton';
 import type { IMyRental } from '@/interfaces/rental.interface';
 import type { IRatingDetail } from '@/interfaces/room-detail.interface';
 import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
@@ -28,9 +30,12 @@ import Map from '@/screens/ProfileSettings/Map';
 import PersonalInformationUpdate from '@/screens/ProfileSettings/PersonalInformation';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
+import { PAYMENTSTATUS, STATUS } from '@/utils/constants';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 export type RootStackParams = {
 	Login: undefined;
 	Register: undefined;
@@ -61,6 +66,89 @@ const StackNavigator = () => {
 	const Stack = createNativeStackNavigator<RootStackParams>();
 	const Tab = createBottomTabNavigator();
 	// const Drawer = createDrawerNavigator();
+	const Tab2 = createMaterialTopTabNavigator();
+	function MyPaymentTabs() {
+		return (
+			<Tab2.Navigator
+				screenOptions={{
+					tabBarScrollEnabled: true,
+					tabBarLabelStyle: { fontSize: 12 },
+					tabBarIndicatorStyle: { backgroundColor: '#E36414' },
+					tabBarActiveTintColor: '#E36414',
+					tabBarInactiveTintColor: 'black',
+				}}
+			>
+				<Tab2.Screen
+					name={PAYMENTSTATUS.UNPAID}
+					children={(props) => (
+						<PaymentList {...props} status={PAYMENTSTATUS.UNPAID} />
+					)}
+				/>
+				<Tab2.Screen
+					name={PAYMENTSTATUS.PAID}
+					children={(props) => (
+						<PaymentList {...props} status={PAYMENTSTATUS.PAID} />
+					)}
+				/>
+			</Tab2.Navigator>
+		);
+	}
+	function MyRenTalsTab() {
+		return (
+			<Tab2.Navigator
+				screenOptions={{
+					tabBarScrollEnabled: true,
+					tabBarLabelStyle: { fontSize: 12 },
+					tabBarIndicatorStyle: { backgroundColor: '#E36414' },
+					tabBarActiveTintColor: '#E36414',
+					tabBarInactiveTintColor: 'black',
+				}}
+			>
+				<Tab2.Screen
+					name={STATUS.CREATED}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.CREATED} />
+					)}
+				/>
+				<Tab2.Screen
+					name={STATUS.APPROVED}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.APPROVED} />
+					)}
+				/>
+				<Tab2.Screen
+					name={STATUS.COMPLETED}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.COMPLETED} />
+					)}
+				/>
+				<Tab2.Screen
+					name={STATUS.REQUEST_BREAK}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.REQUEST_BREAK} />
+					)}
+				/>
+				<Tab2.Screen
+					name={STATUS.BROKEN}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.BROKEN} />
+					)}
+				/>
+				<Tab2.Screen
+					name={STATUS.ENDED}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.ENDED} />
+					)}
+				/>
+				<Tab2.Screen
+					name={STATUS.CANCELED}
+					children={(props) => (
+						<MyRental {...props} status={STATUS.CANCELED} />
+					)}
+				/>
+			</Tab2.Navigator>
+		);
+	}
 	function BottomTabs() {
 		return (
 			<Tab.Navigator
@@ -93,9 +181,23 @@ const StackNavigator = () => {
 				/>
 				<Tab.Screen
 					name="MyRental"
-					component={MyRental}
+					component={MyRenTalsTab}
 					options={{
-						headerShown: false,
+						headerShown: true,
+						header: () => (
+							<Text
+								style={{
+									backgroundColor: 'white',
+									fontWeight: '500',
+									fontSize: 26,
+									color: '#000',
+									paddingTop: 12,
+									paddingLeft: 20,
+								}}
+							>
+								My Rentals
+							</Text>
+						),
 						tabBarIcon: ({ color }) => (
 							<Icon2 name="profile" size={24} color={color} />
 						),
@@ -197,10 +299,28 @@ const StackNavigator = () => {
 				/>
 				<Stack.Screen
 					name="PaymentList"
-					component={PaymentList}
-					options={{
+					component={MyPaymentTabs}
+					options={({ navigation }) => ({
+						headerShown: true,
 						animation: 'slide_from_right',
-					}}
+						header: () => (
+							<>
+								<BackButton onPress={() => navigation.pop()} />
+								<Text
+									style={{
+										backgroundColor: 'white',
+										fontWeight: '500',
+										fontSize: 26,
+										color: '#000',
+										paddingTop: 12,
+										paddingLeft: 80,
+									}}
+								>
+									My Payments
+								</Text>
+							</>
+						),
+					})}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>

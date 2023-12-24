@@ -10,9 +10,9 @@ const useRefetch = () => {
 
 	const { refetch: refetchCheckList } = useGetCheckListQuery('');
 	const { refetch: refetchMyPayment } = useGetMyPaymentQuery('');
-	const { refetch } = useGetMyRentalQuery('');
+	const { refetch } = useGetMyRentalQuery();
 	const { refetch: refetchRooms } = useGetFindingRoomsQuery({
-		"page": [1],
+		page: [1],
 	});
 	const refetchData = () => {
 		dispatch(resetParams());

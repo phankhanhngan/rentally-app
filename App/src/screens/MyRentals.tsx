@@ -9,25 +9,30 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-
-import type { RootStackParams } from '@/navigations/StackNavigator';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-type Props = NativeStackScreenProps<RootStackParams>;
 import Spinner from 'react-native-loading-spinner-overlay';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import WebView from 'react-native-webview';
 
 import { AuthRequirement } from '@/components/AuthRequirement';
 import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
+import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import {
 	useConfirmRentalMutation,
 	useGetMyRentalQuery,
 	useRequestBreakRentalMutation,
 } from '@/redux/services/rental/rental.service';
-import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+import {
+	RATING_STATUS,
+	STATUS,
+	STATUS_COLORS,
+	STATUS_TEXT,
+} from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import moment from 'moment';
+type Props = NativeStackScreenProps<RootStackParams> & { status: STATUS };
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	<Text
 		style={{
@@ -44,15 +49,18 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 const ActionButton = ({
 	rentalStatus,
 	id,
+	ratingStatus,
 }: {
 	rentalStatus: STATUS;
 	id: string;
+	ratingStatus: RATING_STATUS;
 }) => {
 	const [confirmRental, { isLoading: isConfirmLoading }] =
 		useConfirmRentalMutation();
 	const [requestBreakRental, { isLoading }] = useRequestBreakRentalMutation();
 
-	const { refetch } = useGetMyRentalQuery('');
+	const { refetch } = useGetMyRentalQuery(STATUS.APPROVED);
+	const { refetch: refetch2 } = useGetMyRentalQuery(STATUS.COMPLETED);
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [urlPayment, setUrlPayment] = useState('');
@@ -102,6 +110,9 @@ const ActionButton = ({
 						{STATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
+				{ratingStatus === RATING_STATUS.RATED && (
+					<Text style={{ color: 'black' }}>Reviewed</Text>
+				)}
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -124,6 +135,7 @@ const ActionButton = ({
 							onPress={() => {
 								setModalVisible(false);
 								refetch();
+								refetch2();
 							}}
 							text="Close"
 						/>
@@ -138,9 +150,10 @@ const ActionButton = ({
 	);
 };
 
-const CheckList = ({ navigation }: Props) => {
-	const { data, isLoading, isFetching, isError } = useGetMyRentalQuery('');
-	console.log('isError:======', isError);
+const MyRentals = ({ navigation, status }: Props) => {
+	const { data, isLoading, isFetching, isError } =
+		useGetMyRentalQuery(status);
+
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	if (!accessToken) {
 		return AuthRequirement({ navigation });
@@ -155,8 +168,18 @@ const CheckList = ({ navigation }: Props) => {
 
 	if (!data?.data.length) {
 		return (
-			<View style={{ flex: 1 }}>
-				<Text>Hoong co gi ma oi</Text>
+			<View
+				style={{
+					marginBottom: 0,
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					gap: 10,
+					backgroundColor: 'white',
+				}}
+			>
+				<Icon name="dropbox" size={100} />
+				<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
 			</View>
 		);
 	}
@@ -167,17 +190,6 @@ const CheckList = ({ navigation }: Props) => {
 				contentContainerStyle={{ paddingBottom: 24 }}
 				scrollEventThrottle={16}
 			>
-				<Text
-					style={{
-						fontWeight: '500',
-						fontSize: 26,
-						color: '#000',
-						marginTop: 12,
-						marginLeft: 20,
-					}}
-				>
-					My Rentals
-				</Text>
 				<View
 					style={{
 						width: '100%',
@@ -310,6 +322,9 @@ const CheckList = ({ navigation }: Props) => {
 									}}
 								>
 									<ActionButton
+										ratingStatus={
+											myRental.rentalInfo.ratingStatus
+										}
 										rentalStatus={myRental.status}
 										id={myRental.rentalInfo.id || ''}
 									/>
@@ -323,7 +338,7 @@ const CheckList = ({ navigation }: Props) => {
 	);
 };
 
-export default CheckList;
+export default MyRentals;
 
 const styles = StyleSheet.create({
 	textTitle: {

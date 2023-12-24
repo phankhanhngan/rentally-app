@@ -1,7 +1,7 @@
 import type { IRoomBlock } from './block.interface';
 import type { IRoom } from './room.interface';
 import type { IUser } from './user.interface';
-import type { STATUS } from '@/utils/constants';
+import type { RATING_STATUS, STATUS } from '@/utils/constants';
 
 export interface IRental {
 	roomId: string;
@@ -20,6 +20,7 @@ export interface IMyRental {
 		additionalPrice?: number;
 		id?: string;
 		photo?: string;
+		ratingStatus: RATING_STATUS;
 	};
 	hostInfo: IUser;
 	roomInfo: IRoom;
