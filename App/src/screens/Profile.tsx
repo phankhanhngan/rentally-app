@@ -32,6 +32,9 @@ const Profile = ({ navigation }: Props) => {
 	const goToPayment = () => {
 		navigation.navigate('PaymentList');
 	};
+	const goToStatistic = () => {
+		navigation.navigate('Statistic');
+	};
 	const refetch = useRefetch();
 
 	return (
@@ -88,6 +91,12 @@ const Profile = ({ navigation }: Props) => {
 							content="Payments and payouts"
 							iconName="Icon"
 							event={goToPayment}
+						/>
+						<OptionSettings
+							icon="credit-card"
+							content="Statistic"
+							iconName="Icon"
+							event={goToStatistic}
 						/>
 					</View>
 					<View style={styles.logout_container}>

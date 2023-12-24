@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/Feather';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 import { AuthRequirement } from '@/components/AuthRequirement';
 import Loading from '@/components/Loading';
@@ -45,20 +46,22 @@ const CheckList = ({ navigation }: Props) => {
 			</View>
 		);
 	}
-	if (data?.data?.length === 0) {
-		<View
-			style={{
-				marginBottom: 0,
-				flex: 1,
-				alignItems: 'center',
-				justifyContent: 'center',
-				gap: 10,
-				backgroundColor: 'white',
-			}}
-		>
-			<Icon name="dropbox" size={100} />
-			<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
-		</View>;
+	if (!data?.data?.length) {
+		return (
+			<View
+				style={{
+					marginBottom: 0,
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					gap: 10,
+					backgroundColor: 'white',
+				}}
+			>
+				<Icon2 name="dropbox" size={100} />
+				<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
+			</View>
+		);
 	}
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>

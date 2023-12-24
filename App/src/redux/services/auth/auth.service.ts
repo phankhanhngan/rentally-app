@@ -65,10 +65,16 @@ export const authApi = createApiAuthWithAuth.injectEndpoints({
 		}),
 		continueWithGG: builder.mutation<
 			IAuthResponse,
-			{ accessToken: string }
+			{
+				id: string;
+				familyName: string;
+				givenName: string;
+				email: string;
+				photo: string;
+			}
 		>({
 			query: (body) => ({
-				url: '/auth/google/callback',
+				url: '/auth/firebase/callback',
 				method: 'POST',
 				body,
 			}),

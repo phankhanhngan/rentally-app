@@ -15,17 +15,17 @@ export const signInWithGoogle = async () => {
 	try {
 		await GoogleSignin.hasPlayServices();
 		const userInfo = await GoogleSignin.signIn();
-		console.log(userInfo);
-		const googleCredential = auth.GoogleAuthProvider.credential(
-			userInfo.idToken,
-		);
-		console.log(googleCredential);
-		const userCredential = await auth().signInWithCredential(
-			googleCredential,
-		);
-		console.log(userCredential);
+		// console.log(userInfo);
+		// const googleCredential = auth.GoogleAuthProvider.credential(
+		// 	userInfo.idToken,
+		// );
+		// // console.log(googleCredential);
+		// const userCredential = await auth().signInWithCredential(
+		// 	googleCredential,
+		// );
+		// console.log(userCredential);
 
-		return userCredential;
+		return userInfo;
 	} catch (error) {
 		const err = error as UnknownObject;
 		if (err.code === statusCodes.SIGN_IN_CANCELLED) {
