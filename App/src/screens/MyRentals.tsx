@@ -10,6 +10,7 @@ import {
 	View,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import WebView from 'react-native-webview';
 
 import { AuthRequirement } from '@/components/AuthRequirement';
@@ -22,7 +23,12 @@ import {
 	useGetMyRentalQuery,
 	useRequestBreakRentalMutation,
 } from '@/redux/services/rental/rental.service';
-import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
+import {
+	RATING_STATUS,
+	STATUS,
+	STATUS_COLORS,
+	STATUS_TEXT,
+} from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import moment from 'moment';
@@ -43,9 +49,11 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 const ActionButton = ({
 	rentalStatus,
 	id,
+	ratingStatus,
 }: {
 	rentalStatus: STATUS;
 	id: string;
+	ratingStatus: RATING_STATUS;
 }) => {
 	const [confirmRental, { isLoading: isConfirmLoading }] =
 		useConfirmRentalMutation();
@@ -102,6 +110,9 @@ const ActionButton = ({
 						{STATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
+				{ratingStatus === RATING_STATUS.RATED && (
+					<Text style={{ color: 'black' }}>Reviewed</Text>
+				)}
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -142,7 +153,7 @@ const ActionButton = ({
 const MyRentals = ({ navigation, status }: Props) => {
 	const { data, isLoading, isFetching, isError } =
 		useGetMyRentalQuery(status);
-	console.log('isError:======', isError);
+
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	if (!accessToken) {
 		return AuthRequirement({ navigation });
@@ -157,8 +168,18 @@ const MyRentals = ({ navigation, status }: Props) => {
 
 	if (!data?.data.length) {
 		return (
-			<View style={{ flex: 1 }}>
-				<Text>Hoong co gi ma oi</Text>
+			<View
+				style={{
+					marginBottom: 0,
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					gap: 10,
+					backgroundColor: 'white',
+				}}
+			>
+				<Icon name="dropbox" size={100} />
+				<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
 			</View>
 		);
 	}
@@ -301,6 +322,9 @@ const MyRentals = ({ navigation, status }: Props) => {
 									}}
 								>
 									<ActionButton
+										ratingStatus={
+											myRental.rentalInfo.ratingStatus
+										}
 										rentalStatus={myRental.status}
 										id={myRental.rentalInfo.id || ''}
 									/>

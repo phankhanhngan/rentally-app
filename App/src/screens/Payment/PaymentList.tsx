@@ -88,6 +88,7 @@ const ActionButton = ({
 						{PAYMENTSTATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
+
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -139,13 +140,9 @@ const PaymentList = ({ navigation, status }: Props) => {
 			<Text>Hoong co gi ma oi</Text>
 		</View>;
 	}
-	const BackHandler = () => {
-		navigation.pop();
-	};
+
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			
-
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 24 }}
@@ -286,12 +283,25 @@ const PaymentList = ({ navigation, status }: Props) => {
 								</View>
 								<View
 									style={{
-										marginTop: 8,
-										justifyContent: 'center',
+										marginTop: 4,
+										justifyContent: 'space-between',
 										width: '100%',
-										alignItems: 'flex-end',
+										alignItems: 'center',
+										flexDirection: 'row',
 									}}
 								>
+									<Text
+										style={{
+											color: 'black',
+											fontSize: 12,
+											fontFamily: 'mon-b',
+											paddingLeft: 12,
+										}}
+									>
+										{moment(
+											myPayment.expirationDate,
+										).format('ll')}
+									</Text>
 									<ActionButton
 										rentalStatus={myPayment.status}
 										id={myPayment.id || ''}

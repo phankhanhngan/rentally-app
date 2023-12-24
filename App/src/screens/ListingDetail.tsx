@@ -154,10 +154,13 @@ const ListingDetail = ({ navigation, route }: Props) => {
 						<View
 							style={{
 								flexDirection: 'row',
+								width: '100%',
 								// alignItems: 'center',
 								marginTop: 8,
 								paddingHorizontal: 8,
 								paddingBottom: 2,
+
+								alignContent: 'flex-start',
 							}}
 						>
 							<Icon2
@@ -461,10 +464,9 @@ const styles = StyleSheet.create({
 		paddingTop: 12,
 	},
 	location: {
+		width: '90%',
 		fontSize: 20,
-
 		fontFamily: 'mon-sb',
-
 		color: '#000',
 	},
 	rooms: {
@@ -482,6 +484,7 @@ const styles = StyleSheet.create({
 	divider: {
 		height: StyleSheet.hairlineWidth,
 		backgroundColor: '#5E5D5E',
+		flex: 1,
 		marginVertical: 16,
 		marginHorizontal: 12,
 	},
