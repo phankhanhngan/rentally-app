@@ -15,6 +15,7 @@ import {
 	useLoginMutation,
 } from '@/redux/services/auth/auth.service';
 import { signInWithGoogle } from '@/utils/helpers/auth';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 // import {
 // 	GoogleSignin,
 // 	GoogleSigninButton,
@@ -60,8 +61,17 @@ const Login = () => {
 		}
 	}, [loginResult]);
 	const handleSignIn = async () => {
-		const userCredential = await signInWithGoogle();
-		if (userCredential) {
+		const userInfo = await signInWithGoogle();
+
+		const res = await continueWithGG({
+			id: userInfo?.user.id || '',
+			familyName: userInfo?.user.familyName || '',
+			email: userInfo?.user.email || '',
+			givenName: userInfo?.user.givenName || '',
+			photo: userInfo?.user.photo || '',
+		}).unwrap();
+		if (res.status === 'SUCCESS' && res.data) {
+			dispatch(setCredentials({ accessToken: res.data.token }));
 			navigation.replace('Main');
 		}
 	};
@@ -172,11 +182,13 @@ const Login = () => {
 									isLoading={undefined}
 								/>
 								<View
-								// style={{
-								// 	alignItems: 'center',
-								// 	justifyContent: 'space-between',
-								// 	flexDirection: 'row',
-								// }}
+									style={{
+										justifyContent: 'space-between',
+										flexDirection: 'row',
+										alignItems: 'flex-start',
+										marginTop: 20,
+										gap: 140,
+									}}
 								>
 									<Pressable
 										onPress={() =>
@@ -199,7 +211,7 @@ const Login = () => {
 											Forgot your password?
 										</Text>
 									</Pressable>
-									<Pressable
+									{/* <Pressable
 										// size={GoogleSigninButton.Size.Wide}
 										// color={GoogleSigninButton.Color.Dark}
 										onPress={handleSignIn}
@@ -210,7 +222,11 @@ const Login = () => {
 										}}
 									>
 										<Text>Login with GG</Text>
-									</Pressable>
+									</Pressable> */}
+									<GoogleSigninButton
+										size={GoogleSigninButton.Size.Icon}
+										onPress={handleSignIn}
+									/>
 								</View>
 							</View>
 						</SafeAreaView>

@@ -1,14 +1,40 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AirbnbRating } from 'react-native-ratings';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
+import { useReviewRentalMutation } from '@/redux/services/rental/rental.service';
+import * as Yup from 'yup';
+
 const reviewTexts = ['Terrible', 'Bad', 'Meh', 'OK', 'Good'];
 const Review: React.FC = () => {
-	const ratingCompleted = (rating) => {
+	const ratingCompleted = (rating: number) => {
 		console.log('Rating is: ' + rating);
 	};
+	const [reviewRental, { data, error, isLoading }] =
+		useReviewRentalMutation();
+	const initialReview = {
+		cleanRate: 5,
+		supportRate: 5,
+		locationRate: 5,
+		securityRate: 5,
+		comment: '',
+	};
+
+	const ReviewSchema = Yup.object().shape<Record<string, any>>({
+		comment: Yup.string().required('Lease term Required!'),
+	});
+
+	const submitRentalForm = async (values: any) => {
+		try {
+			await reviewRental(values);
+		} catch (error: any) {
+			console.log(error);
+			Alert.alert('error!', error.data.message[0]);
+		}
+	};
+
 	return (
 		<Animated.View
 			entering={SlideInDown.springify().damping(15)}

@@ -8,7 +8,7 @@ export const enum STATUS {
 	CANCELED = 'CANCELED',
 }
 
-export enum RATING_STATUS {
+export const enum RATING_STATUS {
 	NONE = 'NONE',
 	RATED = 'RATED',
 }
