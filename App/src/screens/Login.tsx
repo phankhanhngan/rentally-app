@@ -72,6 +72,7 @@ const Login = () => {
 		}).unwrap();
 		if (res.status === 'SUCCESS' && res.data) {
 			dispatch(setCredentials({ accessToken: res.data.token }));
+			refetch();
 			navigation.replace('Main');
 		}
 	};
