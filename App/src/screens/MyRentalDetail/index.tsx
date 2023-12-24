@@ -33,6 +33,7 @@ import {
 	useRequestBreakRentalMutation,
 } from '@/redux/services/rental/rental.service';
 // import { useRetalRequestMutation } from '@/redux/services/rental/rental.service';
+import { RATING_STATUS } from '@/utils/constants';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
@@ -51,9 +52,13 @@ const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 const ActionButton = ({
 	rentalStatus,
 	id,
+	ratingStatus,
+	navigation,
 }: {
 	rentalStatus: STATUS;
 	id: string;
+	ratingStatus: RATING_STATUS;
+	navigation: any;
 }) => {
 	const [confirmRental, { isLoading: isConfirmLoading }] =
 		useConfirmRentalMutation();
@@ -74,6 +79,7 @@ const ActionButton = ({
 			} else {
 				await requestBreakRental({ id });
 			}
+			navigation.pop();
 		} catch (error: any) {
 			console.log(error);
 			Alert.alert('error!', error.data.message);
@@ -82,8 +88,44 @@ const ActionButton = ({
 
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
-			<>
+			<View
+				style={{
+					flexDirection: 'row',
+					justifyContent: 'center',
+					alignContent: 'center',
+					gap: 40,
+				}}
+			>
 				<Spinner visible={isLoading || isConfirmLoading} />
+				{rentalStatus === STATUS.COMPLETED &&
+					ratingStatus === RATING_STATUS.NONE && (
+						<TouchableOpacity
+							onPress={() => {
+								console.log('review');
+							}}
+							style={[
+								{
+									backgroundColor: '#27ae60',
+									height: 40,
+									marginTop: 5,
+									borderRadius: 8,
+									justifyContent: 'center',
+									alignItems: 'center',
+								},
+								{ paddingRight: 20, paddingLeft: 20 },
+							]}
+						>
+							<Text
+								style={{
+									color: '#fff',
+									fontSize: 16,
+									fontFamily: 'mon-b',
+								}}
+							>
+								Review
+							</Text>
+						</TouchableOpacity>
+					)}
 				<TouchableOpacity
 					onPress={handleRequest}
 					style={[
@@ -135,7 +177,7 @@ const ActionButton = ({
 						/>
 					</View>
 				</Modal>
-			</>
+			</View>
 		);
 	return (
 		<View
@@ -252,8 +294,10 @@ const MyRentalDetail = ({ navigation, route }: Props) => {
 					}}
 				>
 					<ActionButton
+						ratingStatus={myRental.rentalInfo.ratingStatus}
 						rentalStatus={myRental.status}
 						id={myRental.rentalInfo.id || ''}
+						navigation
 					/>
 				</View>
 			</View>

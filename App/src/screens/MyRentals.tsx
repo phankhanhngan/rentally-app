@@ -23,12 +23,8 @@ import {
 	useGetMyRentalQuery,
 	useRequestBreakRentalMutation,
 } from '@/redux/services/rental/rental.service';
-import {
-	RATING_STATUS,
-	STATUS,
-	STATUS_COLORS,
-	STATUS_TEXT,
-} from '@/utils/constants';
+import type { RATING_STATUS } from '@/utils/constants';
+import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import moment from 'moment';
@@ -82,8 +78,22 @@ const ActionButton = ({
 
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
-			<>
+			<View
+				style={{
+					flexDirection: 'row',
+					justifyContent: 'center',
+					alignContent: 'center',
+					gap: 20,
+				}}
+			>
 				<Spinner visible={isLoading || isConfirmLoading} />
+				{rentalStatus === STATUS.COMPLETED && (
+					<Text
+						style={{ color: 'black', fontSize: 12, paddingTop: 8 }}
+					>
+						Reviewed
+					</Text>
+				)}
 				<TouchableOpacity
 					onPress={handleRequest}
 					style={[
@@ -110,9 +120,7 @@ const ActionButton = ({
 						{STATUS_TEXT[rentalStatus]}
 					</Text>
 				</TouchableOpacity>
-				{ratingStatus === RATING_STATUS.RATED && (
-					<Text style={{ color: 'black' }}>Reviewed</Text>
-				)}
+
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -141,7 +149,7 @@ const ActionButton = ({
 						/>
 					</View>
 				</Modal>
-			</>
+			</View>
 		);
 	return (
 		<Text style={{ color: '#5E5D5E', fontSize: 12, marginRight: 12 }}>

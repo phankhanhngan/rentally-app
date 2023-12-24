@@ -55,6 +55,24 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 			}),
 			invalidatesTags: ['Rental'],
 		}),
+		reviewRental: builder.mutation<
+			{ data: any; message: string; status: string },
+			{
+				rentalId: number;
+				comment: string;
+				cleanRate: number;
+				supportRate: number;
+				locationRate: number;
+				securityRate: number;
+			}
+		>({
+			query: (data) => ({
+				url: `/rating`,
+				method: 'POST',
+				body: data,
+			}),
+			invalidatesTags: ['Rental'],
+		}),
 	}),
 });
 
@@ -63,4 +81,5 @@ export const {
 	useConfirmRentalMutation,
 	useRequestBreakRentalMutation,
 	useGetMyRentalQuery,
+	useReviewRentalMutation,
 } = rentalApi;

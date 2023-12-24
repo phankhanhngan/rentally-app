@@ -28,6 +28,7 @@ import Profile from '@/screens/Profile';
 import LoginSecurity from '@/screens/ProfileSettings/LoginSecurity';
 import Map from '@/screens/ProfileSettings/Map';
 import PersonalInformationUpdate from '@/screens/ProfileSettings/PersonalInformation';
+import Statistic from '@/screens/ProfileSettings/Statistic';
 import Register from '@/screens/Register';
 import ResetPassword from '@/screens/ResetPassword';
 import { PAYMENTSTATUS, STATUS } from '@/utils/constants';
@@ -56,6 +57,7 @@ export type RootStackParams = {
 	LoginSecurity: undefined;
 	Map: { markers: IRoomFinding[] };
 	PaymentList: undefined;
+	Statistic: undefined;
 };
 const StackNavigator = () => {
 	const dispatch = useAppDispatch();
@@ -293,6 +295,13 @@ const StackNavigator = () => {
 				<Stack.Screen
 					name="Comments"
 					component={Comments}
+					options={{
+						animation: 'slide_from_right',
+					}}
+				/>
+				<Stack.Screen
+					name="Statistic"
+					component={Statistic}
 					options={{
 						animation: 'slide_from_right',
 					}}
