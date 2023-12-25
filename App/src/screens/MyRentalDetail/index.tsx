@@ -4,6 +4,7 @@ import {
 	Dimensions,
 	Image,
 	Modal,
+	Pressable,
 	ScrollView,
 	StatusBar,
 	StyleSheet,
@@ -11,6 +12,7 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Icon2 from 'react-native-vector-icons/EvilIcons';
 
 import HostInfo from './Components/HostInfo';
@@ -23,10 +25,12 @@ type Props = NativeStackScreenProps<RootStackParams, 'Rental'>;
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import WebView from 'react-native-webview';
 
 import ButtonWithLoader from '@/components/ButtonWithLoader';
+import Review from '@/components/Review';
 import {
 	useConfirmRentalMutation,
 	useGetMyRentalQuery,
@@ -35,7 +39,7 @@ import {
 // import { useRetalRequestMutation } from '@/redux/services/rental/rental.service';
 import { RATING_STATUS } from '@/utils/constants';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
-
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const StatusText = ({ rentalStatus }: { rentalStatus: STATUS }) => (
 	<Text
 		style={{
@@ -54,11 +58,13 @@ const ActionButton = ({
 	id,
 	ratingStatus,
 	navigation,
+	toggleSheetReview,
 }: {
 	rentalStatus: STATUS;
 	id: string;
 	ratingStatus: RATING_STATUS;
 	navigation: any;
+	toggleSheetReview: () => void;
 }) => {
 	const [confirmRental, { isLoading: isConfirmLoading }] =
 		useConfirmRentalMutation();
@@ -69,6 +75,7 @@ const ActionButton = ({
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [urlPayment, setUrlPayment] = useState('');
+
 	const handleRequest = async () => {
 		try {
 			if (rentalStatus === STATUS.APPROVED) {
@@ -85,24 +92,22 @@ const ActionButton = ({
 			Alert.alert('error!', error.data.message);
 		}
 	};
-
+	console.log(ratingStatus);
 	if (rentalStatus === STATUS.COMPLETED || rentalStatus === STATUS.APPROVED)
 		return (
 			<View
 				style={{
 					flexDirection: 'row',
-					justifyContent: 'center',
+					justifyContent: 'space-between',
 					alignContent: 'center',
-					gap: 40,
+					gap: 76,
 				}}
 			>
 				<Spinner visible={isLoading || isConfirmLoading} />
 				{rentalStatus === STATUS.COMPLETED &&
 					ratingStatus === RATING_STATUS.NONE && (
 						<TouchableOpacity
-							onPress={() => {
-								console.log('review');
-							}}
+							onPress={() => toggleSheetReview()}
 							style={[
 								{
 									backgroundColor: '#27ae60',
@@ -200,13 +205,16 @@ const ActionButton = ({
 };
 
 const MyRentalDetail = ({ navigation, route }: Props) => {
+	const [isOpenReview, setOpenReview] = useState(false);
 	const myRental = route.params.myRental;
 	const BackHandler = () => {
 		navigation.pop();
 	};
-
+	const toggleSheetReview = () => {
+		setOpenReview((prev) => !prev);
+	};
 	return (
-		<View style={styles.container}>
+		<GestureHandlerRootView style={styles.container}>
 			<StatusBar backgroundColor={'#0C0F14'} />
 			<BackButton onPress={BackHandler} />
 
@@ -245,7 +253,7 @@ const MyRentalDetail = ({ navigation, route }: Props) => {
 								flexDirection: 'row',
 								// alignItems: 'center',
 								marginTop: 8,
-								paddingHorizontal: 8,
+								paddingHorizontal: 10,
 								paddingBottom: 2,
 							}}
 						>
@@ -297,11 +305,30 @@ const MyRentalDetail = ({ navigation, route }: Props) => {
 						ratingStatus={myRental.rentalInfo.ratingStatus}
 						rentalStatus={myRental.status}
 						id={myRental.rentalInfo.id || ''}
-						navigation
+						navigation={navigation}
+						toggleSheetReview={toggleSheetReview}
 					/>
 				</View>
 			</View>
-		</View>
+			{isOpenReview && (
+				<>
+					<AnimatedPressable
+						entering={FadeIn}
+						exiting={FadeOut}
+						style={{
+							...StyleSheet.absoluteFillObject,
+							backgroundColor: 'rgba(0, 0, 0, 0.3)',
+							zIndex: 1,
+						}}
+						onPress={toggleSheetReview}
+					></AnimatedPressable>
+					<Review
+						onReviewPress={toggleSheetReview}
+						rentalId={myRental.rentalInfo.id || ''}
+					/>
+				</>
+			)}
+		</GestureHandlerRootView>
 	);
 };
 

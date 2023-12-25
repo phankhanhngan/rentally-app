@@ -23,7 +23,7 @@ import {
 	useGetMyRentalQuery,
 	useRequestBreakRentalMutation,
 } from '@/redux/services/rental/rental.service';
-import type { RATING_STATUS } from '@/utils/constants';
+import { RATING_STATUS } from '@/utils/constants';
 import { STATUS, STATUS_COLORS, STATUS_TEXT } from '@/utils/constants';
 import { formatNumberWithCommas } from '@/utils/helpers';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -87,13 +87,18 @@ const ActionButton = ({
 				}}
 			>
 				<Spinner visible={isLoading || isConfirmLoading} />
-				{rentalStatus === STATUS.COMPLETED && (
-					<Text
-						style={{ color: 'black', fontSize: 12, paddingTop: 8 }}
-					>
-						Reviewed
-					</Text>
-				)}
+				{rentalStatus === STATUS.COMPLETED &&
+					ratingStatus === RATING_STATUS.NONE && (
+						<Text
+							style={{
+								color: 'black',
+								fontSize: 12,
+								paddingTop: 8,
+							}}
+						>
+							Reviewed
+						</Text>
+					)}
 				<TouchableOpacity
 					onPress={handleRequest}
 					style={[

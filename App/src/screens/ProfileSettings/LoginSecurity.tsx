@@ -52,8 +52,6 @@ const LoginSecurity = ({ navigation }: Props) => {
 	}, [updateResponse]);
 
 	useEffect(() => {
-		
-
 		if (disableResponse.data?.status === 'success') {
 			navigation.navigate('Login');
 		}
