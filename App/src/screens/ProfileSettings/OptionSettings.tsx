@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import IconEvil from 'react-native-vector-icons/EvilIcons';
 import IconFeather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -26,6 +27,8 @@ const OptionSettings: React.FC<OptionSettingsProps> = ({
 						<Icon style={styles.icon} name={icon} size={24} />
 					) : iconName === 'IconEvil' ? (
 						<IconEvil style={styles.icon} name={icon} size={24} />
+					) : iconName === 'AntDesign' ? (
+						<AntDesign style={styles.icon} name={icon} size={24} />
 					) : (
 						<IconFeather
 							style={styles.icon}

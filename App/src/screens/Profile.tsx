@@ -93,9 +93,9 @@ const Profile = ({ navigation }: Props) => {
 							event={goToPayment}
 						/>
 						<OptionSettings
-							icon="credit-card"
+							icon="areachart"
 							content="Statistic"
-							iconName="Icon"
+							iconName="AntDesign"
 							event={goToStatistic}
 						/>
 					</View>
