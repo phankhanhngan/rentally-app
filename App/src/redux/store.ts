@@ -5,6 +5,7 @@ import { helpApi } from './services/help/help.service';
 import { paymentApi } from './services/payment/payment.service';
 import { rentalApi } from './services/rental/rental.service';
 import { roomDetailApi } from './services/room-detail/room-detail.service';
+import { statisticApi } from './services/statistic/statistic.service';
 import authSlice from '@/redux/features/auth/auth.slice';
 import { authApi } from '@/redux/services/auth/auth.service';
 import { userApi } from '@/redux/services/user/user.service';
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
 	[userApi.reducerPath]: userApi.reducer,
 	[roomDetailApi.reducerPath]: roomDetailApi.reducer,
 	[checkListApi.reducerPath]: checkListApi.reducer,
+	[statisticApi.reducerPath]: statisticApi.reducer,
 
 	[rentalApi.reducerPath]: rentalApi.reducer,
 	[paymentApi.reducerPath]: paymentApi.reducer,
