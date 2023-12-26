@@ -9,6 +9,7 @@ const Loading = () => {
 				flex: 1,
 				justifyContent: 'center',
 				alignItems: 'center',
+				backgroundColor: 'white',
 			}}
 		>
 			<Text style={{ color: '#E36414', fontWeight: '700', fontSize: 30 }}>

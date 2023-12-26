@@ -7,7 +7,7 @@ const createApistatisticWithAuth = createApiWithAuth('statistic', [
 
 export const statisticApi = createApistatisticWithAuth.injectEndpoints({
 	endpoints: (builder) => ({
-		getStatistic: builder.query<IStatisticResponse, string>({
+		getStatistic: builder.query<IStatisticResponse, number>({
 			query: (year) => {
 				return {
 					url: `/statistic/cost/${year}`,

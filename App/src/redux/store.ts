@@ -46,6 +46,7 @@ export const store = configureStore({
 		rentalApi.middleware,
 		paymentApi.middleware,
 		checkListApi.middleware,
+		statisticApi.middleware,
 	),
 });
 

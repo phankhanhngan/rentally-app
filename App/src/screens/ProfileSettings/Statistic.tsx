@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import React, { Text, View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 import BackButton from '@/components/BackButton';
+import Loading from '@/components/Loading';
 import type { RootStackParams } from '@/navigations/StackNavigator';
-import { MONTH } from '@/utils/constants';
+import { useGetStatisticQuery } from '@/redux/services/statistic/statistic.service';
+import { MONTH, MONTH_FULL } from '@/utils/constants';
+import { formatNumberWithCommas } from '@/utils/helpers';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<RootStackParams, 'Statistic'>;
@@ -70,64 +75,27 @@ const renderTitle = () => {
 		</View>
 	);
 };
-const BarChatCustom = () => {
-	const stackData = [
-		{
-			stacks: [
-				{ value: 40, color: '#E36414' },
-				{ value: 4, color: '#F7B787' },
-				{ value: 6, color: '#F9E8D9' },
-				{ value: 1, color: '#527853' },
-			],
-			label: 'Jan',
-		},
-		{
-			stacks: [
-				{ value: 30, color: '#E36414' },
-				{ value: 11, color: '#F7B787' },
-				{ value: 15, color: '#F9E8D9' },
-				{ value: 10, color: '#527853' },
-			],
-			label: 'Mar',
-		},
-		{
-			stacks: [
-				{ value: 20, color: '#E36414' },
-				{ value: 1, color: '#F7B787' },
-				{ value: 5, color: '#F9E8D9' },
-				{ value: 10, color: '#527853' },
-			],
-			label: 'Feb',
-		},
-		{
-			stacks: [
-				{ value: 25, color: '#E36414' },
-				{ value: 11, color: '#F7B787' },
-				{ value: 15, color: '#F9E8D9' },
-				{ value: 6, color: '#527853' },
-			],
-			label: 'Mar',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
+const BarChatCustom = ({ year }: { year: number }) => {
+	const { data, isLoading, isFetching } = useGetStatisticQuery(year);
+	const [mon, setMon] = useState(1);
+	console.log(mon);
+	if (isLoading || isFetching) return <Loading />;
 
-			label: 'May',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
-
-			label: 'June',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
-
-			label: 'July',
-		},
-		{
-			stacks: [{ value: 30, color: 'gray' }],
-			label: 'Aug',
-		},
-	];
+	const stackData = data?.data.statistics.map((statistic) => {
+		return {
+			stacks: [
+				{ value: statistic.cost, color: '#E36414' },
+				{ value: statistic.water, color: '#F7B787' },
+				{ value: statistic.electric, color: '#F9E8D9' },
+				{ value: statistic.additionalPrice, color: '#527853' },
+			],
+			label: MONTH[statistic.month - 1],
+			onPress: () => {
+				// console.log(statistic.month);
+				setMon(statistic.month);
+			},
+		};
+	});
 
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -144,17 +112,16 @@ const BarChatCustom = () => {
 
 				// noOfSections={3}
 			/>
-			<View style={{ marginTop: 18, paddingHorizontal: 20 }}>
+			<View style={{ marginTop: 22, paddingHorizontal: 20 }}>
 				<Text
 					style={{
-						fontSize: 14,
+						fontSize: 16,
 						fontWeight: '700',
 						textAlign: 'center',
 						color: 'black',
 					}}
 				>
-					{' '}
-					January
+					{MONTH_FULL[mon - 1]}
 				</Text>
 				<View
 					style={{
@@ -170,7 +137,7 @@ const BarChatCustom = () => {
 							fontWeight: '400',
 						}}
 					>
-						Price
+						Room
 					</Text>
 					<Text
 						style={{
@@ -179,7 +146,11 @@ const BarChatCustom = () => {
 							fontSize: 13,
 						}}
 					>
-						100.000
+						{data?.data?.statistics[mon - 1].cost &&
+							formatNumberWithCommas(
+								data?.data?.statistics[mon - 1].cost,
+							)}{' '}
+						VND
 					</Text>
 				</View>
 				<View
@@ -204,7 +175,11 @@ const BarChatCustom = () => {
 							fontSize: 13,
 						}}
 					>
-						100.000
+						{data?.data?.statistics[mon - 1].electric &&
+							formatNumberWithCommas(
+								data?.data?.statistics[mon - 1].electric,
+							)}{' '}
+						VND
 					</Text>
 				</View>
 				<View
@@ -229,7 +204,11 @@ const BarChatCustom = () => {
 							fontSize: 13,
 						}}
 					>
-						100.000
+						{data?.data?.statistics[mon - 1].water &&
+							formatNumberWithCommas(
+								data?.data?.statistics[mon - 1].water,
+							)}{' '}
+						VND
 					</Text>
 				</View>
 				<View
@@ -254,7 +233,44 @@ const BarChatCustom = () => {
 							fontSize: 13,
 						}}
 					>
-						100.000
+						{data?.data?.statistics[mon - 1].additionalPrice &&
+							formatNumberWithCommas(
+								data?.data?.statistics[mon - 1].additionalPrice,
+							)}{' '}
+						VND
+					</Text>
+				</View>
+				<View
+					style={{
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+					}}
+				>
+					<Text
+						style={{
+							color: '#5E5D5E',
+							fontSize: 12,
+							fontWeight: '400',
+						}}
+					>
+						Total
+					</Text>
+					<Text
+						style={{
+							color: 'black',
+							fontWeight: 'bold',
+							fontSize: 13,
+						}}
+					>
+						{formatNumberWithCommas(
+							(data?.data?.statistics[mon - 1].additionalPrice ||
+								0) +
+								(data?.data?.statistics[mon - 1].cost || 0) +
+								(data?.data?.statistics[mon - 1].electric ||
+									0) +
+								(data?.data?.statistics[mon - 1].water || 0),
+						)}{' '}
+						VND
 					</Text>
 				</View>
 
@@ -273,22 +289,58 @@ const BarChatCustom = () => {
 					>
 						Compared to last month.
 					</Text>
-					<Text
-						style={{
-							color: 'red',
-							fontWeight: 'bold',
-							fontSize: 13,
-						}}
-					>
-						10%
-					</Text>
+					{(data?.data?.statistics[mon - 1].increase || 0) > 0 ? (
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}
+						>
+							<Icon name="arrowup" color={'green'} />
+							<Text
+								style={{
+									color: 'green',
+									fontWeight: 'bold',
+									fontSize: 13,
+								}}
+							>
+								{data?.data?.statistics[mon - 1].increase || 0}%
+							</Text>
+						</View>
+					) : (
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}
+						>
+							<Icon name="arrowdown" color={'red'} />
+							<Text
+								style={{
+									color: 'red',
+									fontWeight: 'bold',
+									fontSize: 13,
+								}}
+							>
+								{
+									-(
+										data?.data?.statistics[mon - 1]
+											.increase || 0
+									)
+								}
+								%
+							</Text>
+						</View>
+					)}
 				</View>
 			</View>
 		</View>
 	);
 };
 
-const App = ({ navigation, route }: Props) => {
+const App = ({ navigation }: Props) => {
 	const BackHandler = () => {
 		navigation.pop();
 	};
@@ -308,11 +360,11 @@ const App = ({ navigation, route }: Props) => {
 			>
 				<Tab.Screen
 					name={'2023'}
-					children={(props) => <BarChatCustom />}
+					children={(props) => <BarChatCustom year={2023} />}
 				/>
 				<Tab.Screen
 					name={'2024'}
-					children={(props) => <BarChatCustom />}
+					children={(props) => <BarChatCustom year={2024} />}
 				/>
 			</Tab.Navigator>
 		);
@@ -347,7 +399,7 @@ const App = ({ navigation, route }: Props) => {
 					flex: 1,
 					backgroundColor: 'white',
 					width: '100%',
-					paddingHorizontal: 12,
+					paddingHorizontal: 4,
 				}}
 			>
 				{StatisticTabs()}
