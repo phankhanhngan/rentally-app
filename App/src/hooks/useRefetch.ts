@@ -4,6 +4,7 @@ import { useGetCheckListQuery } from '@/redux/services/checkList/checkList.servi
 import { useGetFindingRoomsQuery } from '@/redux/services/findingRoom/findingRoom.service';
 import { useGetMyPaymentQuery } from '@/redux/services/payment/payment.service';
 import { useGetMyRentalQuery } from '@/redux/services/rental/rental.service';
+import { useGetStatisticQuery } from '@/redux/services/statistic/statistic.service';
 import { PAYMENTSTATUS, STATUS } from '@/utils/constants';
 
 const useRefetch = () => {
@@ -16,6 +17,9 @@ const useRefetch = () => {
 	const { refetch: refetchUnpaidMyPayment } = useGetMyPaymentQuery(
 		PAYMENTSTATUS.UNPAID,
 	);
+
+	const { refetch: refetchStatistic2023 } = useGetStatisticQuery(2023);
+	const { refetch: refetchStatistic2024 } = useGetStatisticQuery(2024);
 
 	const { refetch: refetchApproved } = useGetMyRentalQuery(STATUS.APPROVED);
 	const { refetch: refetchBroken } = useGetMyRentalQuery(STATUS.BROKEN);
@@ -43,6 +47,8 @@ const useRefetch = () => {
 		refetchUnpaidMyPayment();
 		refetchCheckList();
 		refetchRooms();
+		refetchStatistic2023();
+		refetchStatistic2024();
 	};
 	return refetchData;
 };
