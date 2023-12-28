@@ -16,6 +16,7 @@ import WebView from 'react-native-webview';
 import { AuthRequirement } from '@/components/AuthRequirement';
 import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
+import { Skeleton } from '@/components/Skeleton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import {
@@ -163,8 +164,7 @@ const ActionButton = ({
 };
 
 const MyRentals = ({ navigation, status }: Props) => {
-	const { data, isLoading, isFetching, isError } =
-		useGetMyRentalQuery(status);
+	const { data, isLoading, isFetching } = useGetMyRentalQuery(status);
 
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	if (!accessToken) {
@@ -172,8 +172,69 @@ const MyRentals = ({ navigation, status }: Props) => {
 	}
 	if (isLoading || isFetching) {
 		return (
-			<View style={{ flex: 1 }}>
-				<Loading />
+			<View style={{ flex: 1, padding: 24 }}>
+				{new Array(5).fill(0).map((_, index) => {
+					return (
+						<View
+							key={index}
+							style={{
+								width: '100%',
+								height: 180,
+								marginBottom: 24,
+								borderWidth: StyleSheet.hairlineWidth,
+								borderColor: '#c2c2c2',
+								elevation: 2,
+								backgroundColor: '#fff',
+								borderRadius: 16,
+								shadowColor: '#000',
+								flexDirection: 'row',
+
+								shadowOpacity: 0.12,
+								shadowRadius: 12,
+								justifyContent: 'flex-start',
+								alignItems: 'center',
+								shadowOffset: {
+									width: 1,
+									height: 1,
+								},
+							}}
+						>
+							<Skeleton
+								// key={room.id}
+								height={160}
+								width={'35%'}
+							/>
+							<View style={{ flex: 1, gap: 8, padding: 16 }}>
+								<Skeleton
+									variant="box"
+									height={10}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'100%'}
+								/>
+							</View>
+							{/* <Skeleton variant="box" height={20} width={'80%'} />
+							<Skeleton
+								variant="box"
+								height={10}
+								width={'100%'}
+							/> */}
+						</View>
+					);
+				})}
 			</View>
 		);
 	}
