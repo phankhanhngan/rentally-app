@@ -108,7 +108,6 @@ const Register = () => {
 				setEmail(body.email);
 			}
 		} catch (error: any) {
-			console.log(error.data.message);
 			if (error.data.message instanceof Array) {
 				Alert.alert('Invalid data!', error.data.message[0]);
 			} else {

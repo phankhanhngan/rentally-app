@@ -82,7 +82,6 @@ const ActionButton = ({
 				const res = await confirmRental({ id }).unwrap();
 				setModalVisible(true);
 				setUrlPayment(res.data);
-				console.log('res:', res);
 			} else {
 				await requestBreakRental({ id });
 			}

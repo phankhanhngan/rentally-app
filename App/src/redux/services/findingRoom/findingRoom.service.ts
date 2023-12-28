@@ -21,7 +21,6 @@ export const findingRoomApi = createApifindingRoomWithAuth.injectEndpoints({
 			any
 		>({
 			query: (params) => {
-				console.log(params);
 				return {
 					url: '/finding',
 					params: params,

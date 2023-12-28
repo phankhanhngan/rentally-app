@@ -78,7 +78,6 @@ const renderTitle = () => {
 const BarChatCustom = ({ year }: { year: number }) => {
 	const { data, isLoading, isFetching } = useGetStatisticQuery(year);
 	const [mon, setMon] = useState(1);
-	console.log(mon);
 	if (isLoading || isFetching) return <Loading />;
 
 	const stackData = data?.data.statistics.map((statistic) => {

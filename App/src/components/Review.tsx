@@ -42,7 +42,6 @@ const Review: React.FC<{ onReviewPress: () => void; rentalId: string }> = ({
 	const submitRentalForm = async (values: any) => {
 		try {
 			const res = await reviewRental(values).unwrap();
-			console.log('res:', res);
 			onReviewPress();
 			navigation.navigate('Main');
 		} catch (error: any) {
