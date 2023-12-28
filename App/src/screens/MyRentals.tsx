@@ -201,7 +201,7 @@ const MyRentals = ({ navigation, status }: Props) => {
 						>
 							<Skeleton
 								// key={room.id}
-								height={160}
+								height={180}
 								width={'35%'}
 							/>
 							<View style={{ flex: 1, gap: 8, padding: 16 }}>
