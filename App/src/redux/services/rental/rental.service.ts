@@ -38,7 +38,6 @@ export const rentalApi = createApiRentalWithAuth.injectEndpoints({
 			{ id: string }
 		>({
 			query: ({ id }) => {
-				console.log(id);
 				return {
 					url: `/rental/my-rental/${id}/confirm`,
 					method: 'PUT',
