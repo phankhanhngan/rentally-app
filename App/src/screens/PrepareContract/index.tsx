@@ -77,7 +77,7 @@ const PrepareContract = ({ navigation, route }: Props) => {
 			const res = await createRental({ data: rentalInfo }).unwrap();
 			console.log('res:', res);
 			if (res.status === 'success' || res.success == true) {
-				navigation.navigate('Main');
+				navigation.navigate('Main', { screen: 'MyRental' });
 			}
 		} catch (error: any) {
 			console.log(error);
