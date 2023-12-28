@@ -14,6 +14,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 import { AuthRequirement } from '@/components/AuthRequirement';
 import Loading from '@/components/Loading';
+import { Skeleton } from '@/components/Skeleton';
 import type { RootStackParams } from '@/navigations/StackNavigator';
 import { useAppSelector } from '@/redux/hook';
 import {
@@ -41,25 +42,129 @@ const CheckList = ({ navigation }: Props) => {
 
 	if (isLoading || isFetching) {
 		return (
-			<View style={{ flex: 1 }}>
-				<Loading />
+			<View style={{ flex: 1, backgroundColor: 'white' }}>
+				<Pressable
+					onPress={() => {
+						setIsEdit((prev) => !prev);
+					}}
+				>
+					<Text
+						style={{
+							fontWeight: '500',
+							fontSize: 16,
+							color: '#000',
+							paddingBottom: 10,
+							marginTop: 20,
+							marginRight: 20,
+							textDecorationLine: 'underline',
+							alignSelf: 'flex-end',
+						}}
+					>
+						{!isEdit ? 'Edit' : 'Done'}
+					</Text>
+				</Pressable>
+				<Text
+					style={{
+						// paddingTop: 24,
+						fontWeight: '500',
+						fontSize: 26,
+						color: '#000',
+						marginTop: 2,
+						marginLeft: 20,
+					}}
+				>
+					Check List
+				</Text>
+				<View
+					style={{
+						width: '100%',
+						padding: 24,
+						flexDirection: 'row',
+						flexWrap: 'wrap',
+						justifyContent: 'space-between',
+					}}
+				>
+					{new Array(5).fill(0).map((_, index) => {
+						return (
+							<View
+								key={index}
+								style={{
+									width: '48%',
+									height: 220,
+									marginBottom: 24,
+									gap: 4,
+								}}
+							>
+								<Skeleton
+									// key={room.id}
+									height={160}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'80%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={10}
+									width={'100%'}
+								/>
+							</View>
+						);
+					})}
+				</View>
 			</View>
 		);
 	}
 	if (!data?.data?.length) {
 		return (
-			<View
-				style={{
-					marginBottom: 0,
-					flex: 1,
-					alignItems: 'center',
-					justifyContent: 'center',
-					gap: 10,
-					backgroundColor: 'white',
-				}}
-			>
-				<Icon2 name="dropbox" size={100} />
-				<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
+			<View style={{ flex: 1, backgroundColor: 'white' }}>
+				<Pressable
+					onPress={() => {
+						setIsEdit((prev) => !prev);
+					}}
+				>
+					<Text
+						style={{
+							fontWeight: '500',
+							fontSize: 16,
+							color: '#000',
+							paddingBottom: 10,
+							marginTop: 20,
+							marginRight: 20,
+							textDecorationLine: 'underline',
+							alignSelf: 'flex-end',
+						}}
+					>
+						{!isEdit ? 'Edit' : 'Done'}
+					</Text>
+				</Pressable>
+				<Text
+					style={{
+						// paddingTop: 24,
+						fontWeight: '500',
+						fontSize: 26,
+						color: '#000',
+						marginTop: 2,
+						marginLeft: 20,
+					}}
+				>
+					Check List
+				</Text>
+				<View
+					style={{
+						marginBottom: 0,
+						flex: 1,
+						alignItems: 'center',
+						justifyContent: 'center',
+						gap: 10,
+						backgroundColor: 'white',
+					}}
+				>
+					<Icon2 name="dropbox" size={100} />
+					<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
+				</View>
 			</View>
 		);
 	}

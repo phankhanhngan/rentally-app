@@ -109,7 +109,6 @@ const ListingDetail = ({ navigation, route }: Props) => {
 	} = roomDetail;
 	// const coordinate = roomblock?.coordinate || { latitude: 0, longitude: 0 };
 
-	console.log(ratingDetail);
 	if (isLoading) return <Loading />;
 	return (
 		<View style={styles.container}>
