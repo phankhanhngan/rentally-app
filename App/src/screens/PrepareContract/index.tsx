@@ -5,6 +5,7 @@ import {
 	StatusBar,
 	StyleSheet,
 	Text,
+	ToastAndroid,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -77,11 +78,25 @@ const PrepareContract = ({ navigation, route }: Props) => {
 			const res = await createRental({ data: rentalInfo }).unwrap();
 			console.log('res:', res);
 			if (res.status === 'success' || res.success == true) {
-				navigation.navigate('Main', { screen: 'MyRental' });
+				ToastAndroid.showWithGravity(
+					'Successfull',
+					ToastAndroid.LONG,
+					ToastAndroid.TOP,
+				);
+				navigation.navigate('Main', {
+					screen: 'MyRental',
+					params: {
+						screen: 'CREATED',
+					},
+				});
 			}
 		} catch (error: any) {
 			console.log(error);
-			Alert.alert('error!', error.data.message[0]);
+			if (error.data.message instanceof Array) {
+				Alert.alert('Invalid data!', error.data.message[0]);
+			} else {
+				Alert.alert('Invalid data!', error.data.message);
+			}
 		}
 	};
 

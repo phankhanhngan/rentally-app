@@ -9,6 +9,7 @@ import {
 	StatusBar,
 	StyleSheet,
 	Text,
+	ToastAndroid,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -84,6 +85,11 @@ const ActionButton = ({
 				setUrlPayment(res.data);
 			} else {
 				await requestBreakRental({ id });
+				ToastAndroid.showWithGravity(
+					'Successfull',
+					ToastAndroid.LONG,
+					ToastAndroid.TOP,
+				);
 			}
 			navigation.pop();
 		} catch (error: any) {

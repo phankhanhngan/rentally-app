@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	StyleSheet,
 	Text,
+	ToastAndroid,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -69,6 +70,11 @@ const ActionButton = ({
 				setUrlPayment(res.data);
 			} else {
 				await requestBreakRental({ id });
+				ToastAndroid.showWithGravity(
+					'Successfull',
+					ToastAndroid.LONG,
+					ToastAndroid.TOP,
+				);
 			}
 		} catch (error: any) {
 			console.log(error);
