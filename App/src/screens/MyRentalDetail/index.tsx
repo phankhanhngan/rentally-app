@@ -84,12 +84,23 @@ const ActionButton = ({
 				setModalVisible(true);
 				setUrlPayment(res.data);
 			} else {
-				await requestBreakRental({ id });
-				ToastAndroid.showWithGravity(
-					'Successfull',
-					ToastAndroid.LONG,
-					ToastAndroid.TOP,
-				);
+				Alert.alert('Confirm', 'Do you want break?', [
+					{
+						text: 'Cancel',
+						style: 'cancel',
+					},
+					{
+						text: 'OK',
+						onPress: async () => {
+							await requestBreakRental({ id });
+							ToastAndroid.showWithGravity(
+								'Successfull',
+								ToastAndroid.LONG,
+								ToastAndroid.TOP,
+							);
+						},
+					},
+				]);
 			}
 			navigation.pop();
 		} catch (error: any) {
