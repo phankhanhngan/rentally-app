@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	StyleSheet,
 	Text,
+	ToastAndroid,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -68,7 +69,23 @@ const ActionButton = ({
 				setModalVisible(true);
 				setUrlPayment(res.data);
 			} else {
-				await requestBreakRental({ id });
+				Alert.alert('Confirm', 'Do you want break?', [
+					{
+						text: 'Cancel',
+						style: 'cancel',
+					},
+					{
+						text: 'OK',
+						onPress: async () => {
+							await requestBreakRental({ id });
+							ToastAndroid.showWithGravity(
+								'Successfull',
+								ToastAndroid.LONG,
+								ToastAndroid.TOP,
+							);
+						},
+					},
+				]);
 			}
 		} catch (error: any) {
 			console.log(error);
