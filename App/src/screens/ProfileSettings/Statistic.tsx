@@ -102,7 +102,6 @@ const BarChatCustom = ({ year }: { year: number }) => {
 				width={300}
 				roundedTop
 				roundedBottom
-				noOfSections={4}
 				stackData={stackData}
 				xAxisThickness={0}
 				yAxisThickness={0}
@@ -343,12 +342,13 @@ const App = ({ navigation }: Props) => {
 	const BackHandler = () => {
 		navigation.pop();
 	};
-
+	const currentDate = new Date();
+	const currentYear = currentDate.getFullYear();
 	const Tab = createMaterialTopTabNavigator();
 	function StatisticTabs() {
 		return (
 			<Tab.Navigator
-				initialRouteName="2024"
+				initialRouteName={`${currentYear}`}
 				screenOptions={{
 					tabBarScrollEnabled: true,
 					tabBarLabelStyle: { fontSize: 12 },
@@ -357,14 +357,17 @@ const App = ({ navigation }: Props) => {
 					tabBarInactiveTintColor: 'black',
 				}}
 			>
-				<Tab.Screen
-					name={'2023'}
-					children={(props) => <BarChatCustom year={2023} />}
-				/>
-				<Tab.Screen
-					name={'2024'}
-					children={(props) => <BarChatCustom year={2024} />}
-				/>
+				{new Array(3).fill(0).map((_, index) => {
+					return (
+						<Tab.Screen
+							key={index}
+							name={`${currentYear - 2 + index}`}
+							children={() => (
+								<BarChatCustom year={currentYear - 2 + index} />
+							)}
+						/>
+					);
+				})}
 			</Tab.Navigator>
 		);
 	}

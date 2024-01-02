@@ -17,7 +17,7 @@ const useRefetch = () => {
 	const { refetch: refetchUnpaidMyPayment } = useGetMyPaymentQuery(
 		PAYMENTSTATUS.UNPAID,
 	);
-
+	const { refetch: refetchStatistic2022 } = useGetStatisticQuery(2022);
 	const { refetch: refetchStatistic2023 } = useGetStatisticQuery(2023);
 	const { refetch: refetchStatistic2024 } = useGetStatisticQuery(2024);
 
@@ -47,6 +47,7 @@ const useRefetch = () => {
 		refetchUnpaidMyPayment();
 		refetchCheckList();
 		refetchRooms();
+		refetchStatistic2022();
 		refetchStatistic2023();
 		refetchStatistic2024();
 	};
