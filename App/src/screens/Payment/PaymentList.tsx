@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
 	Alert,
-	Button,
 	Image,
 	Modal,
 	ScrollView,
@@ -17,11 +16,12 @@ type Props = NativeStackScreenProps<RootStackParams> & {
 	status: PAYMENTSTATUS;
 };
 import Spinner from 'react-native-loading-spinner-overlay';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 import WebView from 'react-native-webview';
 
-import BackButton from '@/components/BackButton';
 import ButtonWithLoader from '@/components/ButtonWithLoader';
 import Loading from '@/components/Loading';
+import { Skeleton } from '@/components/Skeleton';
 import {
 	useCheckOutMutation,
 	useGetMyPaymentQuery,
@@ -130,15 +130,88 @@ const PaymentList = ({ navigation, status }: Props) => {
 	const { data, isLoading, isFetching } = useGetMyPaymentQuery(status);
 	if (isLoading || isFetching) {
 		return (
-			<View style={{ flex: 1 }}>
-				<Loading />
+			<View style={{ flex: 1, padding: 24 }}>
+				{new Array(5).fill(0).map((_, index) => {
+					return (
+						<View
+							key={index}
+							style={{
+								width: '100%',
+								height: 160,
+								marginBottom: 24,
+								borderWidth: StyleSheet.hairlineWidth,
+								borderColor: '#c2c2c2',
+								elevation: 2,
+								backgroundColor: '#fff',
+								borderRadius: 16,
+								shadowColor: '#000',
+								flexDirection: 'row',
+
+								shadowOpacity: 0.12,
+								shadowRadius: 12,
+								justifyContent: 'flex-start',
+								alignItems: 'center',
+								shadowOffset: {
+									width: 1,
+									height: 1,
+								},
+							}}
+						>
+							<Skeleton
+								// key={room.id}
+								height={160}
+								width={'35%'}
+							/>
+							<View style={{ flex: 1, gap: 8, padding: 16 }}>
+								<Skeleton
+									variant="box"
+									height={10}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'100%'}
+								/>
+								<Skeleton
+									variant="box"
+									height={20}
+									width={'100%'}
+								/>
+							</View>
+							{/* <Skeleton variant="box" height={20} width={'80%'} />
+							<Skeleton
+								variant="box"
+								height={10}
+								width={'100%'}
+							/> */}
+						</View>
+					);
+				})}
 			</View>
 		);
 	}
-	if (data?.data.length) {
-		<View style={{ flex: 1 }}>
-			<Text>Hoong co gi ma oi</Text>
-		</View>;
+	if (!data?.data.length) {
+		return (
+			<View
+				style={{
+					marginBottom: 0,
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					gap: 10,
+					backgroundColor: 'white',
+				}}
+			>
+				<Icon2 name="dropbox" size={100} />
+				<Text style={{ color: '#000', fontSize: 18 }}>No room</Text>
+			</View>
+		);
 	}
 
 	return (

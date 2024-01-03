@@ -37,7 +37,43 @@ const CheckList = ({ navigation }: Props) => {
 	};
 	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	if (!accessToken) {
-		return AuthRequirement({ navigation });
+		return (
+			<View style={{ flex: 1, backgroundColor: 'white' }}>
+				<Pressable
+					onPress={() => {
+						setIsEdit((prev) => !prev);
+					}}
+				>
+					<Text
+						style={{
+							fontWeight: '500',
+							fontSize: 16,
+							color: '#000',
+							paddingBottom: 10,
+							marginTop: 20,
+							marginRight: 20,
+							textDecorationLine: 'underline',
+							alignSelf: 'flex-end',
+						}}
+					>
+						{!isEdit ? 'Edit' : 'Done'}
+					</Text>
+				</Pressable>
+				<Text
+					style={{
+						// paddingTop: 24,
+						fontWeight: '500',
+						fontSize: 26,
+						color: '#000',
+						marginTop: 2,
+						marginLeft: 20,
+					}}
+				>
+					Check List
+				</Text>
+				{AuthRequirement({ navigation })}
+			</View>
+		);
 	}
 
 	if (isLoading || isFetching) {

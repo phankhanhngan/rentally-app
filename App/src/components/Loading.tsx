@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import LottieView from 'lottie-react-native';
 const Loading = () => {
 	return (
 		<View
@@ -12,13 +13,19 @@ const Loading = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Text style={{ color: '#E36414', fontWeight: '700', fontSize: 30 }}>
-				Loading...
-			</Text>
+			<LottieView
+				style={{
+					width: 300,
+					height: 300,
+				}}
+				source={require('../assets/images/loading.json')}
+				autoPlay
+				loop
+			/>
 		</View>
 	);
 };
 
 export default Loading;
 
-const styles = StyleSheet.create({});
+

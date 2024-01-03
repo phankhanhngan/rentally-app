@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import type { IUser } from '@/interfaces/user.interface';
+import { useAppSelector } from '@/redux/hook';
+
 interface HeartButtonProps {
 	isInCheckList: boolean;
 	handleClickHeartButton: any;
@@ -13,12 +16,13 @@ const HeartButton: React.FC<HeartButtonProps> = ({
 	handleClickHeartButton,
 }) => {
 	const [hasFavorited, setHasFavorited] = useState(isInCheckList);
+	const userInfo = useAppSelector((state) => state.auth.userInfo) as IUser;
 
 	return (
 		<TouchableOpacity
 			onPress={() => {
-				setHasFavorited((state: any) => !state);
 				handleClickHeartButton();
+				if (userInfo) setHasFavorited((state: any) => !state);
 			}}
 		>
 			<Icon
