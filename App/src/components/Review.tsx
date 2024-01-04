@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+	Alert,
+	StyleSheet,
+	Text,
+	TextInput,
+	ToastAndroid,
+	View,
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { AirbnbRating } from 'react-native-ratings';
@@ -42,6 +49,11 @@ const Review: React.FC<{ onReviewPress: () => void; rentalId: string }> = ({
 	const submitRentalForm = async (values: any) => {
 		try {
 			const res = await reviewRental(values).unwrap();
+			ToastAndroid.showWithGravity(
+				'Successfull',
+				ToastAndroid.LONG,
+				ToastAndroid.TOP,
+			);
 			onReviewPress();
 			navigation.navigate('Main');
 		} catch (error: any) {
