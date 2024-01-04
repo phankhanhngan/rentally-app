@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import LottieView from 'lottie-react-native';
 const Loading = () => {
@@ -13,10 +13,14 @@ const Loading = () => {
 				backgroundColor: 'white',
 			}}
 		>
+			<Image
+				source={require('../assets/images/rentallyLogo.png')}
+				style={{ width: 60, height: 60 }}
+			/>
 			<LottieView
 				style={{
-					width: 300,
-					height: 300,
+					width: 400,
+					height: 200,
 				}}
 				source={require('../assets/images/loading.json')}
 				autoPlay
@@ -27,5 +31,3 @@ const Loading = () => {
 };
 
 export default Loading;
-
-
