@@ -105,8 +105,16 @@ const BarChatCustom = ({ year }: { year: number }) => {
 				stackData={stackData}
 				xAxisThickness={0}
 				yAxisThickness={0}
-				yAxisTextStyle={{ color: 'gray' }}
+				yAxisTextStyle={{ color: 'gray', fontSize: 9 }}
 				backgroundColor={'white'}
+				formatYLabel={(label) => {
+					const labelVal = Number(label);
+					if (labelVal >= 1000000)
+						return (labelVal / 1000000).toFixed(2) + 'M';
+					if (labelVal >= 1000)
+						return (labelVal / 1000).toFixed(2) + 'K';
+					return label;
+				}}
 
 				// noOfSections={3}
 			/>
