@@ -105,7 +105,7 @@ const ActionButton = ({
 			>
 				<Spinner visible={isLoading || isConfirmLoading} />
 				{rentalStatus === STATUS.COMPLETED &&
-					ratingStatus === RATING_STATUS.NONE && (
+					ratingStatus === RATING_STATUS.RATED && (
 						<Text
 							style={{
 								color: 'black',

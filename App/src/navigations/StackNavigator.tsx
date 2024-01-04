@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/EvilIcons';
 import Icon3 from 'react-native-vector-icons/Feather';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import 'react-native-gesture-handler';
 import BackButton from '@/components/BackButton';
+import useRefetchMyRental from '@/hooks/useRefetchMyRental';
 import type { IMyRental } from '@/interfaces/rental.interface';
 import type { IRatingDetail } from '@/interfaces/room-detail.interface';
 import type { IRoomFinding } from '@/interfaces/roomfinding.interface';
@@ -152,6 +153,7 @@ const StackNavigator = () => {
 		);
 	}
 	function BottomTabs() {
+		const refetch = useRefetchMyRental();
 		return (
 			<Tab.Navigator
 				screenOptions={{
@@ -187,18 +189,39 @@ const StackNavigator = () => {
 					options={{
 						headerShown: true,
 						header: () => (
-							<Text
+							<View
 								style={{
+									flexDirection: 'row',
+									justifyContent: 'space-between',
 									backgroundColor: 'white',
-									fontWeight: '500',
-									fontSize: 26,
-									color: '#000',
-									paddingTop: 12,
-									paddingLeft: 20,
+									padding: 12,
+									paddingHorizontal: 20,
+									paddingBottom: 2,
 								}}
 							>
-								My Rentals
-							</Text>
+								<Text
+									style={{
+										backgroundColor: 'white',
+										fontWeight: '500',
+										fontSize: 26,
+										color: '#000',
+									}}
+								>
+									My Rentals
+								</Text>
+								<Pressable
+									style={({ pressed }) => [
+										{ opacity: pressed ? 0.7 : 1 }, // Adjust opacity based on press state
+									]}
+									onPress={() => refetch()}
+								>
+									<Icon4
+										name="refresh"
+										size={34}
+										color={'#000'}
+									/>
+								</Pressable>
+							</View>
 						),
 						tabBarIcon: ({ color }) => (
 							<Icon2 name="profile" size={24} color={color} />
